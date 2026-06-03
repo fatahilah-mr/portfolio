@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Fatahilah M.R — Portfolio</title>
+  <title>Fatahilah Miftahul Rahman — Portfolio</title>
   <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -179,11 +179,7 @@
       border-radius: 2px;
     }
 
-    #about { background: var(--white); }
-    #skills { background: var(--white); }
-    #certificates { background: var(--white); }
-    #contact { background: var(--white); }
-    footer { background: var(--white); }
+    #about, #skills, #certificates, #contact, footer { background: var(--white); }
 
     .about-grid {
       display: grid;
@@ -250,8 +246,6 @@
       margin-bottom: 0.75rem;
     }
 
-    #skills { background: var(--white); }
-
     .skills-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
@@ -309,8 +303,6 @@
     }
 
     /* CERTIFICATES */
-    #certificates { background: var(--white); }
-
     .cert-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
@@ -348,9 +340,7 @@
 
     .cert-card:hover .cert-img-wrap img { transform: scale(1.03); }
 
-    .cert-info {
-      padding: 1.2rem 1.4rem;
-    }
+    .cert-info { padding: 1.2rem 1.4rem; }
 
     .cert-name {
       font-weight: 600;
@@ -359,10 +349,7 @@
       margin-bottom: 0.3rem;
     }
 
-    .cert-year {
-      font-size: 0.82rem;
-      color: var(--ink-muted);
-    }
+    .cert-year { font-size: 0.82rem; color: var(--ink-muted); }
 
     .cert-drive-btn {
       display: inline-flex;
@@ -383,15 +370,9 @@
       transform: translateY(-1px);
     }
 
-    .cert-drive-btn svg {
-      width: 18px;
-      height: 18px;
-      fill: currentColor;
-    }
+    .cert-drive-btn svg { width: 18px; height: 18px; fill: currentColor; }
 
     /* CONTACT */
-    #contact { background: var(--white); }
-
     .contact-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
@@ -428,11 +409,7 @@
       flex-shrink: 0;
     }
 
-    .contact-icon svg {
-      width: 22px;
-      height: 22px;
-      fill: var(--accent);
-    }
+    .contact-icon svg { width: 22px; height: 22px; fill: var(--accent); }
 
     .contact-label {
       font-size: 0.72rem;
@@ -457,7 +434,6 @@
       font-size: 0.82rem;
       color: var(--ink-muted);
       border-top: 1px solid var(--border);
-      background: var(--white);
     }
 
     /* RESPONSIVE */
@@ -473,7 +449,7 @@
 <body>
 
   <nav>
-    
+    <!-- <a href="#home" class="nav-logo">Fatahilah M.R</a> -->
     <ul class="nav-links">
       <li><a href="#home">Home</a></li>
       <li><a href="#about">About</a></li>
@@ -506,8 +482,8 @@
       <div class="divider"></div>
       <div class="about-grid">
         <div class="about-body">
-          <p>Saya adalah seorang alumni SMK Patriot Pituruh yang lulus pada tahun 2026, dari jurusan Teknik Komputer dan Jaringan (TKJ). Ketertarikan saya pada dunia teknologi, khususnya bidang networking, menjadi alasan utama saya memilih jurusan ini.</p>
-          <p>Meskipun pengalaman saya di bidang networking masih belum cukup, saya percaya bahwa belajar adalah proses dari tidak tahu menjadi tahu, dan yang tidak bisa menjadi bisa. Selama ada niat untuk menekuninya, pasti bisa mempelajarinya.</p>
+          <p>Saya adalah seorang alumni SMK Patriot Pituruh yang lulus pada tahun 2026, dari jurusan Teknik Komputer dan Jaringan (TKJ).</p>
+          <p>Setelah berhasil meraih Juara I LKS di bidang IT Network System Administration, fokus saya tidak cuma berhenti di infrastruktur jaringan dan kelola server aja. Belakangan ini, saya lagi seru-serunya ngulik bidang AI Prompt Engineering. Lewat hal baru ini, saya pengen cari tahu gimana cara manfaatin kecerdasan buatan buat bantu otomatisasi skrip jaringan atau sistem server biar kerjaan di industri ke depannya bisa jauh lebih efisien, cepat, dan aman.</p>
         </div>
         <div class="about-meta">
           <div class="meta-card">
@@ -538,40 +514,43 @@
         <div class="skill-category">
           <div class="skill-cat-title">Hardware &amp; Cabling</div>
           <ul class="skill-list">
-            <li>Crimping Kabel UTP</li>
-            <li>Splicing Kabel Fiber Optic</li>
-            <li>Fast Connector Fiber Optic</li>
-            <li>PC Assembly</li>
-            <li>Hardeare Troubleshooting</li>
+            <li>PC Assembly &amp; Hardware Troubleshooting</li>
+            <li>UTP Cabling (Crimping) &amp; LAN Testing</li>
+            <li>Fiber Optic Splicing &amp; Fast Connector Termination</li>
+            <li>Fiber Optic Testing (OPM &amp; VFL)</li>
+            <li>Rack Server &amp; Cable Management</li>
           </ul>
         </div>
         <div class="skill-category">
-          <div class="skill-cat-title">Cisco</div>
+          <div class="skill-cat-title">Cisco Networking</div>
           <ul class="skill-list">
-            <li>Konfigurasi Dasar</li>
-            <li>Inter-VLAN Routing</li>
-            <li>Static Routing</li>
-            <li>Dynamic Routing</li>
+            <li>Konfigurasi Dasar &amp; Keamanan Device</li>
+            <li>Infrastruktur Switching, VLAN &amp; Trunking</li>
+            <li>Implementasi STP Portfast &amp; EtherChannel</li>
+            <li>Pengalamatan IPv4 &amp; IPv6 Addressing</li>
+            <li>Static &amp; Dynamic Routing (OSPF, BGP, EIGRP, RIP)</li>
           </ul>
         </div>
         <div class="skill-category">
           <div class="skill-cat-title">Mikrotik &amp; Wireless</div>
           <ul class="skill-list">
-            <li>User Management</li>
-            <li>Konfigurasi Dasar Mikrotik</li>
-            <li>Konfigurasi Wireless Router</li>
-            <li>Konfigurasi Hotspot</li>
+            <li>Konfigurasi Dasar, Pengalamatan IP &amp; Internet Gateway (Identity, IPv4, DHCP Client/Server, DNS, SNTP)</li>
+            <li>Manajemen Pengguna &amp; Hak Akses Perangkat (User Privilege, Password Hardening, Custom Service Ports)</li>
+            <li>Keamanan Jaringan &amp; Firewall (NAT Masquerade, Content &amp; Media Blocking, Port Forwarding)</li>
+            <li>Wireless Network Setup (Mikrotik AP-Bridge Mode, Security Profiles, &amp; SOHO Wireless Router Configuration)</li>
+            <li>Mikrotik Hotspot Gateway &amp; User Profile Management</li>
           </ul>
         </div>
         <div class="skill-category">
           <div class="skill-cat-title">Server &amp; OS Administration</div>
           <ul class="skill-list">
-            <li>Debian Administration</li>
-            <li>Windows Server Administration</li>
-            <li>Windows Client Administration</li>
-            <li>Instalasi Debian 12 &amp; 13</li>
-            <li>Instalasi Windows Server 2025</li>
-            <li>Instalasi Windows Client</li>
+            <li>Linux Server (Debian): Network Config (IP, Gateway, DNS, Resolvconf, Timezone) &amp; SSH Server</li>
+            <li>Linux Services: DNS Server (Bind9) &amp; Web Server (Nginx, Apache2, Virtual Host)</li>
+            <li>Network Optimization &amp; Security: DHCP Server, Nftables Firewall, &amp; VRRP Redundancy</li>
+            <li>High Availability Server: HAProxy (Load Balancing Round-Robin)</li>
+            <li>Windows Server 2022 Services: ADDS, DNS Server, DHCP Server, &amp; IIS (Internet Information Services)</li>
+            <li>Windows Server Data Mgmt: File Sharing, RAID Storage, Organizational Units (OU), User &amp; Group Management</li>
+            <li>AI Prompt Engineering: Pemanfaatan LLM untuk Otomatisasi Skrip &amp; Troubleshooting Sistem</li>
           </ul>
         </div>
       </div>
@@ -627,7 +606,7 @@
             <div class="contact-value">+62 851-1747-0256</div>
           </div>
         </a>
-        <a class="contact-card" href="https://www.linkedin.com/in/fatahilah-miftahul-rahman-2522013a3" target="_blank" rel="noopener">
+        <a class="contact-card" href="https://www.linkedin.com/in/fatahilah-miftahul-rahman" target="_blank" rel="noopener">
           <div class="contact-icon">
             <svg viewBox="0 0 24 24"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
           </div>
@@ -641,8 +620,4 @@
   </section>
 
   <footer>
-    &copy; 2026 Fatahilah Miftahul Rahman. All rights reserved.
-  </footer>
-
-</body>
-</html>
+              
