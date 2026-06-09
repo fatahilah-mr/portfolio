@@ -940,6 +940,12 @@ footer {
 .overlay-title {
   color: var(--ink-soft) !important; /* Menaikkan kepekatan elemen teks sekunder */
 }
+/* Tambahan untuk meta penerbit & tahun */
+.cert-meta {
+  font-size: 0.75rem;
+  color: var(--ink-muted);
+  margin-top: 4px;
+}
 
 .project-desc, 
 .about-body p {
