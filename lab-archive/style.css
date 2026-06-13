@@ -28,19 +28,15 @@ body {
   line-height: 1.6;
   overflow-x: hidden;
   padding-top: 64px;
-  
-  /* Solusi Kunci 1: Aktifkan Flexbox Vertikal */
   display: flex;
   flex-direction: column;
-  min-height: 100vh; /* Memaksa tinggi body minimal sepanjang layar HP/Laptop */
+  min-height: 100vh;
 }
-
 
 a, button, .menu-toggle, .close-btn {
   -webkit-tap-highlight-color: #fff0;
 }
 
-/* Navigasi Utama - GAYA BARU (smart hidden dengan opacity + translateY) */
 nav {
   position: fixed;
   top: 0;
@@ -55,13 +51,11 @@ nav {
   align-items: center;
   justify-content: space-between;
   height: 64px;
-  /* Transisi halus untuk opacity dan transform */
   transition: opacity 0.4s ease, transform 0.4s ease;
   opacity: 1;
   transform: translateY(0);
 }
 
-/* Kelas yang ditambahkan JS saat navbar akan disembunyikan */
 nav.nav-hidden {
   opacity: 0;
   transform: translateY(-10px);
@@ -70,7 +64,7 @@ nav.nav-hidden {
 
 .nav-logo {
   font-family: 'DM Serif Display', serif;
-  font-size: 1.1rem;    /* ← tambahkan baris ini */
+  font-size: 1.1rem;
   color: var(--ink);
   text-decoration: none;
   font-weight: 700;
@@ -126,13 +120,10 @@ nav.nav-hidden {
   display: none;
 }
 
-/* Struktur Layout Konten */
 .certificates-page {
   padding-top: 40px;
-  /* Solusi Kunci 2: Mengambil sisa ruang kosong agar footer terdorong ke bawah */
-  flex-grow: 1; 
+  flex-grow: 1;
 }
-
 
 .section-inner {
   max-width: 1100px;
@@ -183,7 +174,6 @@ nav.nav-hidden {
   border-radius: 2px;
 }
 
-/* Desain Filter Kategori */
 .cert-buttons-wrapper {
   display: flex;
   flex-wrap: wrap;
@@ -217,7 +207,6 @@ nav.nav-hidden {
   color: var(--white);
 }
 
-/* Grid & Kartu Proyek */
 .cert-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
@@ -269,7 +258,6 @@ nav.nav-hidden {
   flex-grow: 1;
 }
 
-/* Aturan Dasar Badge Teks */
 .project-badge {
   display: inline-block;
   font-size: .72rem;
@@ -282,41 +270,33 @@ nav.nav-hidden {
   align-self: flex-start;
 }
 
-/* ==========================================================================
-   LOGIKA KUSTOM WARNA DINAMIS BADGE BERDASARKAN KATEGORI (Kloning Gaya Portofolio)
-   ========================================================================== */
+/* Badge warna */
 .badge-ai {
-  background-color: #E0F2FE !important; /* Biru Langit Lembut */
+  background-color: #E0F2FE !important;
   color: #0369A1 !important;
 }
-
 .badge-cisco {
-  background-color: #FEF3C7 !important; /* Emas Lembut Khas Pemenang LKS */
+  background-color: #FEF3C7 !important;
   color: #B45309 !important;
 }
-
 .badge-linux {
-  background-color: #DCFCE7 !important; /* Hijau Server Open Source */
+  background-color: #DCFCE7 !important;
   color: #15803D !important;
 }
-
 .badge-mikrotik {
-  background-color: #FEE2E2 !important; /* Merah Lembut Identitas MikroTik */
+  background-color: #FEE2E2 !important;
   color: #B91C1C !important;
 }
-
 .badge-windows {
-  background-color: #EDE9FE !important; /* Ungu Server Perusahaan */
+  background-color: #EDE9FE !important;
   color: #6D28D9 !important;
 }
-
 .badge-website {
-  background-color: #E0E7FF !important; /* biru muda */
-  color: #3730A3 !important;           /* ungu tua */
+  background-color: #E0E7FF !important;
+  color: #3730A3 !important;
 }
-
 .badge-default {
-  background-color: #E5E7EB !important; /* Abu-abu Cadangan */
+  background-color: #E5E7EB !important;
   color: #374151 !important;
 }
 
@@ -360,17 +340,15 @@ nav.nav-hidden {
 footer {
   text-align: center;
   padding: 2rem;
-  margin-top: auto; /* Solusi Kunci 3: Menempel otomatis di bagian paling dasar */
+  margin-top: auto;
   font-size: .82rem;
   color: var(--ink-muted) !important;
   border-top: 1px solid var(--border);
   background: var(--white);
 }
 
-
-/* Media Queries Responsif */
+/* ========== RESPONSIVE ========== */
 @media (min-width: 769px) {
-  /* Tidak perlu override khusus untuk nav-hidden karena gaya sudah diatur di atas */
   .cert-grid {
     grid-template-columns: repeat(2, 1fr);
     gap: 2rem;
@@ -431,5 +409,53 @@ footer {
   .overlay-links a {
     font-size: 1.05rem;
     width: 100%;
+  }
+}
+
+/* ========== TAMBAHAN UNTUK TOMBOL BAGIKAN ========== */
+.project-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 0.5rem;
+  gap: 1rem;
+}
+
+.project-share {
+  background: none;
+  border: 1.5px solid var(--border);
+  border-radius: 4px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.5rem 0.8rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--ink-muted);
+  transition: all 0.2s;
+  background-color: transparent;
+}
+
+.project-share:hover {
+  background-color: var(--cream);
+  color: var(--accent);
+  border-color: var(--accent);
+}
+
+.project-share svg {
+  width: 16px;
+  height: 16px;
+  stroke: currentColor;
+}
+
+@media (max-width: 480px) {
+  .project-actions {
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+  .project-link, .project-share {
+    width: 100%;
+    justify-content: center;
   }
 }

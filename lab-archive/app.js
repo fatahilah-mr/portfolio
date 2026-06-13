@@ -1,5 +1,4 @@
 // 1. Konfigurasi Database Google Sheets API Baru
-// Menggunakan SPREADSHEET_ID baru milikmu dan menembak langsung tab 'Database_App'
 const SPREADSHEET_ID = '1YMxR6-SlP-TT0B3y6NScT4L0YH0GXZEId_PY0Jgp8fQ';
 const SHEET_NAME = 'Database_App'; 
 const GOOGLE_SHEETS_URL = `https://docs.google.com/spreadsheets/d/${SPREADSHEET_ID}/gviz/tq?tqx=out:json&sheet=${SHEET_NAME}`;
@@ -14,7 +13,22 @@ const navOverlay = document.getElementById('nav-overlay');
 const closeMenuBtn = document.getElementById('close-menu');
 const navbar = document.getElementById('navbar');
 
-// 2. Fungsi Mengambil Data dari Google Sheets (Asynchronous Fetch)
+// ==========================================
+// UTILITY: ESCAPE HTML (XSS Protection)
+// ==========================================
+function escapeHtml(str) {
+  if (!str) return '';
+  return str.replace(/[&<>]/g, function(m) {
+    if (m === '&') return '&amp;';
+    if (m === '<') return '&lt;';
+    if (m === '>') return '&gt;';
+    return m;
+  });
+}
+
+// ==========================================
+// 2. AMBIL DATA DARI GOOGLE SHEETS
+// ==========================================
 async function fetchProjectsData() {
   try {
     const response = await fetch(GOOGLE_SHEETS_URL);
@@ -23,24 +37,21 @@ async function fetchProjectsData() {
     const rawText = await response.text();
     const jsonString = rawText.match(/google\.visualization\.Query\.setResponse\(([\s\S]*?)\);/)[1];
     const data = JSON.parse(jsonString);
-    
     const rows = data.table.rows;
     
-    // Mapping baris data disesuaikan dengan urutan kolom baru di tab Database_App
     localProjectsData = rows.map(row => {
       return {
         id: row.c[0] ? row.c[0].v : '',
         timestamp: row.c[1] ? row.c[1].v : '',
         judul: row.c[2] ? row.c[2].v : 'Tanpa Judul',
         kategori: row.c[3] ? row.c[3].v : 'Umum',
-        link_dokumentasi: row.c[4] ? row.c[4].v : '#', // Kolom E
-        deskripsi: row.c[5] ? row.c[5].v : 'Tidak ada deskripsi.', // Kolom F
-        link_gambar: row.c[6] ? row.c[6].v : '' // Kolom G
+        link_dokumentasi: row.c[4] ? row.c[4].v : '#',
+        deskripsi: row.c[5] ? row.c[5].v : 'Tidak ada deskripsi.',
+        link_gambar: row.c[6] ? row.c[6].v : ''
       };
     });
 
     renderProjects(localProjectsData);
-
   } catch (error) {
     console.error('Error fetching data:', error);
     projectsGrid.innerHTML = `
@@ -51,8 +62,9 @@ async function fetchProjectsData() {
   }
 }
 
-
-// 3. Logika Penentu Class Warna Badge Berdasarkan Kategori
+// ==========================================
+// 3. WARNA BADGE BERDASARKAN KATEGORI
+// ==========================================
 function getBadgeClass(kategori) {
   const kat = kategori.toLowerCase().trim();
   if (kat === 'ai') return 'badge-ai';
@@ -64,7 +76,44 @@ function getBadgeClass(kategori) {
   return 'badge-default';
 }
 
-// 4. Fungsi Menampilkan Kartu Proyek ke Layar
+// ==========================================
+// 4. FUNGSI BAGIKAN (SHARE)
+// ==========================================
+async function shareProject(url, title) {
+  if (!url || url === '#') {
+    alert('Tidak ada link dokumentasi untuk proyek ini.');
+    return;
+  }
+  const shareData = {
+    title: title,
+    text: 'Lihat proyek ini di Lab Archive saya:',
+    url: url
+  };
+  if (navigator.share) {
+    try {
+      await navigator.share(shareData);
+    } catch (err) {
+      if (err.name !== 'AbortError') {
+        console.warn('Gagal membagikan:', err);
+        fallbackCopy(url);
+      }
+    }
+  } else {
+    fallbackCopy(url);
+  }
+}
+
+function fallbackCopy(url) {
+  navigator.clipboard.writeText(url).then(() => {
+    alert('Link dokumentasi telah disalin ke clipboard!');
+  }).catch(() => {
+    alert('Gagal menyalin link. Silakan salin manual: ' + url);
+  });
+}
+
+// ==========================================
+// 5. RENDER KARTU PROYEK (DENGAN TOMBOL BAGIKAN)
+// ==========================================
 function renderProjects(projects) {
   projectsGrid.innerHTML = '';
 
@@ -79,33 +128,55 @@ function renderProjects(projects) {
     const card = document.createElement('div');
     card.className = 'project-card';
     
-    // Solusi Gambar Retak: Jika kosong, gunakan gambar placeholder teknologi
     const imgUrl = project.link_gambar ? project.link_gambar : 'https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=600';
-    
     const badgeClass = getBadgeClass(project.kategori);
+    
+    // Escape untuk keamanan
+    const judulEscaped = escapeHtml(project.judul);
+    const deskripsiEscaped = escapeHtml(project.deskripsi);
+    const kategoriEscaped = escapeHtml(project.kategori);
     
     card.innerHTML = `
       <div class="project-img-wrap">
-        <img src="${imgUrl}" alt="Preview ${project.judul}" loading="lazy" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=600';">
+        <img src="${imgUrl}" alt="Preview ${judulEscaped}" loading="lazy" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=600';">
       </div>
       <div class="project-info">
         <div>
-          <span class="project-badge ${badgeClass}">${project.kategori}</span>
-          <h3 class="project-title">${project.judul}</h3>
-          <p class="project-desc">${project.deskripsi}</p>
+          <span class="project-badge ${badgeClass}">${kategoriEscaped}</span>
+          <h3 class="project-title">${judulEscaped}</h3>
+          <p class="project-desc">${deskripsiEscaped}</p>
         </div>
-        <a href="${project.link_dokumentasi}" target="_blank" rel="noopener noreferrer" class="project-link">
-          Lihat Dokumentasi
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="7" y1="17" x2="17" y2="7"></line><polyline points="7 7 17 7 17 17"></polyline></svg>
-        </a>
+        <div class="project-actions">
+          <a href="${project.link_dokumentasi}" target="_blank" rel="noopener noreferrer" class="project-link">
+            Lihat Dokumentasi
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="7" y1="17" x2="17" y2="7"></line><polyline points="7 7 17 7 17 17"></polyline></svg>
+          </a>
+          <button class="project-share" data-url="${project.link_dokumentasi}" data-title="${judulEscaped}">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+            Bagikan
+          </button>
+        </div>
       </div>
     `;
     
     projectsGrid.appendChild(card);
+    
+    // Event listener untuk tombol bagikan
+    const shareBtn = card.querySelector('.project-share');
+    if (shareBtn) {
+      shareBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        const url = shareBtn.getAttribute('data-url');
+        const title = shareBtn.getAttribute('data-title');
+        shareProject(url, title);
+      });
+    }
   });
 }
 
-// 5. Logika Penyaringan (Filter) Kategori Proyek
+// ==========================================
+// 6. LOGIKA FILTER KATEGORI
+// ==========================================
 filterButtons.forEach(button => {
   button.addEventListener('click', () => {
     filterButtons.forEach(btn => btn.classList.remove('active-filter'));
@@ -122,7 +193,9 @@ filterButtons.forEach(button => {
   });
 });
 
-// 6. Logika Menu Navigasi HP (Open/Close Overlay)
+// ==========================================
+// 7. MENU MOBILE (OVERLAY)
+// ==========================================
 if (mobileMenuBtn && navOverlay && closeMenuBtn) {
   mobileMenuBtn.addEventListener('click', () => {
     navOverlay.classList.add('open');
@@ -141,23 +214,23 @@ if (mobileMenuBtn && navOverlay && closeMenuBtn) {
 }
 
 // ==========================================
-// 7. LOGIKA SMART HIDDEN NAVBAR (diubah sesuai kode dari script.js sebelumnya)
+// 8. SMART HIDDEN NAVBAR ON SCROLL
 // ==========================================
 let lastScrollTop = 0;
 
 if (navbar) {
   window.addEventListener('scroll', function() {
     let currentScroll = window.scrollY;
-    
-    // Batas toleransi 100px sebelum navbar bisa sembunyi
     if (currentScroll > lastScrollTop && currentScroll > 100) {
       navbar.classList.add('nav-hidden');
     } else {
       navbar.classList.remove('nav-hidden');
     }
-    
     lastScrollTop = currentScroll <= 0 ? 0 : currentScroll;
   }, false);
 }
 
+// ==========================================
+// 9. JALANKAN FETCH SAAT DOM SIAP
+// ==========================================
 document.addEventListener('DOMContentLoaded', fetchProjectsData);
