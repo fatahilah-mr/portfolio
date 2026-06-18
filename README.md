@@ -4,7 +4,7 @@ Ini adalah repositori kode sumber (*source code*) untuk website portofolio priba
 
 Sebagai lulusan TKJ yang juga sedang mendalami **AI Prompt Engineering**, saya memanfaatkan teknologi LLM (Large Language Model) untuk membantu otomatisasi skrip jaringan dan pemecahan masalah (*troubleshooting*) sistem server agar implementasi di industri menjadi lebih efisien dan aman.
 
-Website ini sudah live dan bisa diakses di: [fatahilah-portofolio.vercel.app](https://fatahilah-portofolio.vercel.app)
+Website ini sudah live dan bisa diakses di: [fatahilahmr.my.id](https://fatahilahmr.my.id)
 
 ---
 
@@ -45,7 +45,7 @@ Biar kodenya rapi dan sesuai dengan standar coding yang baik, proyek ini dibagi 
 Kalau Anda tertarik untuk melihat atau menguji kode website ini di komputer Anda sendiri:
 
 1. Kloning repositori ini terlebih dahulu:
-   git clone https://github.com/fatahilah-tkj/portofolio.git
+   git clone https://github.com/fatahilah-mr/portofolio.git
 
 2. Masuk ke dalam folder proyeknya:
    cd portofolio

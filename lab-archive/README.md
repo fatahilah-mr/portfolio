@@ -5,10 +5,11 @@ Ini adalah kode sumber untuk **Lab Archive**, sebuah laboratorium teknis digital
 
 > **Catatan:** Proyek ini sekarang menjadi subdirektori dari repository portofolio utama saya.  
 > Kode lengkap (portofolio + lab archive) dapat ditemukan di:  
-> [github.com/fatahilah-tkj/portofolio](https://github.com/fatahilah-tkj/portofolio)
+> [github.com/fatahilah-mr/portofolio](https://github.com/fatahilah-mr/portofolio)
 
 Website live dapat diakses di:  
-[https://fatahilah-portofolio.vercel.app/lab-archive/](https://fatahilah-portofolio.vercel.app/lab-archive/)
+[https://fatahilahmr.my.id/lab-archive/](https://fatahilahmr.my.id/lab-archive/)
+
 
 ---
 
@@ -53,7 +54,7 @@ Karena lab archive sekarang bagian dari repository portofolio:
 
 1. Clone repository portofolio utama:
    ```bash
-   git clone https://github.com/fatahilah-tkj/portofolio.git
+   git clone https://github.com/fatahilah-mr/portofolio.git
    cd portofolio
 
 2. Masuk ke folder lab-archive:
