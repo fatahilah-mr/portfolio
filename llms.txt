@@ -1,0 +1,21 @@
+# Fatahilah Miftahul Rahman - Portfolio
+
+## Profil
+- [Home](https://fatahmr.my.id/)
+- [About](https://fatahmr.my.id/#about)
+- [Professional Experience (Internship)](https://fatahmr.my.id/#experience)
+- [Skills](https://fatahmr.my.id/#skills)
+- [Projects](https://fatahmr.my.id/#projects)
+- [Certificates](https://fatahmr.my.id/#certificates)
+- [Contact](https://fatahmr.my.id/#contact)
+
+## Arsip & Laboratorium
+- [All Certificates Archive](https://fatahmr.my.id/certificates.html)
+- [Lab Archive — Technical Projects](https://fatahmr.my.id/lab-archive/)
+
+## Resume
+- [Download Resume (PDF)](https://cdn.jsdelivr.net/gh/fatahilah-mr/portofolio@main/assets/Resume-Fatahilah-Miftahul-Rahman-ATS.pdf)
+
+---
+
+© 2026 Fatahilah Miftahul Rahman. All rights reserved.
