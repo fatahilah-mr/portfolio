@@ -380,6 +380,7 @@ import { ui, defaultLang } from '../i18n/ui';
     if (announcer) {
       announcer.textContent = lang === 'en' ? 'Language switched to English' : 'Bahasa diganti ke Indonesia';
     }
+    window.dispatchEvent(new CustomEvent('languagechange', { detail: { lang } }));
   }
   window.applyLanguage = applyLanguage;
 

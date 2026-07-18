@@ -77,9 +77,56 @@ import Layout from '../layouts/Layout.astro';
     });
   }
 
-  function updateCacheStatusText(msg) {
-    if (cacheStatus) cacheStatus.textContent = msg;
+  let currentCacheState = { type: 'loading', mins: 0 };
+
+  function renderCacheStatusText() {
+    if (!cacheStatus) return;
+    const lang = localStorage.getItem('lang') || 'id';
+    const isEn = lang === 'en';
+    switch (currentCacheState.type) {
+      case 'loading':
+        cacheStatus.textContent = isEn ? 'Status: Fetching from Google Sheets...' : 'Status: Mengambil dari Google Sheets...';
+        break;
+      case 'cached':
+        cacheStatus.textContent = isEn ? `Status: Cached Data (${currentCacheState.mins}m remaining)` : `Status: Data dari Cache (${currentCacheState.mins}m tersisa)`;
+        break;
+      case 'live_success':
+        cacheStatus.textContent = isEn ? 'Status: Live Update Success (1h Cache)' : 'Status: Pembaruan Live Berhasil (Cache 1 Jam)';
+        break;
+      case 'offline_cache':
+        cacheStatus.textContent = isEn ? 'Status: Offline (Showing Last Cache)' : 'Status: Offline (Menampilkan Cache Terakhir)';
+        break;
+      case 'offline_fallback':
+        cacheStatus.textContent = isEn ? 'Status: Offline (Showing Fallback Data)' : 'Status: Offline (Menampilkan Data Fallback)';
+        break;
+      default:
+        cacheStatus.textContent = currentCacheState.type;
+    }
   }
+
+  function updateCacheStatusText(type, mins = 0) {
+    if (typeof type === 'string') {
+      if (type.includes('Data dari Cache') || type.includes('Cached Data')) {
+        const m = type.match(/\((\d+)m/);
+        currentCacheState = { type: 'cached', mins: m ? parseInt(m[1], 10) : mins };
+      } else if (type.includes('Mengambil') || type.includes('Fetching') || type.includes('Memuat')) {
+        currentCacheState = { type: 'loading', mins: 0 };
+      } else if (type.includes('Pembaruan Live') || type.includes('Live Update')) {
+        currentCacheState = { type: 'live_success', mins: 0 };
+      } else if (type.includes('Menampilkan Cache Terakhir') || type.includes('Showing Last Cache')) {
+        currentCacheState = { type: 'offline_cache', mins: 0 };
+      } else if (type.includes('Menampilkan Data Fallback') || type.includes('Showing Fallback Data')) {
+        currentCacheState = { type: 'offline_fallback', mins: 0 };
+      } else {
+        currentCacheState = { type: type, mins: mins };
+      }
+    } else {
+      currentCacheState = { type: 'loading', mins: 0 };
+    }
+    renderCacheStatusText();
+  }
+
+  window.addEventListener('languagechange', renderCacheStatusText);
 
   // 3. WARNA BADGE BERDASARKAN KATEGORI (Sesuai app.js)
   function getBadgeClass(kategori) {
