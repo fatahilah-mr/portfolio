@@ -126,7 +126,16 @@ import Layout from '../layouts/Layout.astro';
     renderCacheStatusText();
   }
 
-  window.addEventListener('languagechange', renderCacheStatusText);
+  window.addEventListener('languagechange', (e) => {
+    renderCacheStatusText();
+    // Swap bilingual descriptions on project cards
+    const lang = e.detail?.lang || localStorage.getItem('lang') || 'id';
+    document.querySelectorAll('.project-card .dynamic-desc').forEach(el => {
+      const idDesc = el.getAttribute('data-id-desc');
+      const enDesc = el.getAttribute('data-en-desc');
+      el.textContent = lang === 'en' ? enDesc : idDesc;
+    });
+  });
 
   // 3. WARNA BADGE BERDASARKAN KATEGORI (Sesuai app.js)
   function getBadgeClass(kategori) {
@@ -204,9 +213,13 @@ import Layout from '../layouts/Layout.astro';
       
       const judulEscaped = escapeHtml(project.judul);
       const deskripsiEscaped = escapeHtml(project.deskripsi);
+      const deskripsiEnEscaped = escapeHtml(project.english_desc);
       const kategoriEscaped = escapeHtml(project.kategori);
       const linkEscaped = escapeHtml(project.link_dokumentasi || '#');
       
+      const currentLang = localStorage.getItem('lang') || 'id';
+      const initialDesc = currentLang === 'en' ? deskripsiEnEscaped : deskripsiEscaped;
+
       card.innerHTML = `
         <div class="project-img-wrap">
           <img src="${imgUrl}" alt="Preview ${judulEscaped}" loading="lazy" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=600';">
@@ -215,7 +228,7 @@ import Layout from '../layouts/Layout.astro';
           <div>
             <span class="project-badge ${badgeClass}">${kategoriEscaped}</span>
             <h3 class="project-title font-heading">${judulEscaped}</h3>
-            <p class="project-desc text-muted">${deskripsiEscaped}</p>
+            <p class="project-desc text-muted dynamic-desc" data-id-desc="${deskripsiEscaped}" data-en-desc="${deskripsiEnEscaped}">${initialDesc}</p>
           </div>
           <div class="project-actions mt-auto pt-4 border-t border-border flex justify-between items-center gap-3">
             <a href="${linkEscaped}" target="_blank" rel="noopener noreferrer" class="project-link text-xs py-2 px-3 flex items-center gap-1.5" data-i18n="projects.btn.doc">
@@ -284,15 +297,16 @@ import Layout from '../layouts/Layout.astro';
       const data = JSON.parse(jsonMatch[1]);
       const rows = data.table.rows || [];
       
-      localProjectsData = rows.map(row => {
+      localProjectsData = rows.map((row, index) => {
         return {
-          id: row.c[0] ? row.c[0].v : '',
-          timestamp: row.c[1] ? row.c[1].v : '',
-          judul: row.c[2] ? row.c[2].v : 'Tanpa Judul',
-          kategori: row.c[3] ? row.c[3].v : 'Umum',
-          link_dokumentasi: row.c[4] ? row.c[4].v : '#',
-          deskripsi: row.c[5] ? row.c[5].v : 'Tidak ada deskripsi.',
-          link_gambar: row.c[6] ? row.c[6].v : ''
+          id: index.toString(),
+          timestamp: row.c[0] ? (row.c[0].f || row.c[0].v) : '',
+          judul: row.c[1] ? row.c[1].v : 'Tanpa Judul',
+          kategori: row.c[2] ? row.c[2].v : 'Umum',
+          link_dokumentasi: row.c[3] ? row.c[3].v : '#',
+          deskripsi: row.c[4] ? row.c[4].v : 'Tidak ada deskripsi.',
+          link_gambar: row.c[5] ? row.c[5].v : '',
+          english_desc: row.c[6] ? row.c[6].v : (row.c[4] ? row.c[4].v : 'Tidak ada deskripsi.')
         };
       });
 
