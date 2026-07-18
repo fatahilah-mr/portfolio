@@ -98,40 +98,68 @@ import Layout from '../layouts/Layout.astro';
         </div>
       </div>
 
-      <!-- Category 4: Server & OS Administration -->
+      <!-- Category 4: Linux Server Administration -->
       <div class="skill-card glass-card">
         <div class="card-header">
           <div class="icon-circle icon-gold">
             <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="20" height="8" x="2" y="2" rx="2"/><rect width="20" height="8" x="2" y="14" rx="2"/><line x1="6" x2="6.01" y1="6" y2="6"/><line x1="6" x2="6.01" y1="18" y2="18"/></svg>
           </div>
-          <h2 class="skill-cat-title font-heading" data-i18n="skills.cat4.title">Server &amp; OS Administration</h2>
+          <h2 class="skill-cat-title font-heading" data-i18n="skills.cat4.title">Linux Server Administration</h2>
         </div>
         <ul class="skill-list text-muted">
-          <li class="flex items-start gap-2"><span data-i18n="skills.cat4.li1">Linux Server (Debian 12 &amp; 13): Network Config (IP, Gateway, DNS, Resolvconf, Timezone) &amp; SSH Server</span></li>
-          <li class="flex items-start gap-2"><span data-i18n="skills.cat4.li2">Linux Services (Debian 12 &amp; 13): DNS Server (Bind9) &amp; Web Server (Nginx, Apache2, Virtual Host)</span></li>
-          <li class="flex items-start gap-2"><span data-i18n="skills.cat4.li3">Network Optimization &amp; Security: DHCP Server, Nftables Firewall, &amp; VRRP Redundancy</span></li>
-          <li class="flex items-start gap-2"><span data-i18n="skills.cat4.li4">High Availability Server: HAProxy (Load Balancing Round-Robin)</span></li>
-          <li class="flex items-start gap-2"><span data-i18n="skills.cat4.li5">Windows Server 2022 Services: ADDS, DNS Server, DHCP Server, &amp; IIS (Internet Information Services)</span></li>
-          <li class="flex items-start gap-2"><span data-i18n="skills.cat4.li6">Windows Server Data Mgmt: File Sharing, RAID Storage, Organizational Units (OU), User &amp; Group Management</span></li>
-          <li class="flex items-start gap-2"><span data-i18n="skills.cat4.li7">AI Prompt Engineering: Pemanfaatan LLM untuk Otomatisasi Skrip &amp; Troubleshooting Sistem</span></li>
+          <li class="flex items-start gap-2"><span data-i18n="skills.cat4.li1">Network Config (IP, Gateway, DNS, Timezone) &amp; SSH Server</span></li>
+          <li class="flex items-start gap-2"><span data-i18n="skills.cat4.li2">DNS Server (Bind9) &amp; Web Server (Nginx, Apache2, Virtual Host)</span></li>
+          <li class="flex items-start gap-2"><span data-i18n="skills.cat4.li3">Network Security: DHCP Server, Nftables Firewall, &amp; VRRP Redundancy</span></li>
+          <li class="flex items-start gap-2"><span data-i18n="skills.cat4.li4">High Availability: HAProxy (Load Balancing Round-Robin)</span></li>
         </ul>
         <div class="tags-cluster font-mono mt-auto pt-4 border-t border-border">
           <span class="tag">Debian 12 &amp; 13</span>
-          <span class="tag">Network Config</span>
           <span class="tag">SSH Server</span>
           <span class="tag">Bind9 DNS</span>
           <span class="tag">Nginx &amp; Apache2</span>
-          <span class="tag">Virtual Host</span>
-          <span class="tag">DHCP Server</span>
           <span class="tag">Nftables Firewall</span>
-          <span class="tag">VRRP Redundancy</span>
           <span class="tag">HAProxy Load Balance</span>
+        </div>
+      </div>
+
+      <!-- Category 5: Windows Server Administration -->
+      <div class="skill-card glass-card">
+        <div class="card-header">
+          <div class="icon-circle icon-indigo">
+             <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+          </div>
+          <h2 class="skill-cat-title font-heading" data-i18n="skills.cat5.title">Windows Server Administration</h2>
+        </div>
+        <ul class="skill-list text-muted">
+          <li class="flex items-start gap-2"><span data-i18n="skills.cat5.li1">ADDS, DNS Server, DHCP Server, &amp; IIS (Internet Information Services)</span></li>
+          <li class="flex items-start gap-2"><span data-i18n="skills.cat5.li2">File Sharing, RAID Storage, Organizational Units (OU), User &amp; Group Management</span></li>
+        </ul>
+        <div class="tags-cluster font-mono mt-auto pt-4 border-t border-border">
           <span class="tag">Windows Server 2022</span>
           <span class="tag">ADDS &amp; IIS</span>
           <span class="tag">File Sharing &amp; RAID</span>
           <span class="tag">OU &amp; User Mgmt</span>
-          <span class="tag">AI Prompt Engineering</span>
-          <span class="tag">Script Automation</span>
+        </div>
+      </div>
+
+      <!-- Category 6: AI & Web Development -->
+      <div class="skill-card glass-card">
+        <div class="card-header">
+          <div class="icon-circle icon-cyan">
+             <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+          </div>
+          <h2 class="skill-cat-title font-heading" data-i18n="skills.cat6.title">AI &amp; Web Development</h2>
+        </div>
+        <ul class="skill-list text-muted">
+          <li class="flex items-start gap-2"><span data-i18n="skills.cat6.li1">AI Prompt Engineering: Pemanfaatan LLM untuk Otomatisasi Skrip &amp; Troubleshooting Sistem</span></li>
+          <li class="flex items-start gap-2"><span data-i18n="skills.cat6.li2">Front-End Web Development: Pembuatan antarmuka responsif dengan Astro, HTML, dan CSS murni</span></li>
+          <li class="flex items-start gap-2"><span data-i18n="skills.cat6.li3">UI/UX &amp; Design System: Implementasi prinsip desain modern untuk pengalaman pengguna yang optimal</span></li>
+        </ul>
+        <div class="tags-cluster font-mono mt-auto pt-4 border-t border-border">
+          <span class="tag">AI Prompt</span>
+          <span class="tag">Astro Framework</span>
+          <span class="tag">Web Development</span>
+          <span class="tag">UI/UX Design</span>
         </div>
       </div>
     </div>
