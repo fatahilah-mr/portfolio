@@ -218,8 +218,17 @@ import { ui, defaultLang } from '../i18n/ui';
       if (key && dict[key]) {
         if (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA') {
           el.placeholder = dict[key];
-        } else {
+        } else if (!el.querySelector('svg')) {
           el.textContent = dict[key];
+        } else {
+          // If element contains an SVG icon, only update text spans or aria attributes so SVG is preserved
+          const textSpan = el.querySelector('span, .btn-text');
+          if (textSpan) {
+            textSpan.textContent = dict[key];
+          } else {
+            if (el.hasAttribute('aria-label')) el.setAttribute('aria-label', dict[key]);
+            if (el.hasAttribute('title')) el.setAttribute('title', dict[key]);
+          }
         }
       }
     });
