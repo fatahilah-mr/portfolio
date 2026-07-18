@@ -297,6 +297,29 @@ import Layout from '../layouts/Layout.astro';
   .btn-refresh.loading .refresh-icon { animation: spin 1s linear infinite; }
   @keyframes spin { 100% { transform: rotate(360deg); } }
 
+  /* ==========================================
+     STATUS LOADING & EMPTY STATE (Rata Tengah)
+     ========================================== */
+  .col-span-full {
+    grid-column: 1 / -1 !important;
+    width: 100%;
+  }
+  .loading-status {
+    grid-column: 1 / -1 !important;
+    width: 100%;
+    padding: 3.5rem 2rem !important;
+    text-align: center !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+  }
+  .loading-status p, .loading-status div {
+    text-align: center !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+  }
+
   /* ==========================================================================
      SEKSI CERTIFICATES (KARTU & GRID) - Sesuai backupstyle.css
      ========================================================================== */

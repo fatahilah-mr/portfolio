@@ -385,6 +385,29 @@ import Layout from '../layouts/Layout.astro';
   }
 
   /* ==========================================
+     STATUS LOADING & EMPTY STATE (Rata Tengah)
+     ========================================== */
+  .col-span-full {
+    grid-column: 1 / -1 !important;
+    width: 100%;
+  }
+  .loading-status {
+    grid-column: 1 / -1 !important;
+    width: 100%;
+    padding: 3.5rem 2rem !important;
+    text-align: center !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+  }
+  .loading-status p, .loading-status div {
+    text-align: center !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+  }
+
+  /* ==========================================
      KARTU PROYEK & GRID (Sesuai backup-style.css)
      ========================================== */
   .projects-grid {

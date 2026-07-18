@@ -262,3 +262,34 @@ textarea:focus-visible,
   padding-top: clamp(4rem, 8vw, 7rem);
   padding-bottom: clamp(4rem, 8vw, 7rem);
 }
+
+/* Universal Utility & Empty State Center Align */
+.col-span-full {
+  grid-column: 1 / -1 !important;
+  width: 100%;
+}
+
+.text-center {
+  text-align: center !important;
+}
+
+.p-12 {
+  padding: 3rem !important;
+}
+
+.loading-status {
+  grid-column: 1 / -1 !important;
+  width: 100%;
+  padding: 3.5rem 2rem !important;
+  text-align: center !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 1rem;
+}
+
+.loading-status p {
+  text-align: center !important;
+  margin: 0 !important;
+}
