@@ -29,6 +29,14 @@ This repository contains the source code for the personal portfolio of Fatahilah
 - 🪄 **Micro-animations** - Tactile feedback on all interactive elements using CSS `transform` and `-webkit-tap-highlight-color` resets for a native app feel.
 - 📈 **Scroll Progress Indicator** - A subtle, glowing gradient scroll progress bar running on highly-optimized vanilla JS.
 
+## Performance 🚀
+
+This portfolio is meticulously engineered for maximum speed and efficiency. Below are the real-world PageSpeed Insights results demonstrating top-tier performance:
+
+<div align="center">
+  <img src="https://cdn.fatahmr.my.id/portfolio/assets/pagespeedtest-18-july-2026.webp" alt="Google PageSpeed Insights Perfect Score" style="border-radius: 12px; max-width: 100%; box-shadow: 0 4px 14px rgba(0,0,0,0.1);">
+</div>
+
 ## Architecture
 
 The project is structured following standard Astro conventions:
