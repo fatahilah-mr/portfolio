@@ -65,3 +65,16 @@ The site will be available at `http://localhost:4321`.
 npm run build
 ```
 The compiled static files will be generated in the `dist/` directory.
+
+## Connect with Me 🤝
+
+Interested in discussing a project, collaboration, or just want to say hi? Feel free to reach out!
+
+<div align="left">
+  <a href="https://linkedin.com/in/fatahilah-miftahul-rahman">
+    <img src="https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white" alt="LinkedIn" />
+  </a>
+  <a href="mailto:your.email@example.com">
+    <img src="https://img.shields.io/badge/Email-D14836?style=for-the-badge&logo=gmail&logoColor=white" alt="Email" />
+  </a>
+</div>
