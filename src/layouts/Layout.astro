@@ -24,6 +24,12 @@ const {
   <link rel="icon" type="image/svg+xml" href="/assets/favicon/favicon.ico" />
   <title>{title} | Fatahilah Miftahul Rahman</title>
 
+  <!-- Performance Optimization: Preconnect & Load Fonts in parallel (DTK-PERF-001) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="preload" href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300..800;1,9..40,300..800&family=DM+Serif+Display:ital@0;1&family=JetBrains+Mono:wght@400;500;600;700&display=swap" as="style" />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300..800;1,9..40,300..800&family=DM+Serif+Display:ital@0;1&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
   <!-- Anti-FOUC Theme & Language Initialization Script -->
   <script is:inline>
     (function() {

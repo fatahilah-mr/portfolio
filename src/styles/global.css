@@ -4,7 +4,6 @@
    Derived from: design-taste-frontend, frontend-design, refactoring-ui, ui-ux-pro-max, desktop-a11y-specialist
    ========================================================================== */
 
-@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300..800;1,9..40,300..800&family=DM+Serif+Display:ital@0;1&family=JetBrains+Mono:wght@400;500;600;700&display=swap');
 
 :root,
 [data-theme="dark"] {
