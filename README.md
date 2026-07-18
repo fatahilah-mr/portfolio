@@ -27,6 +27,7 @@ This repository contains the source code for the personal portfolio of Fatahilah
 - 🌐 **Bilingual Support** - Instant language switching (ID/EN) managed via DOM manipulation and `localStorage`, avoiding full-page reloads.
 - 🎨 **Premium Minimalist UI** - Sleek dark/light modes, ghost buttons, tailored color palettes, and responsive typography.
 - 🪄 **Micro-animations** - Tactile feedback on all interactive elements using CSS `transform` and `-webkit-tap-highlight-color` resets for a native app feel.
+- 📈 **Scroll Progress Indicator** - A subtle, glowing gradient scroll progress bar running on highly-optimized vanilla JS.
 
 ## Architecture
 
