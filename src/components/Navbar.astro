@@ -3,6 +3,7 @@ import { ui } from '../i18n/ui';
 ---
 
 <header class="navbar-header">
+  <div class="scroll-progress-bar" id="scroll-progress"></div>
   <div class="container navbar-container">
     <!-- Brand Logo -->
     <a href="/" class="navbar-brand" aria-label="Beranda Fatahilah Portfolio">
@@ -86,6 +87,18 @@ import { ui } from '../i18n/ui';
 </header>
 
 <style>
+  .scroll-progress-bar {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--color-primary), var(--color-cyan));
+    width: var(--scroll-width, 0%);
+    z-index: 1001;
+    transition: width 0.1s ease-out;
+    box-shadow: 0 0 10px var(--color-primary-glow);
+  }
+
   .navbar-header {
     position: sticky;
     top: 0;
@@ -309,10 +322,31 @@ import { ui } from '../i18n/ui';
     });
   }
 
+  // Scroll Progress Logic
+  function setupScrollProgress() {
+    const progressBar = document.getElementById('scroll-progress');
+    if (!progressBar) return;
+
+    const updateScroll = () => {
+      // Calculate how far down the user has scrolled
+      const scrollTotal = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+      if (scrollTotal > 0) {
+        const scrollProgress = (window.scrollY / scrollTotal) * 100;
+        progressBar.style.setProperty('--scroll-width', `${scrollProgress}%`);
+      }
+    };
+
+    // Attach passive scroll listener for better performance
+    window.addEventListener('scroll', updateScroll, { passive: true });
+    // Run once on load just in case the page is not at the top
+    updateScroll();
+  }
+
   // Initialize on page load and navigation
   document.addEventListener('DOMContentLoaded', () => {
     highlightCurrentPage();
     setupThemeToggle();
     setupMobileMenu();
+    setupScrollProgress();
   });
 </script>
