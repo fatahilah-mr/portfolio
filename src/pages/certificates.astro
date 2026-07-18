@@ -5,13 +5,6 @@ import Layout from '../layouts/Layout.astro';
 <Layout title="Sertifikat & Pencapaian" description="Galeri arsip digital sertifikasi, transkrip nilai, dan pencapaian LKS Fatahilah Miftahul Rahman di bidang IT Network & System Administration.">
   <section class="certificates-section container section-py">
     <div class="section-header">
-      <div class="back-btn-wrap mb-6 flex justify-center">
-        <a href="/" class="btn-secondary text-xs py-2 px-4 flex items-center gap-2">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
-          <span>Kembali ke Beranda</span>
-        </a>
-      </div>
-
       <div class="section-badge flex justify-center items-center gap-3">
         <span class="badge font-mono" data-i18n="nav.certificates">Arsip Digital</span>
         <span class="badge badge-gold font-mono">Terverifikasi</span>
@@ -25,7 +18,7 @@ import Layout from '../layouts/Layout.astro';
       <div class="cms-toolbar mt-6 flex flex-wrap justify-center items-center gap-4">
         <button id="refresh-cms-btn" class="btn-refresh font-mono text-xs flex items-center gap-2" aria-label="Segarkan data Sertifikat dari Google Sheets">
           <svg class="refresh-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 4v6h-6"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
-          <span>↻ Segarkan Data CMS</span>
+          <span>Segarkan Data CMS</span>
         </button>
         <span id="cms-cache-status" class="cache-status font-mono text-xs text-muted">Status: Memuat data...</span>
       </div>
@@ -44,7 +37,7 @@ import Layout from '../layouts/Layout.astro';
     <div class="mt-14 text-center flex justify-center">
       <a class="cert-drive-btn glass-card flex items-center justify-center gap-3 py-4 px-8 rounded-full font-medium hover:border-primary transition-all" href="https://drive.google.com/drive/folders/1jxQi8S0QpUtACRlumbORdfEAGRturCqt" target="_blank" rel="noopener">
         <svg width="22" height="22" viewBox="0 0 24 24" fill="var(--color-primary)"><path d="M4.433 22l-2.9-5.02 5.4-9.35h5.8L4.433 22zm4.4-9.35L5.733 7.63 11.133 0h5.8l-5.4 9.35H8.833zm11.167 9.35H7.333l2.9-5H19.4l2.9 5h-2.3z"/></svg>
-        <span>Buka Folder Sertifikat Lengkap di Google Drive</span>
+        <span>Buka Folder Sertifikat di Google Drive</span>
       </a>
     </div>
   </section>
@@ -279,8 +272,8 @@ import Layout from '../layouts/Layout.astro';
 </script>
 
 <style is:global>
-  .section-header { text-align: center; max-width: 800px; margin: 0 auto 36px; }
-  .section-subtitle { font-size: 1.1rem; margin-top: 12px; }
+  .section-header { text-align: center; max-width: 800px; margin: 0 auto 48px; }
+  .section-subtitle { font-size: 1.1rem; margin-top: 16px; margin-bottom: 24px; }
 
   .btn-refresh {
     padding: 6px 14px;
@@ -301,33 +294,25 @@ import Layout from '../layouts/Layout.astro';
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
     gap: 1.75rem;
-    margin-bottom: 2.5rem;
   }
 
-  @media (min-width: 600px) {
+  @media (min-width: 769px) {
     .cert-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
+      grid-template-columns: repeat(3, 1fr);
       gap: 2rem;
-    }
-
-    .cert-card.featured-cert {
-      grid-column: 1 / -1;
-      max-width: 550px;
-      margin-left: auto;
-      margin-right: auto;
-      margin-bottom: 2rem;
     }
   }
 
   .cert-card {
     border: 1px solid var(--color-border);
     border-radius: 14px;
-    overflow: hidden;
-    transition: box-shadow 0.25s, transform 0.25s;
     background: var(--bg-card);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.02);
     display: flex;
     flex-direction: column;
+    justify-content: space-between;
+    overflow: hidden;
+    transition: box-shadow 0.25s, transform 0.25s, border-color 0.25s;
   }
 
   .cert-card:hover {
@@ -336,17 +321,23 @@ import Layout from '../layouts/Layout.astro';
     border-color: var(--color-primary);
   }
 
+  /* KARTU FEATURED JUARA 1 LKS */
   .featured-cert {
-    border: 2px solid var(--color-primary);
-    background: linear-gradient(180deg, var(--bg-card) 0%, rgba(255, 179, 0, 0.04) 100%);
+    border-color: var(--color-accent) !important;
+    background: linear-gradient(180deg, var(--bg-card) 0%, rgba(245, 158, 11, 0.06) 100%);
+    box-shadow: 0 0 25px rgba(245, 158, 11, 0.15);
   }
 
   .cert-img-wrap {
     width: 100%;
-    aspect-ratio: 16/10;
-    overflow: hidden;
+    aspect-ratio: 16 / 10;
     background: var(--bg-surface);
+    overflow: hidden;
+    border-bottom: 1px solid var(--color-border);
     position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 
   .cert-img-wrap img {
@@ -354,7 +345,7 @@ import Layout from '../layouts/Layout.astro';
     height: 100%;
     object-fit: cover;
     display: block;
-    transition: transform 0.4s;
+    transition: transform 0.4s ease;
   }
 
   .cert-card:hover .cert-img-wrap img {
@@ -362,10 +353,11 @@ import Layout from '../layouts/Layout.astro';
   }
 
   .cert-info {
-    padding: 1.2rem 1.4rem;
+    padding: 1.5rem;
     display: flex;
     flex-direction: column;
     flex-grow: 1;
+    gap: 14px;
   }
 
   .cert-name {

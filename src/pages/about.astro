@@ -14,12 +14,32 @@ import Layout from '../layouts/Layout.astro';
       </p>
     </div>
 
+    <!-- Hero Profile Section (Sesuai source di ~/storage/shared/portofolio/index.html) -->
+    <div class="hero-profile-card glass-card mb-12 p-8 md:p-10 flex flex-col md:flex-row items-center justify-between gap-8">
+      <div class="hero-profile-info flex flex-col items-center md:items-start text-center md:text-left gap-3">
+        <span class="badge badge-primary font-mono text-xs">IT Network & System Administration</span>
+        <h2 class="font-heading text-3xl md:text-4xl text-foreground mt-1">Fatahilah Miftahul Rahman</h2>
+        <p class="text-muted text-base md:text-lg max-w-xl leading-relaxed">
+          Connecting the future, one network at a time. Spesialis infrastruktur jaringan, konfigurasi server Linux/Windows, serta otomatisasi berbasis AI Prompt Engineering.
+        </p>
+        <div class="status-indicator mt-2 flex items-center gap-2 bg-surface px-4 py-2 rounded-full border border-border">
+          <span class="status-dot"></span>
+          <span class="font-mono text-xs text-foreground">Siap Kerja & Berkembang di Industri IT (Lulusan 2026)</span>
+        </div>
+      </div>
+      <div class="hero-profile-photo flex-shrink-0">
+        <div class="avatar-ring">
+          <img src="/assets/profile.webp" alt="Foto Profil Fatahilah Miftahul Rahman" width="160" height="160" class="avatar-img" fetchpriority="high" />
+        </div>
+      </div>
+    </div>
+
     <!-- Main About Grid (Exact Source from ~/storage/shared/portofolio/index.html) -->
     <div class="about-grid">
       <!-- Left Column: Biography -->
       <div class="about-bio glass-card">
-        <h2 class="font-heading text-2xl mb-4">Latar Belakang & Visi Teknologi</h2>
-        <div class="bio-content leading-relaxed text-muted space-y-4">
+        <h2 class="font-heading text-2xl mb-6">Latar Belakang & Visi Teknologi</h2>
+        <div class="bio-content leading-relaxed text-muted space-y-5">
           <p>
             Saya lulusan SMK Patriot Pituruh jurusan Teknik Komputer dan Jaringan (2026) dengan spesialisasi di bidang IT Network & System Administration. Prestasi terbaik saya adalah meraih Juara 1 pada Lomba Kompetensi Siswa (LKS) SMK tingkat Kabupaten Purworejo di bidang IT Network System Administration.
           </p>
@@ -39,45 +59,48 @@ import Layout from '../layouts/Layout.astro';
         <!-- Pendidikan Card -->
         <div class="meta-card glass-card">
           <div class="meta-icon font-mono">🎓 Pendidikan</div>
-          <h3 class="meta-title font-heading">SMK Patriot Pituruh</h3>
+          <h3 class="meta-title font-heading mt-2 mb-1">SMK Patriot Pituruh</h3>
           <p class="meta-val font-mono text-muted">Teknik Komputer dan Jaringan (TKJ)</p>
         </div>
 
         <!-- Tahun Lulus Card -->
         <div class="meta-card glass-card">
           <div class="meta-icon font-mono">📅 Tahun Lulus</div>
-          <h3 class="meta-title font-heading">Angkatan 2026</h3>
+          <h3 class="meta-title font-heading mt-2 mb-1">Angkatan 2026</h3>
           <p class="meta-val font-mono text-muted">Siap Kerja & Berkembang di Industri IT</p>
         </div>
 
         <!-- Prestasi LKS Featured Card -->
         <div class="achievement-card glass-card">
-          <div class="achievement-badge font-mono badge badge-gold">🏆 Prestasi Utama</div>
-          <h3 class="achievement-title font-heading mt-2">Lomba Kompetensi Siswa (LKS) SMK</h3>
-          <div class="achievement-val font-mono text-accent text-lg font-bold">Juara I</div>
-          <p class="meta-val font-mono text-muted mt-1">IT Network System Administration<br>Tingkat Kabupaten Purworejo, 2026</p>
+          <div class="achievement-badge font-mono badge badge-gold mb-3">🏆 Prestasi Utama</div>
+          <h3 class="achievement-title font-heading mb-2">Lomba Kompetensi Siswa (LKS) SMK</h3>
+          <div class="achievement-val font-mono text-accent text-lg font-bold mb-2">Juara I</div>
+          <p class="meta-val font-mono text-muted leading-snug">IT Network System Administration<br>Tingkat Kabupaten Purworejo, 2026</p>
         </div>
       </div>
     </div>
 
     <!-- Core Philosophy / Focus Areas -->
-    <div class="focus-areas mt-16">
-      <h2 class="font-heading text-2xl text-center mb-8">Fokus & Kompetensi Utama</h2>
+    <div class="focus-areas mt-16 pt-6">
+      <div class="text-center max-w-2xl mx-auto mb-10">
+        <h2 class="font-heading text-2xl mb-3">Fokus & Kompetensi Utama</h2>
+        <p class="text-muted text-sm leading-relaxed">Tiga pilar utama yang menjadi pondasi keahlian teknis saya dalam menyelesaikan tantangan IT modern.</p>
+      </div>
       <div class="focus-grid">
         <div class="focus-item glass-card">
           <span class="focus-num font-mono">01</span>
-          <h3 class="font-heading text-xl">Network Infrastructure</h3>
-          <p class="text-muted text-sm mt-2">Perancangan dan pengamanan topologi jaringan LAN, WLAN, VLAN, routing, serta konfigurasi RouterBoard MikroTik & Cisco.</p>
+          <h3 class="font-heading text-xl mt-3 mb-2">Network Infrastructure</h3>
+          <p class="text-muted text-sm leading-relaxed mt-2">Perancangan dan pengamanan topologi jaringan LAN, WLAN, VLAN, routing, serta konfigurasi RouterBoard MikroTik & Cisco.</p>
         </div>
         <div class="focus-item glass-card">
           <span class="focus-num font-mono">02</span>
-          <h3 class="font-heading text-xl">Server Administration</h3>
-          <p class="text-muted text-sm mt-2">Instalasi & optimalisasi Linux Debian Server (DNS, Web Server Nginx/Apache, DHCP, Nftables Firewall, dan High Availability HAProxy).</p>
+          <h3 class="font-heading text-xl mt-3 mb-2">Server Administration</h3>
+          <p class="text-muted text-sm leading-relaxed mt-2">Instalasi & optimalisasi Linux Debian Server (DNS, Web Server Nginx/Apache, DHCP, Nftables Firewall, dan High Availability HAProxy).</p>
         </div>
         <div class="focus-item glass-card">
           <span class="focus-num font-mono">03</span>
-          <h3 class="font-heading text-xl">AI Prompt Engineering</h3>
-          <p class="text-muted text-sm mt-2">Pemanfaatan Large Language Models (LLM) untuk pembuatan otomatisasi skrip administrasi jaringan dan percepatan analisis troubleshooting.</p>
+          <h3 class="font-heading text-xl mt-3 mb-2">AI Prompt Engineering</h3>
+          <p class="text-muted text-sm leading-relaxed mt-2">Pemanfaatan Large Language Models (LLM) untuk pembuatan otomatisasi skrip administrasi jaringan dan percepatan analisis troubleshooting.</p>
         </div>
       </div>
     </div>
@@ -87,8 +110,48 @@ import Layout from '../layouts/Layout.astro';
 <style>
   .section-header { text-align: center; max-width: 800px; margin: 0 auto 48px; }
   .section-badge { margin-bottom: 16px; }
-  .section-subtitle { font-size: 1.1rem; margin-top: 12px; }
+  .section-subtitle { font-size: 1.1rem; margin-top: 16px; margin-bottom: 16px; }
 
+  /* Hero Profile Card */
+  .hero-profile-card {
+    position: relative;
+    overflow: hidden;
+    background: linear-gradient(135deg, var(--bg-card) 0%, rgba(59, 130, 246, 0.05) 100%);
+    border: 1px solid var(--color-border);
+    box-shadow: var(--shadow-md);
+  }
+
+  .avatar-ring {
+    width: 160px;
+    height: 160px;
+    border-radius: 50%;
+    padding: 6px;
+    background: linear-gradient(135deg, var(--color-primary), var(--color-accent));
+    box-shadow: 0 0 30px rgba(59, 130, 246, 0.35);
+  }
+
+  .avatar-img {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    object-fit: cover;
+    background: var(--bg-surface);
+  }
+
+  .status-indicator {
+    display: inline-flex;
+    align-items: center;
+  }
+
+  .status-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background-color: #22c55e;
+    box-shadow: 0 0 10px #22c55e;
+  }
+
+  /* About Grid */
   .about-grid {
     display: grid;
     grid-template-columns: 3fr 2fr;
@@ -101,6 +164,14 @@ import Layout from '../layouts/Layout.astro';
     border-radius: 24px;
     background: var(--bg-card);
     border: 1px solid var(--color-border);
+    display: flex;
+    flex-direction: column;
+  }
+
+  .bio-content {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
   }
 
   .bio-content p {
@@ -110,11 +181,13 @@ import Layout from '../layouts/Layout.astro';
 
   .meta-card,
   .achievement-card {
-    padding: 24px 28px;
+    padding: 26px 28px;
     border-radius: 20px;
     background: var(--bg-card);
     border: 1px solid var(--color-border);
     transition: transform 0.3s ease, border-color 0.3s ease;
+    display: flex;
+    flex-direction: column;
   }
 
   .meta-card:hover,
@@ -133,18 +206,18 @@ import Layout from '../layouts/Layout.astro';
     color: var(--color-primary);
     text-transform: uppercase;
     letter-spacing: 0.06em;
-    margin-bottom: 6px;
   }
 
   .meta-title,
   .achievement-title {
     font-size: 1.35rem;
-    margin-bottom: 4px;
     color: var(--color-foreground);
+    line-height: 1.3;
   }
 
   .meta-val {
     font-size: 0.95rem;
+    line-height: 1.5;
   }
 
   /* Focus areas */
@@ -161,21 +234,23 @@ import Layout from '../layouts/Layout.astro';
     border: 1px solid var(--color-border);
     position: relative;
     overflow: hidden;
+    display: flex;
+    flex-direction: column;
   }
 
   .focus-num {
     display: inline-block;
+    align-self: flex-start;
     font-size: 0.8rem;
     color: var(--color-accent);
     background: var(--bg-surface);
     padding: 4px 10px;
     border-radius: 6px;
-    margin-bottom: 12px;
     font-weight: 700;
   }
 
   @media (max-width: 900px) {
     .about-grid { grid-template-columns: 1fr; }
-    .about-bio { padding: 24px; }
+    .about-bio { padding: 28px; }
   }
 </style>
