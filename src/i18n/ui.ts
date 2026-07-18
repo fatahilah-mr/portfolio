@@ -12,7 +12,7 @@ export const ui = {
     'nav.about': 'Tentang',
     'nav.experience': 'Pengalaman',
     'nav.skills': 'Keahlian',
-    'nav.projects': 'Proyek & Lab',
+    'nav.projects': 'Proyek',
     'nav.certificates': 'Sertifikat',
     'nav.contact': 'Kontak',
 
@@ -99,7 +99,7 @@ export const ui = {
     'nav.about': 'About',
     'nav.experience': 'Experience',
     'nav.skills': 'Skills',
-    'nav.projects': 'Projects & Lab',
+    'nav.projects': 'Projects',
     'nav.certificates': 'Certificates',
     'nav.contact': 'Contact',
 

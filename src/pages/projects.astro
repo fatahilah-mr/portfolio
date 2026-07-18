@@ -2,21 +2,21 @@
 import Layout from '../layouts/Layout.astro';
 ---
 
-<Layout title="Proyek & Lab Archive" description="Galeri dokumentasi proyek teknis, eksperimen lab jaringan, Cisco, MikroTik, Linux, AI, Windows Server, dan pembuatan website Fatahilah Miftahul Rahman.">
+<Layout title="Proyek" description="Galeri dokumentasi proyek teknis, eksperimen lab jaringan, Cisco, MikroTik, Linux, AI, Windows Server, dan pembuatan website Fatahilah Miftahul Rahman.">
   <section class="projects-section container section-py">
     <div class="section-header">
       <div class="section-badge flex justify-center items-center gap-3">
-        <span class="badge font-mono" data-i18n="nav.projects">Proyek Teknis</span>
+        <span class="badge font-mono" data-i18n="nav.projects">Proyek</span>
         <span class="badge badge-primary font-mono">Google Sheets CMS</span>
       </div>
       <h1 class="font-heading" data-i18n="projects.title">Lab Archive & Proyek Portofolio</h1>
-      <p class="section-subtitle">
+      <p class="section-subtitle" data-i18n="projects.subtitle">
         Dokumentasi langsung dari eksperimen laboratorium infrastruktur, konfigurasi server, serta proyek pengembangan teknologi terapan.
       </p>
 
       <!-- CMS Actions & Caching Info -->
       <div class="cms-toolbar mt-6 flex flex-wrap justify-center items-center gap-4">
-        <button id="refresh-projects-btn" class="btn-refresh font-mono text-xs flex items-center gap-2" aria-label="Segarkan data Proyek dari Google Sheets">
+        <button id="refresh-projects-btn" class="btn-refresh font-mono text-xs flex items-center gap-2" aria-label="Segarkan data Proyek dari Google Sheets" data-i18n="projects.btn.refresh">
           <svg class="refresh-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 4v6h-6"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
           <span>Segarkan Data CMS</span>
         </button>
@@ -26,7 +26,7 @@ import Layout from '../layouts/Layout.astro';
 
     <!-- Category Filter Buttons (Exact Categories from cms logic) -->
     <div class="cert-buttons-wrapper flex flex-wrap justify-center gap-3 mb-10" role="group" aria-label="Filter Kategori Proyek">
-      <button class="cert-btn btn-secondary active-filter" data-category="all">Semua Proyek</button>
+      <button class="cert-btn btn-secondary active-filter" data-category="all" data-i18n="projects.filter.all">Semua Proyek</button>
       <button class="cert-btn btn-secondary" data-category="AI">AI</button>
       <button class="cert-btn btn-secondary" data-category="Cisco">Cisco</button>
       <button class="cert-btn btn-secondary" data-category="Linux">Linux</button>
@@ -39,8 +39,8 @@ import Layout from '../layouts/Layout.astro';
     <div id="projects-grid" class="projects-grid" aria-live="polite">
       <div class="loading-status glass-card p-12 text-center col-span-full">
         <div class="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-primary mb-4"></div>
-        <p class="font-heading text-lg">Menghubungkan ke API Google Sheets (Database_App)...</p>
-        <p class="text-muted text-sm mt-1">Mengambil arsip proyek terbaru dari server</p>
+        <p class="font-heading text-lg" data-i18n="projects.loading.title">Menghubungkan ke API Google Sheets (Database_App)...</p>
+        <p class="text-muted text-sm mt-1" data-i18n="projects.loading.sub">Mengambil arsip proyek terbaru dari server</p>
       </div>
     </div>
   </section>
@@ -139,9 +139,12 @@ import Layout from '../layouts/Layout.astro';
     if (!projects || projects.length === 0) {
       projectsGrid.innerHTML = `
         <div class="loading-status glass-card p-12 text-center col-span-full">
-          <p class="font-heading text-lg text-muted">Tidak ada proyek dalam kategori ini.</p>
+          <p class="font-heading text-lg text-muted" data-i18n="projects.empty">Tidak ada proyek dalam kategori ini.</p>
         </div>
       `;
+      if (window.applyLanguage && localStorage.getItem('lang')) {
+        window.applyLanguage(localStorage.getItem('lang'));
+      }
       return;
     }
 
@@ -168,11 +171,11 @@ import Layout from '../layouts/Layout.astro';
             <p class="project-desc text-muted">${deskripsiEscaped}</p>
           </div>
           <div class="project-actions mt-auto pt-4 border-t border-border flex justify-between items-center gap-3">
-            <a href="${linkEscaped}" target="_blank" rel="noopener noreferrer" class="project-link btn-primary text-xs py-2 px-3 flex items-center gap-1.5">
+            <a href="${linkEscaped}" target="_blank" rel="noopener noreferrer" class="project-link btn-primary text-xs py-2 px-3 flex items-center gap-1.5" data-i18n="projects.btn.doc">
               <span>Lihat Dokumentasi</span>
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="7" y1="17" x2="17" y2="7"></line><polyline points="7 7 17 7 17 17"></polyline></svg>
             </a>
-            <button class="project-share btn-secondary text-xs py-2 px-3 flex items-center gap-1.5" data-url="${linkEscaped}" data-title="${judulEscaped}">
+            <button class="project-share btn-secondary text-xs py-2 px-3 flex items-center gap-1.5" data-url="${linkEscaped}" data-title="${judulEscaped}" data-i18n="projects.btn.share">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
               <span>Bagikan</span>
             </button>
@@ -192,6 +195,10 @@ import Layout from '../layouts/Layout.astro';
         });
       }
     });
+
+    if (window.applyLanguage && localStorage.getItem('lang')) {
+      window.applyLanguage(localStorage.getItem('lang'));
+    }
   }
 
   // 2. AMBIL DATA DARI GOOGLE SHEETS

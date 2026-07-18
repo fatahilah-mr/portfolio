@@ -2,14 +2,14 @@
 import Layout from '../layouts/Layout.astro';
 ---
 
-<Layout title="Tentang Saya & Profil" description="Profil tentang Fatahilah Miftahul Rahman, lulusan SMK Patriot Pituruh jurusan TKJ (2026), Juara 1 LKS IT Network System Administration, serta praktisi AI Prompt Engineering.">
+<Layout title="Tentang" description="Profil tentang Fatahilah Miftahul Rahman, lulusan SMK Patriot Pituruh jurusan TKJ (2026), Juara 1 LKS IT Network System Administration, serta praktisi AI Prompt Engineering.">
   <section class="about-section container section-py">
     <div class="section-header">
       <div class="section-badge">
-        <span class="badge font-mono" data-i18n="nav.about">Tentang Saya</span>
+        <span class="badge font-mono" data-i18n="nav.about">Tentang</span>
       </div>
       <h1 class="font-heading" data-i18n="about.title">About Me & Profil Profesional</h1>
-      <p class="section-subtitle">
+      <p class="section-subtitle" data-i18n="about.subtitle">
         Memadukan keahlian administrasi jaringan & sistem server dengan inovasi otomatisasi berbasis AI Prompt Engineering.
       </p>
     </div>
@@ -17,14 +17,14 @@ import Layout from '../layouts/Layout.astro';
     <!-- Hero Profile Section (Sesuai source di ~/storage/shared/portofolio/index.html) -->
     <div class="hero-profile-card glass-card mb-12 p-8 md:p-10 flex flex-col md:flex-row items-center justify-between gap-8">
       <div class="hero-profile-info flex flex-col items-center md:items-start text-center md:text-left gap-3">
-        <span class="badge badge-primary font-mono text-xs">IT Network & System Administration</span>
+        <span class="badge badge-primary font-mono text-xs" data-i18n="about.profile.badge">IT Network & System Administration</span>
         <h2 class="font-heading text-3xl md:text-4xl text-foreground mt-1">Fatahilah Miftahul Rahman</h2>
-        <p class="text-muted text-base md:text-lg max-w-xl leading-relaxed">
+        <p class="text-muted text-base md:text-lg max-w-xl leading-relaxed" data-i18n="about.profile.desc">
           Connecting the future, one network at a time. Spesialis infrastruktur jaringan, konfigurasi server Linux/Windows, serta otomatisasi berbasis AI Prompt Engineering.
         </p>
         <div class="status-indicator mt-2 flex items-center gap-2 bg-surface px-4 py-2 rounded-full border border-border">
           <span class="status-dot"></span>
-          <span class="font-mono text-xs text-foreground">Siap Kerja & Berkembang di Industri IT (Lulusan 2026)</span>
+          <span class="font-mono text-xs text-foreground" data-i18n="about.profile.status">Siap Kerja & Berkembang di Industri IT (Lulusan 2026)</span>
         </div>
       </div>
       <div class="hero-profile-photo flex-shrink-0">
@@ -38,19 +38,19 @@ import Layout from '../layouts/Layout.astro';
     <div class="about-grid">
       <!-- Left Column: Biography -->
       <div class="about-bio glass-card">
-        <h2 class="font-heading text-2xl mb-6">Latar Belakang & Visi Teknologi</h2>
+        <h2 class="font-heading text-2xl mb-6" data-i18n="about.bio.heading">Latar Belakang & Visi Teknologi</h2>
         <div class="bio-content leading-relaxed text-muted space-y-5">
-          <p>
+          <p data-i18n="about.bio.p1">
             Saya lulusan SMK Patriot Pituruh jurusan Teknik Komputer dan Jaringan (2026) dengan spesialisasi di bidang IT Network & System Administration. Prestasi terbaik saya adalah meraih Juara 1 pada Lomba Kompetensi Siswa (LKS) SMK tingkat Kabupaten Purworejo di bidang IT Network System Administration.
           </p>
-          <p>
+          <p data-i18n="about.bio.p2">
             Saat ini, saya tidak hanya fokus pada infrastruktur jaringan dan manajemen server, tetapi juga mendalami AI Prompt Engineering. Saya melihat potensi besar AI untuk mengotomatisasi skrip jaringan dan troubleshooting sistem, sehingga pekerjaan di industri bisa menjadi lebih efisien, cepat, dan aman.
           </p>
         </div>
 
         <div class="bio-actions mt-8 pt-6 border-t border-border flex flex-wrap gap-4">
-          <a href="/experience" class="btn-primary">Lihat Pengalaman PKL →</a>
-          <a href="/skills" class="btn-secondary">Daftar Keahlian Teknis →</a>
+          <a href="/experience" class="btn-primary" data-i18n="about.bio.btn.exp">Lihat Pengalaman PKL →</a>
+          <a href="/skills" class="btn-secondary" data-i18n="about.bio.btn.skills">Daftar Keahlian Teknis →</a>
         </div>
       </div>
 
@@ -58,24 +58,24 @@ import Layout from '../layouts/Layout.astro';
       <div class="about-meta flex flex-col gap-6">
         <!-- Pendidikan Card -->
         <div class="meta-card glass-card">
-          <div class="meta-icon font-mono">🎓 Pendidikan</div>
+          <div class="meta-icon font-mono" data-i18n="about.meta.edu.label">🎓 Pendidikan</div>
           <h3 class="meta-title font-heading mt-2 mb-1">SMK Patriot Pituruh</h3>
-          <p class="meta-val font-mono text-muted">Teknik Komputer dan Jaringan (TKJ)</p>
+          <p class="meta-val font-mono text-muted" data-i18n="about.meta.edu.val">Teknik Komputer dan Jaringan (TKJ)</p>
         </div>
 
         <!-- Tahun Lulus Card -->
         <div class="meta-card glass-card">
-          <div class="meta-icon font-mono">📅 Tahun Lulus</div>
+          <div class="meta-icon font-mono" data-i18n="about.meta.year.label">📅 Tahun Lulus</div>
           <h3 class="meta-title font-heading mt-2 mb-1">2026</h3>
-          <p class="meta-val font-mono text-muted">Siap Kerja &amp; Berkembang di Industri IT</p>
+          <p class="meta-val font-mono text-muted" data-i18n="about.meta.year.val">Siap Kerja &amp; Berkembang di Industri IT</p>
         </div>
 
         <!-- Prestasi LKS Featured Card -->
         <div class="achievement-card glass-card">
-          <div class="achievement-badge font-mono badge badge-gold mb-3">🏆 Prestasi</div>
-          <h3 class="achievement-title font-heading mb-2">Lomba Kompetensi Siswa (LKS) SMK</h3>
-          <div class="achievement-val font-mono text-accent text-lg font-bold mb-2">Juara I</div>
-          <p class="meta-val font-mono text-muted leading-snug">IT Network System Administration<br>Tingkat Kabupaten Purworejo, 2026</p>
+          <div class="achievement-badge font-mono badge badge-gold mb-3" data-i18n="about.meta.achieve.label">🏆 Prestasi</div>
+          <h3 class="achievement-title font-heading mb-2" data-i18n="about.meta.achieve.title">Lomba Kompetensi Siswa (LKS) SMK</h3>
+          <div class="achievement-val font-mono text-accent text-lg font-bold mb-2" data-i18n="about.meta.achieve.val">Juara I</div>
+          <p class="meta-val font-mono text-muted leading-snug" data-i18n="about.meta.achieve.desc" data-i18n-html="true">IT Network System Administration<br>Tingkat Kabupaten Purworejo, 2026</p>
         </div>
       </div>
     </div>
@@ -83,24 +83,24 @@ import Layout from '../layouts/Layout.astro';
     <!-- Core Philosophy / Focus Areas -->
     <div class="focus-areas mt-16 pt-6">
       <div class="text-center max-w-2xl mx-auto mb-10">
-        <h2 class="font-heading text-2xl mb-3">Fokus & Kompetensi Utama</h2>
-        <p class="text-muted text-sm leading-relaxed">Tiga pilar utama yang menjadi pondasi keahlian teknis saya dalam menyelesaikan tantangan IT modern.</p>
+        <h2 class="font-heading text-2xl mb-3" data-i18n="about.focus.heading">Fokus & Kompetensi Utama</h2>
+        <p class="text-muted text-sm leading-relaxed" data-i18n="about.focus.subtitle">Tiga pilar utama yang menjadi pondasi keahlian teknis saya dalam menyelesaikan tantangan IT modern.</p>
       </div>
       <div class="focus-grid">
         <div class="focus-item glass-card">
           <span class="focus-num font-mono">01</span>
-          <h3 class="font-heading text-xl mt-3 mb-2">Network Infrastructure</h3>
-          <p class="text-muted text-sm leading-relaxed mt-2">Perancangan dan pengamanan topologi jaringan LAN, WLAN, VLAN, routing, serta konfigurasi RouterBoard MikroTik & Cisco.</p>
+          <h3 class="font-heading text-xl mt-3 mb-2" data-i18n="about.focus.item1.title">Network Infrastructure</h3>
+          <p class="text-muted text-sm leading-relaxed mt-2" data-i18n="about.focus.item1.desc">Perancangan dan pengamanan topologi jaringan LAN, WLAN, VLAN, routing, serta konfigurasi RouterBoard MikroTik & Cisco.</p>
         </div>
         <div class="focus-item glass-card">
           <span class="focus-num font-mono">02</span>
-          <h3 class="font-heading text-xl mt-3 mb-2">Server Administration</h3>
-          <p class="text-muted text-sm leading-relaxed mt-2">Instalasi & optimalisasi Linux Debian Server (DNS, Web Server Nginx/Apache, DHCP, Nftables Firewall, dan High Availability HAProxy).</p>
+          <h3 class="font-heading text-xl mt-3 mb-2" data-i18n="about.focus.item2.title">Server Administration</h3>
+          <p class="text-muted text-sm leading-relaxed mt-2" data-i18n="about.focus.item2.desc">Instalasi & optimalisasi Linux Debian Server (DNS, Web Server Nginx/Apache, DHCP, Nftables Firewall, dan High Availability HAProxy).</p>
         </div>
         <div class="focus-item glass-card">
           <span class="focus-num font-mono">03</span>
-          <h3 class="font-heading text-xl mt-3 mb-2">AI Prompt Engineering</h3>
-          <p class="text-muted text-sm leading-relaxed mt-2">Pemanfaatan Large Language Models (LLM) untuk pembuatan otomatisasi skrip administrasi jaringan dan percepatan analisis troubleshooting.</p>
+          <h3 class="font-heading text-xl mt-3 mb-2" data-i18n="about.focus.item3.title">AI Prompt Engineering</h3>
+          <p class="text-muted text-sm leading-relaxed mt-2" data-i18n="about.focus.item3.desc">Pemanfaatan Large Language Models (LLM) untuk pembuatan otomatisasi skrip administrasi jaringan dan percepatan analisis troubleshooting.</p>
         </div>
       </div>
     </div>
