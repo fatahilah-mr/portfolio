@@ -71,6 +71,7 @@
   box-sizing: border-box;
   margin: 0;
   padding: 0;
+  -webkit-tap-highlight-color: transparent;
 }
 
 html {
@@ -211,6 +212,11 @@ textarea:focus-visible,
   box-shadow: var(--shadow-md), 0 0 25px rgba(99, 102, 241, 0.4);
 }
 
+.btn-primary:active {
+  transform: scale(0.96) translateY(0);
+  box-shadow: var(--shadow-sm);
+}
+
 .btn-secondary {
   display: inline-flex;
   align-items: center;
@@ -233,6 +239,11 @@ textarea:focus-visible,
   background-color: var(--bg-card-hover);
   transform: translateY(-2px);
   box-shadow: var(--shadow-sm);
+}
+
+.btn-secondary:active {
+  transform: scale(0.96) translateY(0);
+  background-color: var(--bg-card);
 }
 
 /* Badge Utility */
