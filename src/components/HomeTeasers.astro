@@ -1,26 +1,83 @@
 ---
 ---
 
-<section class="about-teaser container section-py bg-surface/30">
-  <div class="glass-card p-8 md:p-12 rounded-2xl border border-border flex flex-col md:flex-row items-center gap-8">
-    <div class="teaser-text flex-1">
-      <h2 class="font-heading text-3xl mb-4" data-i18n="home.about.title">Kenali Saya Lebih Jauh</h2>
-      <p class="text-muted mb-6 leading-relaxed" data-i18n="home.about.desc">
+<section class="about-teaser container section-py">
+  <div class="teaser-glass glass-card">
+    <div class="teaser-text">
+      <h2 class="font-heading teaser-title" data-i18n="home.about.title">Kenali Saya Lebih Jauh</h2>
+      <p class="text-muted teaser-desc" data-i18n="home.about.desc">
         Saya Fatahilah, lulusan TKJ dengan minat mendalam pada otomasi AI dan infrastruktur server. Saya senang memecahkan masalah kompleks dan membangun sistem yang stabil serta efisien.
       </p>
-      <a href="/about" class="btn-secondary inline-flex" data-i18n="home.about.btn">
+      <a href="/about" class="btn-secondary" data-i18n="home.about.btn">
         Baca Profil Lengkap
       </a>
     </div>
     
-    <div class="teaser-contact flex-1 text-center md:text-right border-t md:border-t-0 md:border-l border-border pt-6 md:pt-0 md:pl-8">
-      <h3 class="font-heading text-xl mb-3" data-i18n="home.contact.title">Tertarik Bekerja Sama?</h3>
-      <p class="text-muted text-sm mb-5" data-i18n="home.contact.desc">
-        Saya selalu terbuka untuk peluang karir, proyek *freelance*, atau diskusi teknis seputar IT.
+    <div class="teaser-contact">
+      <h3 class="font-heading teaser-subtitle" data-i18n="home.contact.title">Tertarik Bekerja Sama?</h3>
+      <p class="text-muted teaser-contact-desc" data-i18n="home.contact.desc">
+        Saya selalu terbuka untuk peluang karir, proyek freelance, atau diskusi teknis seputar IT.
       </p>
-      <a href="/contact" class="btn-primary inline-flex" data-i18n="home.contact.btn">
+      <a href="/contact" class="btn-primary" data-i18n="home.contact.btn">
         Hubungi Saya Sekarang
       </a>
     </div>
   </div>
 </section>
+
+<style>
+  .teaser-glass {
+    padding: 3rem;
+    border-radius: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+  }
+
+  .teaser-title {
+    font-size: 1.875rem;
+    margin-bottom: 1rem;
+  }
+
+  .teaser-desc {
+    line-height: 1.6;
+    margin-bottom: 1.5rem;
+  }
+
+  .teaser-contact {
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--color-border);
+    text-align: center;
+  }
+
+  .teaser-subtitle {
+    font-size: 1.25rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .teaser-contact-desc {
+    font-size: 0.875rem;
+    margin-bottom: 1.25rem;
+  }
+
+  @media (min-width: 768px) {
+    .teaser-glass {
+      flex-direction: row;
+      align-items: center;
+      gap: 2rem;
+    }
+
+    .teaser-text {
+      flex: 1;
+    }
+
+    .teaser-contact {
+      flex: 1;
+      padding-top: 0;
+      padding-left: 2rem;
+      border-top: none;
+      border-left: 1px solid var(--color-border);
+      text-align: right;
+    }
+  }
+</style>

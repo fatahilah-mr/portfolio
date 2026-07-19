@@ -2,19 +2,19 @@
 ---
 
 <section class="featured-projects container section-py">
-  <div class="section-header text-center mb-12">
-    <h2 class="font-heading text-3xl" data-i18n="home.featured.title">Proyek Unggulan</h2>
-    <p class="text-muted mt-3" data-i18n="home.featured.subtitle">Beberapa eksperimen laboratorium dan proyek infrastruktur terbaik saya.</p>
+  <div class="featured-header">
+    <h2 class="font-heading featured-title" data-i18n="home.featured.title">Proyek Unggulan</h2>
+    <p class="text-muted featured-subtitle" data-i18n="home.featured.subtitle">Beberapa eksperimen laboratorium dan proyek infrastruktur terbaik saya.</p>
   </div>
 
-  <div id="featured-grid" class="projects-grid mb-10">
-    <div class="loading-status glass-card p-8 text-center col-span-full">
-      <div class="inline-block animate-spin rounded-full h-6 w-6 border-b-2 border-primary mb-3"></div>
-      <p class="font-heading text-sm text-muted">Memuat proyek unggulan...</p>
+  <div id="featured-grid" class="projects-grid">
+    <div class="loading-status glass-card">
+      <div class="spinner"></div>
+      <p class="font-heading loading-text text-muted">Memuat proyek unggulan...</p>
     </div>
   </div>
 
-  <div class="text-center">
+  <div class="featured-footer">
     <a href="/projects" class="btn-primary" data-i18n="home.featured.btn">
       Lihat Semua Proyek →
     </a>
@@ -88,8 +88,8 @@
             <h3 class="project-title font-heading dynamic-title" data-id-title="${judulEscaped}" data-en-title="${judulEnEscaped}">${initialTitle}</h3>
             <p class="project-desc text-muted dynamic-desc" data-id-desc="${deskripsiEscaped}" data-en-desc="${deskripsiEnEscaped}">${initialDesc}</p>
           </div>
-          <div class="project-actions mt-auto pt-4 border-t border-border">
-            <a href="${linkEscaped}" target="_blank" rel="noopener noreferrer" class="project-link text-xs py-2 px-3 flex items-center justify-center gap-1.5 w-full">
+          <div class="project-actions">
+            <a href="${linkEscaped}" target="_blank" rel="noopener noreferrer" class="project-link-full">
               <span>Lihat Detail</span>
             </a>
           </div>
@@ -140,7 +140,47 @@
 </script>
 
 <style>
+  .featured-header {
+    text-align: center;
+    margin-bottom: 3rem;
+  }
+  .featured-title {
+    font-size: 1.875rem;
+  }
+  .featured-subtitle {
+    margin-top: 0.75rem;
+  }
+  .featured-footer {
+    text-align: center;
+    margin-top: 2.5rem;
+  }
+  
   .projects-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5rem;
+  }
+  
+  .loading-status {
+    grid-column: 1 / -1;
+    padding: 3rem;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .spinner {
+    width: 1.5rem;
+    height: 1.5rem;
+    border: 2px solid var(--color-primary);
+    border-bottom-color: transparent;
+    border-radius: 50%;
+    display: inline-block;
+    animation: spin 1s linear infinite;
+    margin-bottom: 0.75rem;
+  }
+  @keyframes spin { 100% { transform: rotate(360deg); } }
+  .loading-text { font-size: 0.875rem; }
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
     gap: 1.5rem;
@@ -213,14 +253,27 @@
     -webkit-box-orient: vertical;
     overflow: hidden;
   }
-  .project-link {
+  .project-actions {
+    margin-top: auto;
+    padding-top: 1rem;
+    border-top: 1px solid var(--color-border);
+  }
+  .project-link-full {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    padding: 0.5rem 0.75rem;
+    font-size: 0.75rem;
     background-color: transparent;
     color: var(--color-primary);
     border: 1.5px solid var(--color-primary);
     border-radius: 4px;
     transition: all 0.2s;
+    text-decoration: none;
+    font-weight: 600;
   }
-  .project-link:hover {
+  .project-link-full:hover {
     background-color: var(--color-primary);
     color: #ffffff;
   }
