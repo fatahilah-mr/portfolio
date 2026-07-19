@@ -138,6 +138,21 @@
   } else {
     loadFeatured();
   }
+
+  // Dengarkan perubahan bahasa untuk merender ulang teks statis dinamis
+  window.addEventListener('languagechange', function(e) {
+    const lang = e.detail.lang;
+    document.querySelectorAll('#featured-grid .project-card').forEach(card => {
+      const titleEl = card.querySelector('.dynamic-title');
+      const descEl = card.querySelector('.dynamic-desc');
+      if (titleEl) {
+        titleEl.textContent = lang === 'en' ? titleEl.getAttribute('data-en-title') : titleEl.getAttribute('data-id-title');
+      }
+      if (descEl) {
+        descEl.textContent = lang === 'en' ? descEl.getAttribute('data-en-desc') : descEl.getAttribute('data-id-desc');
+      }
+    });
+  });
 })();
 </script>
 
