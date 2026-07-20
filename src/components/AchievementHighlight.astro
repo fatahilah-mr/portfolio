@@ -3,34 +3,34 @@
 
 <section class="achievement-highlight container section-py">
   <div class="achievement-glass glass-card">
-    <div class="achievement-image-wrap">
-      <div class="achievement-badge-container">
-        <span class="badge badge-gold font-mono" data-i18n="home.achievement.badge1">Top Achievement</span>
-      </div>
-      <img id="ach-img" src="https://cdn.fatahmr.my.id/portfolio/assets/certificates/LKS-Certificate.webp" alt="Sertifikat Juara 1 LKS IT Network System Administration" loading="lazy" />
+    <div class="achievement-top-badge-wrapper">
+      <span class="badge badge-gold font-mono" data-i18n="home.achievement.badge1">Top Achievement</span>
     </div>
     
-    <div class="achievement-content">
-      <div class="badge-wrapper mb-3">
-        <span class="badge badge-primary font-mono text-xs uppercase tracking-wider" data-i18n="home.achievement.badge2">Pencapaian Terbesar</span>
+    <div class="achievement-main-layout">
+      <div class="achievement-image-wrap">
+        <img id="ach-img" src="https://cdn.fatahmr.my.id/portfolio/assets/certificates/LKS-Certificate.webp" alt="Sertifikat Juara 1 LKS IT Network System Administration" loading="lazy" />
       </div>
-      <h2 id="ach-title" class="font-heading achievement-title">
-        Juara I - IT Network System Administration
-      </h2>
-      <p id="ach-desc" class="text-muted achievement-desc" data-i18n="home.achievement.desc">
-        Pencapaian terbesar saya di tahun 2026. Meraih medali emas pada Lomba Kompetensi Siswa (LKS) tingkat Kabupaten dalam bidang lomba <strong>IT Network System Administration</strong>. Membuktikan kompetensi tingkat lanjut dalam membangun dan mengamankan infrastruktur jaringan yang kompleks.
-      </p>
       
-      <div class="achievement-meta">
-        <div class="meta-item">
-          <span class="meta-label" data-i18n="home.achievement.org">Penyelenggara:</span>
-          <span id="ach-publisher" class="meta-value">LKS SMK Kabupaten Purworejo</span>
+      <div class="achievement-content">
+        <h2 id="ach-title" class="font-heading achievement-title">
+          Juara I - IT Network System Administration
+        </h2>
+        <p id="ach-desc" class="text-muted achievement-desc" data-i18n="home.achievement.desc">
+          Pencapaian terbesar saya di tahun 2026. Meraih medali emas pada Lomba Kompetensi Siswa (LKS) tingkat Kabupaten dalam bidang lomba <strong>IT Network System Administration</strong>. Membuktikan kompetensi tingkat lanjut dalam membangun dan mengamankan infrastruktur jaringan yang kompleks.
+        </p>
+        
+        <div class="achievement-meta">
+          <div class="meta-item">
+            <span class="meta-label" data-i18n="home.achievement.org">Penyelenggara:</span>
+            <span id="ach-publisher" class="meta-value">LKS SMK Kabupaten Purworejo</span>
+          </div>
         </div>
-      </div>
 
-      <a href="/certificates" class="btn-primary mt-6 inline-flex" data-i18n="home.achievement.btn">
-        Lihat Semua Sertifikat →
-      </a>
+        <a href="/certificates" class="btn-primary mt-6 inline-flex" data-i18n="home.achievement.btn">
+          Lihat Semua Sertifikat →
+        </a>
+      </div>
     </div>
   </div>
 </section>
@@ -68,7 +68,6 @@
       }
       
       if (data && data.length > 0) {
-        // Ambil sertifikat baris pertama (urutan pertama)
         const topCert = data[0];
         
         if (topCert.imgDepan) document.getElementById('ach-img').src = topCert.imgDepan;
@@ -100,23 +99,28 @@
     overflow: hidden;
     border-color: var(--color-accent);
     box-shadow: 0 0 25px rgba(245, 158, 11, 0.08);
+    padding: 1.75rem;
+    gap: 1.5rem;
   }
 
-  .achievement-image-wrap {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 1.25rem;
-    padding: 1.75rem 1.5rem 1.5rem 1.5rem;
-    background: rgba(255, 255, 255, 0.01);
-    border-bottom: 1px solid var(--color-border);
-  }
-
-  .achievement-badge-container {
+  .achievement-top-badge-wrapper {
     display: flex;
     justify-content: center;
     width: 100%;
+  }
+
+  .achievement-main-layout {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    width: 100%;
+  }
+
+  .achievement-image-wrap {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
 
   .achievement-image-wrap img {
@@ -135,7 +139,7 @@
   }
 
   .achievement-content {
-    padding: 2rem;
+    width: 100%;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -161,6 +165,7 @@
     gap: 0.75rem;
     padding-top: 1.25rem;
     border-top: 1px solid var(--color-border);
+    width: 100%;
   }
 
   .meta-item {
@@ -183,7 +188,6 @@
     font-weight: 500;
   }
 
-  /* Badge Gold Khusus */
   .badge-gold {
     background-color: rgba(245, 158, 11, 0.15);
     color: var(--color-accent);
@@ -192,18 +196,22 @@
 
   @media (min-width: 768px) {
     .achievement-glass {
+      padding: 2.5rem;
+      gap: 2rem;
+    }
+
+    .achievement-main-layout {
       flex-direction: row;
+      align-items: center;
+      gap: 2.5rem;
     }
     
     .achievement-image-wrap {
       width: 50%;
-      border-bottom: none;
-      border-right: 1px solid var(--color-border);
     }
     
     .achievement-content {
       width: 50%;
-      padding: 3rem;
       align-items: flex-start;
       text-align: left;
     }
