@@ -24,8 +24,9 @@ export const ui = {
 
     // Home / Index Hero
     'hero.badge': 'Juara 1 LKS IT Network System Administration & AI Prompt Engineer',
+    'hero.eyebrow': 'IT Network System Administration & Web Development',
     'hero.title': 'Menghubungkan Infrastruktur & Mengoptimalkan AI dengan Presisi',
-    'hero.subtitle': 'Selamat datang di portofolio Fatahilah. Spesialis administrasi jaringan server, routing & switching, serta rekayasa prompt AI (LLM) untuk otomatisasi sistem berkinerja tinggi.',
+    'hero.subtitle': 'Spesialis IT Network & System Administration, konfigurasi server Linux/Windows, infrastruktur jaringan Cisco & MikroTik, otomatisasi AI Prompt Engineering, serta Web Development responsif.',
     'hero.cta.primary': 'Lihat Portofolio →',
     'hero.cta.secondary': 'Hubungi Saya',
     'hero.stat.uptime': '99.9% Target Uptime',
@@ -35,7 +36,7 @@ export const ui = {
     // About Page
     'about.title': 'Tentang Saya & Filosofi Teknis',
     'about.bio.p1': 'Saya adalah seorang praktisi IT Network & System Administration yang memiliki semangat tinggi dalam membangun infrastruktur jaringan yang stabil, aman, dan efisien. Berpengalaman dalam merancang topologi, mengonfigurasi router/switch Cisco & Mikrotik, serta mengelola sistem operasi server Linux & Windows.',
-    'about.bio.p2': 'Di era transformasi artificial intelligence, saya menggabungkan keahlian infrastruktur IT dengan AI Prompt Engineering. Saya merancang prompt terstruktur dan alur kerja LLM (Large Language Models) untuk mengotomatisasi pemecahan masalah jaringan, pembuatan skrip administrasi, dan dokumentasi sistem yang akurat.',
+    'about.bio.p2': 'Selain menguasai infrastruktur jaringan Cisco & MikroTik, administrasi server Linux/Windows, dan pengkabelan serat optik, saya mengintegrasikan rekayasa prompt AI (LLM) serta pengembangan Web modern. Kombinasi ini memungkinkan saya mengotomatisasi skrip administrasi, mempercepat analisis troubleshooting, dan membangun sistem yang tidak hanya tangguh tetapi juga mudah diakses secara intuitif.',
     'about.phil.card1.title': '1. Keamanan & Keandalan (Uptime 99.9%)',
     'about.phil.card1.desc': 'Infrastruktur tidak boleh lengah. Saya menerapkan segmentasi VLAN, firewall ketat, dan redundansi protokol.',
     'about.phil.card2.title': '2. Otomatisasi Efisien',
@@ -112,8 +113,9 @@ export const ui = {
 
     // Home / Index Hero
     'hero.badge': '1st Place LKS IT Network System Administration & AI Prompt Engineer',
+    'hero.eyebrow': 'IT Network System Administration & Web Development',
     'hero.title': 'Connecting Infrastructure & Optimizing AI with Precision',
-    'hero.subtitle': 'Welcome to Fatahilah\'s portfolio. Specializing in server network administration, routing & switching, and advanced AI prompt engineering (LLM) for high-performance system automation.',
+    'hero.subtitle': 'Specializing in IT Network & System Administration, Linux/Windows server infrastructure, Cisco & MikroTik networking, AI Prompt Engineering automation, and responsive Web Development.',
     'hero.cta.primary': 'View Portfolio →',
     'hero.cta.secondary': 'Contact me',
     'hero.stat.uptime': '99.9% Target Uptime',
@@ -123,7 +125,7 @@ export const ui = {
     // About Page
     'about.title': 'About Me & Technical Philosophy',
     'about.bio.p1': 'I am an IT Network & System Administration practitioner passionate about architecting resilient, secure, and highly efficient network infrastructures. Experienced in network topology design, configuring Cisco & Mikrotik routers/switches, and managing Linux & Windows server operating systems.',
-    'about.bio.p2': 'In this era of artificial intelligence transformation, I bridge core IT infrastructure with AI Prompt Engineering. I design structured prompts and LLM (Large Language Model) workflows to automate network troubleshooting, generate administration scripts, and produce precise system documentation.',
+    'about.bio.p2': 'Beyond mastering Cisco & MikroTik networking, Linux/Windows server administration, and fiber optic cabling, I integrate AI Prompt Engineering (LLM) and modern Web Development. This combination allows me to automate administrative scripting, accelerate troubleshooting diagnostics, and engineer resilient systems with intuitive accessibility.',
     'about.phil.card1.title': '1. Security & Reliability (99.9% Uptime)',
     'about.phil.card1.desc': 'Infrastructure must never compromise. I implement VLAN segmentation, strict firewall policies, and protocol redundancy.',
     'about.phil.card2.title': '2. Efficient Automation',
