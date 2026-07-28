@@ -24,12 +24,31 @@ import Layout from '../layouts/Layout.astro';
       </div>
     </div>
 
-    <!-- Dynamic Certificates Grid Container (Sesuai ID di cms-certificates.js) -->
+    <!-- Dynamic Certificates Grid Container (Sesuai ID di cms-certificates.js, dengan fallback SSR untuk SEO) -->
     <div id="cert-grid-dynamic" class="cert-grid" aria-live="polite">
-      <div class="loading-status glass-card p-12 text-center col-span-full">
-        <div class="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-primary mb-4"></div>
-        <p class="font-heading text-lg" data-i18n="certs.loading.title">Menghubungkan ke API Google Sheets...</p>
-        <p class="text-muted text-sm mt-1" data-i18n="certs.loading.sub">Mengambil arsip sertifikat terbaru dari server</p>
+      <div class="cert-card glass-card">
+        <div class="cert-card-badge"><span class="badge badge-primary font-mono">Penghargaan</span></div>
+        <div class="cert-content">
+          <h3 class="cert-title font-heading">Juara 1 LKS IT Network System Administration</h3>
+          <p class="cert-issuer font-mono text-sm text-muted">Dinas Pendidikan Kabupaten Purworejo (2026)</p>
+          <p class="cert-desc text-muted text-sm mt-2">Meraih Medali Emas Juara 1 Lomba Kompetensi Siswa (LKS) SMK Tingkat Kabupaten Purworejo dalam bidang IT Network System Administration.</p>
+        </div>
+      </div>
+      <div class="cert-card glass-card">
+        <div class="cert-card-badge"><span class="badge font-mono">Sertifikat Magang</span></div>
+        <div class="cert-content">
+          <h3 class="cert-title font-heading">Sertifikat PKL UPTD BLK Kebumen</h3>
+          <p class="cert-issuer font-mono text-sm text-muted">UPTD Balai Latihan Kerja Kebumen (2025)</p>
+          <p class="cert-desc text-muted text-sm mt-2">Sertifikat Kompetensi Praktik Kerja Lapangan bidang IT Network, RouterOS MikroTik, Debian Server, dan Cisco Networking.</p>
+        </div>
+      </div>
+      <div class="cert-card glass-card">
+        <div class="cert-card-badge"><span class="badge font-mono">Sertifikat Magang</span></div>
+        <div class="cert-content">
+          <h3 class="cert-title font-heading">Sertifikat PKL Fazza Computer (FTTH)</h3>
+          <p class="cert-issuer font-mono text-sm text-muted">Fazza Computer &amp; Networking (2025)</p>
+          <p class="cert-desc text-muted text-sm mt-2">Sertifikat Praktik Kerja Lapangan instalasi jaringan Fiber Optic (FTTH), konfigurasi ONT, dan maintenance jaringan ISP.</p>
+        </div>
       </div>
     </div>
 

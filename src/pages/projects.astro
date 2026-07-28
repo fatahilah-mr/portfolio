@@ -35,12 +35,58 @@ import Layout from '../layouts/Layout.astro';
       <button class="cert-btn btn-secondary" data-category="Website">Website</button>
     </div>
 
-    <!-- Projects Grid Container (Dynamically rendered by app.js logic) -->
+    <!-- Projects Grid Container (Dynamically rendered by app.js logic, with SSR static fallback for SEO) -->
     <div id="projects-grid" class="projects-grid" aria-live="polite">
-      <div class="loading-status glass-card p-12 text-center col-span-full">
-        <div class="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-primary mb-4"></div>
-        <p class="font-heading text-lg" data-i18n="projects.loading.title">Menghubungkan ke API Google Sheets (Database_App)...</p>
-        <p class="text-muted text-sm mt-1" data-i18n="projects.loading.sub">Mengambil arsip proyek terbaru dari server</p>
+      <div class="project-card glass-card">
+        <div class="project-img-wrap">
+          <img src="https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=600" alt="Preview Lab Cisco Routing & Switching" loading="lazy" />
+        </div>
+        <div class="project-info">
+          <div>
+            <span class="project-badge badge-cisco">Cisco</span>
+            <h3 class="project-title font-heading">Infrastruktur Routing &amp; Switching Cisco</h3>
+            <p class="project-desc text-muted">Simulasi topologi jaringan enterprise, konfigurasi VLAN, Inter-VLAN Routing, EtherChannel, OSPF, dan Access Control List (ACL).</p>
+          </div>
+          <div class="project-actions">
+            <a href="https://github.com/fatahilah-mr" target="_blank" rel="noopener noreferrer" class="project-link-full">
+              <span>Lihat Dokumentasi</span>
+            </a>
+          </div>
+        </div>
+      </div>
+      <div class="project-card glass-card">
+        <div class="project-img-wrap">
+          <img src="https://images.unsplash.com/photo-1544197150-b99a580bb7a8?w=600" alt="Preview MikroTik Hotspot & Firewall" loading="lazy" />
+        </div>
+        <div class="project-info">
+          <div>
+            <span class="project-badge badge-mikrotik">MikroTik</span>
+            <h3 class="project-title font-heading">Hotspot Gateway &amp; Firewall MikroTik</h3>
+            <p class="project-desc text-muted">Implementasi MikroTik RouterOS, user manager hotspot, NAT masquerade, firewall filtering, dan manajemen bandwidth Queues.</p>
+          </div>
+          <div class="project-actions">
+            <a href="https://github.com/fatahilah-mr" target="_blank" rel="noopener noreferrer" class="project-link-full">
+              <span>Lihat Dokumentasi</span>
+            </a>
+          </div>
+        </div>
+      </div>
+      <div class="project-card glass-card">
+        <div class="project-img-wrap">
+          <img src="https://images.unsplash.com/photo-1618401471353-b98afee0b2eb?w=600" alt="Preview Linux Debian Server Administration" loading="lazy" />
+        </div>
+        <div class="project-info">
+          <div>
+            <span class="project-badge badge-linux">Linux</span>
+            <h3 class="project-title font-heading">Administrasi Server Linux Debian 12</h3>
+            <p class="project-desc text-muted">Instalasi &amp; hardening server Linux Debian, DNS Bind9, Nginx web server, DHCP server, serta database server MySQL/MariaDB.</p>
+          </div>
+          <div class="project-actions">
+            <a href="https://github.com/fatahilah-mr" target="_blank" rel="noopener noreferrer" class="project-link-full">
+              <span>Lihat Dokumentasi</span>
+            </a>
+          </div>
+        </div>
       </div>
     </div>
   </section>
