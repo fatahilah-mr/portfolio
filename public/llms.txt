@@ -1,21 +1,18 @@
-# Fatahilah Miftahul Rahman - Portfolio
+# Fatahilah Miftahul Rahman — IT Network & System Administration Specialist
 
-## Profil
-- [Home](https://fatahmr.my.id/)
-- [About](https://fatahmr.my.id/#about)
-- [Professional Experience (Internship)](https://fatahmr.my.id/#experience)
-- [Skills](https://fatahmr.my.id/#skills)
-- [Projects](https://fatahmr.my.id/#projects)
-- [Certificates](https://fatahmr.my.id/#certificates)
-- [Contact](https://fatahmr.my.id/#contact)
+> Gold Medalist 1st Place LKS IT Network System Administration Purworejo Regency 2026. Specializing in Cisco & MikroTik infrastructure, Linux & Windows Server administration, AI Prompt Engineering automation, and responsive Web Development.
 
-## Arsip & Laboratorium
-- [All Certificates Archive](https://fatahmr.my.id/certificates.html)
-- [Lab Archive — Technical Projects](https://fatahmr.my.id/lab-archive/)
+## Core Pages & Navigation
+- [Home & Overview](https://fatahmr.my.id/): Portfolio overview, hero tagline, LKS achievement highlight, and featured projects.
+- [About Me](https://fatahmr.my.id/about/): Background, technical philosophy, IT Vision, educational background, and profile.
+- [Professional Experience](https://fatahmr.my.id/experience/): Internship (PKL) history at UPTD BLK Kebumen, Fazza Computer (FTTH), and IMC Computer.
+- [Technical Skills](https://fatahmr.my.id/skills/): Six core competency pillars: Hardware & Cabling, Cisco Networking, MikroTik & Wireless, Linux Server Administration, Windows Server Administration, and AI & Web Development.
+- [Lab Archive & Projects](https://fatahmr.my.id/projects/): Comprehensive gallery of network topology lab experiments, server setups, and tech projects.
+- [Certificates & Transcripts](https://fatahmr.my.id/certificates/): Official competition awards, internship grade transcripts, and certificates.
+- [Contact & Official Channels](https://fatahmr.my.id/contact/): Direct contact via WhatsApp, LinkedIn, GitHub, and Email.
 
-## Resume
-- [Download Resume (PDF)](https://cdn.jsdelivr.net/gh/fatahilah-mr/portofolio@main/assets/Resume-Fatahilah-Miftahul-Rahman-ATS.pdf)
+## Document Downloads
+- [Curriculum Vitae (PDF)](https://cdn.fatahmr.my.id/portfolio/assets/CV%20Fatahilah%20Miftahul%20Rahman.pdf): Official ATS CV of Fatahilah Miftahul Rahman.
 
 ---
-
 © 2026 Fatahilah Miftahul Rahman. All rights reserved.

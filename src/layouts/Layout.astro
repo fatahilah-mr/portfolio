@@ -40,20 +40,35 @@ const {
   <meta property="twitter:title" content={`${title} | Fatahilah Miftahul Rahman`} />
   <meta property="twitter:description" content={description} />
 
-  <!-- Schema.org JSON-LD (Rich Snippets) -->
-  <script type="application/ld+json">
-    {
-      "@context": "https://schema.org/",
-      "@type": "Person",
-      "name": "Fatahilah Miftahul Rahman",
-      "url": "https://fatahmr.my.id",
-      "sameAs": [
-        "https://github.com/fatahilah-mr",
-        "https://linkedin.com/in/fatahilah-miftahul-rahman"
-      ],
-      "jobTitle": "IT Network System Administration & AI Prompt Engineering Specialist"
-    }
-  </script>
+  <!-- Schema.org JSON-LD (AI Entity & Knowledge Graph Optimization) -->
+  <script type="application/ld+json" set:html={JSON.stringify({
+    "@context": "https://schema.org",
+    "@type": "Person",
+    "name": "Fatahilah Miftahul Rahman",
+    "url": "https://fatahmr.my.id",
+    "image": "https://cdn.fatahmr.my.id/portfolio/assets/profile.webp",
+    "jobTitle": "IT Network System Administration & Web Development Specialist",
+    "alumniOf": {
+      "@type": "EducationalOrganization",
+      "name": "SMK Patriot Pituruh"
+    },
+    "award": [
+      "Juara 1 Lomba Kompetensi Siswa (LKS) IT Network System Administration Kabupaten Purworejo 2026"
+    ],
+    "knowsAbout": [
+      "IT Network System Administration",
+      "Cisco Networking & Switching",
+      "MikroTik RouterOS & Hotspot Gateway",
+      "Linux Server Administration (Debian 12)",
+      "Windows Server 2022 & ADDS",
+      "AI Prompt Engineering & Automation",
+      "Web Development (Astro, HTML, Vanilla CSS)"
+    ],
+    "sameAs": [
+      "https://github.com/fatahilah-mr",
+      "https://www.linkedin.com/in/fatahilah-mr"
+    ]
+  })} />
 
   <!-- Performance Optimization: Preconnect & Load Fonts in parallel (DTK-PERF-001) -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
