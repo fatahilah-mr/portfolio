@@ -116,6 +116,12 @@ p {
   margin-bottom: 1rem;
 }
 
+.section-subtitle,
+.featured-subtitle {
+  margin-left: auto;
+  margin-right: auto;
+}
+
 a {
   color: inherit;
   text-decoration: none;
