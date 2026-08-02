@@ -19,3 +19,7 @@ pnpm-debug.log*
 # vercel & others
 .vercel/
 .DS_Store
+
+#  ai agent skills
+.agents/
+.claude/
