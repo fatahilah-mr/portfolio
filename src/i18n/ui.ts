@@ -20,23 +20,20 @@ export const ui = {
     'theme.toggle': 'Ganti Mode Gelap/Terang',
     'lang.toggle': '🇬🇧 EN',
     'lang.label': 'Ganti ke Bahasa Inggris',
-    'footer.copyright': '© 2026 Fatahilah. Hak Cipta Dilindungi. Dibuat dengan presisi menggunakan Astro & Vanilla CSS.',
+    'footer.copyright': '© 2026 Fatahilah Miftahul Rahman. Dibangun dengan Astro & Vanilla CSS.',
 
     // Home / Index Hero
     'hero.badge': 'Juara 1 LKS IT Network System Administration & AI Prompt Engineer',
     'hero.eyebrow': 'IT Network System Administration & Web Development',
     'hero.title': 'Menghubungkan Infrastruktur & Mengoptimalkan AI dengan Presisi',
-    'hero.subtitle': 'Spesialis IT Network & System Administration, konfigurasi server Linux/Windows, infrastruktur jaringan Cisco & MikroTik, otomatisasi AI Prompt Engineering, serta Web Development responsif.',
+    'hero.subtitle': 'Lulusan TKJ yang senang ngulik server, jaringan, dan otomasi. Juara 1 LKS IT Network Kabupaten Purworejo 2026.',
     'hero.cta.primary': 'Lihat Portofolio →',
     'hero.cta.secondary': 'Hubungi Saya',
-    'hero.stat.uptime': '99.9% Target Uptime',
-    'hero.stat.lks': 'Juara 1 LKS 2026',
-    'hero.stat.ai': 'AI Prompt Automated',
 
     // About Page
     'about.title': 'Tentang Saya & Filosofi Teknis',
     'about.bio.p1': 'Saya adalah seorang praktisi IT Network & System Administration yang memiliki semangat tinggi dalam membangun infrastruktur jaringan yang stabil, aman, dan efisien. Berpengalaman dalam merancang topologi, mengonfigurasi router/switch Cisco & Mikrotik, serta mengelola sistem operasi server Linux & Windows.',
-    'about.bio.p2': 'Selain menguasai infrastruktur jaringan Cisco & MikroTik, administrasi server Linux/Windows, dan pengkabelan serat optik, saya mengintegrasikan rekayasa prompt AI (LLM) serta pengembangan Web modern. Kombinasi ini memungkinkan saya mengotomatisasi skrip administrasi, mempercepat analisis troubleshooting, dan membangun sistem yang tidak hanya tangguh tetapi juga mudah diakses secara intuitif.',
+    'about.bio.p2': 'Selain jaringan Cisco & MikroTik, admin server Linux/Windows, dan kabel serat optik, saya pakai AI Prompt Engineering buat otomasi tugas-tugas admin yang repetitif dan mempercepat troubleshooting. Web juga saya bangun sendiri — portofolio ini salah satunya.',
     'about.phil.card1.title': '1. Keamanan & Keandalan (Uptime 99.9%)',
     'about.phil.card1.desc': 'Infrastruktur tidak boleh lengah. Saya menerapkan segmentasi VLAN, firewall ketat, dan redundansi protokol.',
     'about.phil.card2.title': '2. Otomatisasi Efisien',
@@ -109,23 +106,20 @@ export const ui = {
     'theme.toggle': 'Toggle Dark / Light Mode',
     'lang.toggle': '🇮🇩 ID',
     'lang.label': 'Switch to Indonesian Language',
-    'footer.copyright': '© 2026 Fatahilah. All Rights Reserved. Built with precision using Astro & Vanilla CSS.',
+    'footer.copyright': '© 2026 Fatahilah Miftahul Rahman. Built with Astro & Vanilla CSS.',
 
     // Home / Index Hero
     'hero.badge': '1st Place LKS IT Network System Administration & AI Prompt Engineer',
     'hero.eyebrow': 'IT Network System Administration & Web Development',
     'hero.title': 'Connecting Infrastructure & Optimizing AI with Precision',
-    'hero.subtitle': 'Specializing in IT Network & System Administration, Linux/Windows server infrastructure, Cisco & MikroTik networking, AI Prompt Engineering automation, and responsive Web Development.',
+    'hero.subtitle': 'A network & server enthusiast who won 1st Place at LKS IT Network, Purworejo Regency 2026. I build, break, and fix things — then automate them.',
     'hero.cta.primary': 'View Portfolio →',
-    'hero.cta.secondary': 'Contact me',
-    'hero.stat.uptime': '99.9% Target Uptime',
-    'hero.stat.lks': '1st Place LKS 2026',
-    'hero.stat.ai': 'AI Prompt Automated',
+    'hero.cta.secondary': 'Contact Me',
 
     // About Page
     'about.title': 'About Me & Technical Philosophy',
-    'about.bio.p1': 'I am an IT Network & System Administration practitioner passionate about architecting resilient, secure, and highly efficient network infrastructures. Experienced in network topology design, configuring Cisco & Mikrotik routers/switches, and managing Linux & Windows server operating systems.',
-    'about.bio.p2': 'Beyond mastering Cisco & MikroTik networking, Linux/Windows server administration, and fiber optic cabling, I integrate AI Prompt Engineering (LLM) and modern Web Development. This combination allows me to automate administrative scripting, accelerate troubleshooting diagnostics, and engineer resilient systems with intuitive accessibility.',
+    'about.bio.p1': 'I graduated from SMK Patriot Pituruh (TKJ, 2026) and won 1st Place at the LKS Student Competency Competition for IT Network System Administration at the Purworejo Regency level. My focus is on real, hands-on networking and server work — not just theory.',
+    'about.bio.p2': 'On top of Cisco & MikroTik networking, Linux/Windows server admin, and fiber optic work, I use AI Prompt Engineering to automate repetitive admin tasks and speed up troubleshooting. I also build web projects — this portfolio is one of them.',
     'about.phil.card1.title': '1. Security & Reliability (99.9% Uptime)',
     'about.phil.card1.desc': 'Infrastructure must never compromise. I implement VLAN segmentation, strict firewall policies, and protocol redundancy.',
     'about.phil.card2.title': '2. Efficient Automation',
@@ -145,7 +139,7 @@ export const ui = {
     'home.exp.more': 'View All Experience Details →',
 
     // Skills Page
-    'skills.title': 'Technical Skills & Competency Arsenal',
+    'skills.title': 'Technical Skills & Expertise',
     'skills.cat1.title': '1. Network Administration',
     'skills.cat1.desc': 'Routing, Switching, VLAN, BGP/OSPF, Cisco IOS, Mikrotik RouterOS, Network Troubleshooting & Firewall Rules.',
     'skills.cat2.title': '2. System & Server Management',
