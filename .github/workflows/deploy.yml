@@ -1,0 +1,58 @@
+name: 🚀 Deploy to cPanel (FTP)
+
+on:
+  push:
+    branches:
+      - public
+
+jobs:
+  build-and-deploy:
+    name: Build & Deploy
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1. Checkout kode dari repo
+      - name: 📥 Checkout Repository
+        uses: actions/checkout@v4
+
+      # 2. Setup Node.js
+      - name: 🔧 Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      # 3. Install dependencies
+      - name: 📦 Install Dependencies
+        run: npm ci
+
+      # 4. Build proyek Astro
+      - name: 🏗️ Build Astro Project
+        run: npm run build
+        env:
+          # Tambahkan environment variable jika dibutuhkan saat build
+          # GOOGLE_SHEETS_API_KEY: ${{ secrets.GOOGLE_SHEETS_API_KEY }}
+          NODE_ENV: production
+
+      # 5. Deploy via FTP ke cPanel
+      - name: 🚀 Deploy via FTP to cPanel
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          # Kredensial FTP — simpan di GitHub Secrets!
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          port: 21
+
+          # Folder lokal yang diupload (hasil build Astro)
+          local-dir: ./dist/
+
+          # Folder tujuan di server cPanel
+          server-dir: /website/test-portfolio.fatah.web.id/
+
+          # Opsi tambahan
+          protocol: ftps          # Gunakan FTPS (lebih aman). Ganti ke 'ftp' jika tidak didukung hosting
+          exclude: |
+            **/.git*
+            **/.git*/**
+            **/node_modules/**
