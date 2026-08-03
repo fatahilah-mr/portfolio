@@ -16,7 +16,7 @@ const {
 ---
 
 <!DOCTYPE html>
-<html lang="id" data-theme="dark">
+<html lang="id" data-theme="light">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -80,7 +80,7 @@ const {
   <script is:inline>
     (function() {
       try {
-        const theme = localStorage.getItem('theme') || 'dark';
+        const theme = localStorage.getItem('theme') || 'light';
         document.documentElement.setAttribute('data-theme', theme);
 
         const lang = localStorage.getItem('lang') || 'id';

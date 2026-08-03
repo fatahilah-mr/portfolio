@@ -6,37 +6,8 @@
 
 
 :root,
-[data-theme="dark"] {
-  /* Dark Mode (OLED Command Center & Server Room) - Default */
-  --bg-main: #0B0E14;
-  --bg-surface: #141A29;
-  --bg-card: #1C2438;
-  --bg-card-hover: #242E47;
-  --bg-glass: rgba(28, 36, 56, 0.75);
-  
-  --color-primary: #3B82F6;       /* Electric Blue - Network Fiber & Routing */
-  --color-primary-glow: rgba(59, 130, 246, 0.25);
-  --color-secondary: #818CF8;     /* Lighter Indigo for better contrast */
-  --color-accent: #FBBF24;        /* Brighter Amber for highlights */
-  --color-accent-glow: rgba(251, 191, 36, 0.25);
-  --color-cyan: #22D3EE;          /* Brighter Cyber Cyan */
-  
-  --color-foreground: #F8FAFC;    /* Brighter White (Maximum Contrast) */
-  --color-muted: #CBD5E1;         /* Lighter Gray for better paragraph readability */
-  --color-subtle: #94A3B8;        /* Brighter subtle gray */
-  
-  --color-border: #334155;        /* Brighter border so components stand out */
-  --color-border-focus: #3B82F6;
-  --color-ring: #3B82F6;
-  
-  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.4);
-  --shadow-md: 0 8px 30px rgba(0, 0, 0, 0.6);
-  --shadow-lg: 0 20px 50px rgba(0, 0, 0, 0.8);
-  --shadow-glow: 0 0 25px var(--color-primary-glow);
-}
-
 [data-theme="light"] {
-  /* Light Mode (Warm Clean Editorial & High-Tech Precision) */
+  /* Light Mode (Warm Clean Editorial & High-Tech Precision) - Default */
   --bg-main: #F8F6F0;             /* Warm Paper Slate */
   --bg-surface: #FFFFFF;
   --bg-card: #FFFFFF;
@@ -61,6 +32,35 @@
   --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.04);
   --shadow-md: 0 8px 30px rgba(0, 0, 0, 0.08);
   --shadow-lg: 0 20px 50px rgba(0, 0, 0, 0.12);
+  --shadow-glow: 0 0 25px var(--color-primary-glow);
+}
+
+[data-theme="dark"] {
+  /* Dark Mode (OLED Command Center & Server Room) */
+  --bg-main: #0B0E14;
+  --bg-surface: #141A29;
+  --bg-card: #1C2438;
+  --bg-card-hover: #242E47;
+  --bg-glass: rgba(28, 36, 56, 0.75);
+  
+  --color-primary: #3B82F6;       /* Electric Blue - Network Fiber & Routing */
+  --color-primary-glow: rgba(59, 130, 246, 0.25);
+  --color-secondary: #818CF8;     /* Lighter Indigo for better contrast */
+  --color-accent: #FBBF24;        /* Brighter Amber for highlights */
+  --color-accent-glow: rgba(251, 191, 36, 0.25);
+  --color-cyan: #22D3EE;          /* Brighter Cyber Cyan */
+  
+  --color-foreground: #F8FAFC;    /* Brighter White (Maximum Contrast) */
+  --color-muted: #CBD5E1;         /* Lighter Gray for better paragraph readability */
+  --color-subtle: #94A3B8;        /* Brighter subtle gray */
+  
+  --color-border: #334155;        /* Brighter border so components stand out */
+  --color-border-focus: #3B82F6;
+  --color-ring: #3B82F6;
+  
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.4);
+  --shadow-md: 0 8px 30px rgba(0, 0, 0, 0.6);
+  --shadow-lg: 0 20px 50px rgba(0, 0, 0, 0.8);
   --shadow-glow: 0 0 25px var(--color-primary-glow);
 }
 
