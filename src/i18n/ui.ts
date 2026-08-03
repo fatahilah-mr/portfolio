@@ -26,7 +26,7 @@ export const ui = {
     'hero.badge': 'Juara 1 LKS IT Network System Administration & AI Prompt Engineer',
     'hero.eyebrow': 'IT Network System Administration & Web Development',
     'hero.title': 'Menghubungkan Infrastruktur & Mengoptimalkan AI dengan Presisi',
-    'hero.subtitle': 'Lulusan TKJ yang senang ngulik server, jaringan, dan otomasi. Juara 1 LKS IT Network Kabupaten Purworejo 2026.',
+    'hero.subtitle': 'Lulusan TKJ dengan spesialisasi IT Network & System Administration. Juara 1 LKS Kabupaten Purworejo 2026.',
     'hero.cta.primary': 'Lihat Portofolio →',
     'hero.cta.secondary': 'Hubungi Saya',
 
@@ -112,7 +112,7 @@ export const ui = {
     'hero.badge': '1st Place LKS IT Network System Administration & AI Prompt Engineer',
     'hero.eyebrow': 'IT Network System Administration & Web Development',
     'hero.title': 'Connecting Infrastructure & Optimizing AI with Precision',
-    'hero.subtitle': 'A network & server enthusiast who won 1st Place at LKS IT Network, Purworejo Regency 2026. I build, break, and fix things — then automate them.',
+    'hero.subtitle': 'IT Network & System Administration graduate, 1st Place winner at LKS Purworejo Regency 2026. Specializing in network infrastructure, server administration, and AI automation.',
     'hero.cta.primary': 'View Portfolio →',
     'hero.cta.secondary': 'Contact Me',
 
