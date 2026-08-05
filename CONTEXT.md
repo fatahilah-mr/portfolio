@@ -153,6 +153,8 @@ portfolio-new/
 
 Berikut adalah riwayat kronologis lengkap perbaikan dan penguatan fitur yang telah berhasil dilakukan pada codebase ini:
 
+* **Fase 10 — Perbaikan Workflow Deployment GitHub Actions (`.github/workflows/deploy.yml`):**  
+  Menyelaraskan skrip deployment FTPS ke cPanel menggunakan referensi `.github/deploy.yml` yang teruji, menambahkan perintah `rm -rf dist` sebelum build untuk menghapus sisa build lama di runner, mengaktifkan `dangerous-clean-slate: true` agar server cPanel dibersihkan secara total sebelum mengunggah ualng, serta mendaftarkan pemicu otomatis untuk branch `public` & `main`.
 * **Fase 1 — Perbaikan Sitemap & Google Search Console:**  
   Mematikan integrasi `@astrojs/sitemap` yang berpotensi menghasilkan bentrok tag `hreflang` berulang. Menggantinya dengan berkas statis `public/sitemap.xml` berstandar W3C Datetime serta menyesuaikan `public/robots.txt`.
 * **Fase 2 — Perbaikan Rendering Googlebot & SSR Fallback:**  
