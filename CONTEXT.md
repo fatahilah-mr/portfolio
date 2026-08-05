@@ -155,6 +155,8 @@ Berikut adalah riwayat kronologis lengkap perbaikan dan penguatan fitur yang tel
 
 * **Fase 10 — Perbaikan Workflow Deployment GitHub Actions (`.github/workflows/deploy.yml`):**  
   Menyelaraskan skrip deployment FTPS ke cPanel menggunakan referensi `.github/deploy.yml` yang teruji, memperbarui environment Node.js ke **Node.js 24**, menambahkan perintah `rm -rf dist` sebelum build untuk menghapus sisa build lama di runner, mengaktifkan `dangerous-clean-slate: true` agar server cPanel dibersihkan secara total sebelum mengunggah ulang, serta mendaftarkan pemicu otomatis untuk branch `public` & `main`.
+* **Fase 15 — Penghapusan Badge Eyebrow (Section-Badge) di Seluruh Halaman:**  
+  Menghapus seluruh elemen badge header (`.section-badge` dan `.badge-wrapper` eyebrow) dari bagian atas judul pada 7 halaman utama (`index`, `about`, `experience`, `skills`, `projects`, `certificates`, `contact`) serta komponen `ExperienceShowcase.astro` untuk memberikan tampilan header yang lebih bersih, fokus, dan minimalis.
 * **Fase 1 — Perbaikan Sitemap & Google Search Console:**  
   Mematikan integrasi `@astrojs/sitemap` yang berpotensi menghasilkan bentrok tag `hreflang` berulang. Menggantinya dengan berkas statis `public/sitemap.xml` berstandar W3C Datetime serta menyesuaikan `public/robots.txt`.
 * **Fase 2 — Perbaikan Rendering Googlebot & SSR Fallback:**  
