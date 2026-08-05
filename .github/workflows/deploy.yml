@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - public
+      - main
 
 jobs:
   build-and-deploy:
@@ -26,12 +27,12 @@ jobs:
       - name: 📦 Install Dependencies
         run: npm ci
 
-      # 4. Build proyek Astro
-      - name: 🏗️ Build Astro Project
-        run: npm run build
+      # 4. Hapus hasil build lama & Build proyek Astro
+      - name: 🧹 Clean Old Build & 🏗️ Build Astro Project
+        run: |
+          rm -rf dist
+          npm run build
         env:
-          # Tambahkan environment variable jika dibutuhkan saat build
-          # GOOGLE_SHEETS_API_KEY: ${{ secrets.GOOGLE_SHEETS_API_KEY }}
           NODE_ENV: production
 
       # 5. Deploy via FTP ke cPanel
@@ -48,10 +49,11 @@ jobs:
           local-dir: ./dist/
 
           # Folder tujuan di server cPanel
-          server-dir: /website/test-portfolio.fatah.web.id/
+          server-dir: ./website/test-portfolio.fatah.web.id/
 
-          # Opsi tambahan
-          protocol: ftps          # Gunakan FTPS (lebih aman). Ganti ke 'ftp' jika tidak didukung hosting
+          # Opsi pembersihan & enkripsi
+          protocol: ftps                   # Gunakan FTPS (Explicit TLS)
+          dangerous-clean-slate: true      # Hapus seluruh file/folder lama di cPanel sebelum upload baru
           exclude: |
             **/.git*
             **/.git*/**
