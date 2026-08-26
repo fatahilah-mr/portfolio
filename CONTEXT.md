@@ -1,26 +1,62 @@
-# CONTEXT.md — Dokumentasi Arsitektur, Kode, & Rekapitulasi Proyek Web Portofolio
+# 🧠 Project Context & Agent Session Summary
 
-> **Status Proyek:** Production Ready & Live at [`https://fatahmr.my.id`](https://fatahmr.my.id)  
-> **Pemilik:** Fatahilah Miftahul Rahman  
-> **Repository:** `fatahilah-mr/portfolio` (Branch `public`)  
-> **Hosting:** Cloudflare Pages  
-
----
-
-## 🚀 1. Ringkasan Eksekutif & Identitas Proyek
-
-Situs web portofolio ini dirancang sebagai platform interaktif berkinerja tinggi untuk menampilkan profil profesional, galeri proyek laboratorium teknis, sertifikasi, serta riwayat pengalaman **Fatahilah Miftahul Rahman** — Juara 1 Lomba Kompetensi Siswa (LKS) SMK IT Network System Administration Kabupaten Purworejo 2026.
-
-Situs dibangun menggunakan arsitektur **Static Site Generation (SSG)** berbasis **Astro 5** tanpa bergantung pada framework JavaScript berat di sisi klien. Seluruh data proyek dan sertifikat dikelola secara terpusat melalui **Google Sheets Headless CMS** yang dikombinasikan dengan sistem *caching* 24 jam dan *static SSR fallback cards* untuk menjamin indeksasi 100% sempurna di Google Search Console maupun mesin pencari AI.
+> [!IMPORTANT]
+> **Instructions for AI Coding Assistants:**
+> 1. Read this entire document and [AGENTS.md](AGENTS.md) before proposing or executing code changes to understand the project architecture, domain models, conventions, and previous session history.
+> 2. Whenever you finish a significant milestone or end a session, update the **Session History & Progress Log** section at the bottom of this file so subsequent sessions maintain continuity.
 
 ---
 
-## 🛠️ 2. Arsitektur Teknis & Tech Stack
+## 🚀 1. Project Bootstrapping Checklist (For New Repositories)
 
+- [x] **Step 1: Rename Project Placeholders:** Configured for `fatahilah-mr/portfolio`.
+- [x] **Step 2: Configure Environment:** Set up Astro SSG and Cloudflare Pages / cPanel FTPS deployment pipeline.
+- [x] **Step 3: Define Domain Models:** Defined Content Collections schemas (`src/content.config.ts`) and CMS Google Sheets types.
+- [x] **Step 4: Update Architecture & Flow:** Documented SSG build engine, client-side caching, and dynamic DOM translation flow.
+- [x] **Step 5: Record Initial ADR:** Documented SSG, Vanilla CSS, Headless Google Sheets CMS, and bilingual i18n decisions.
+- [x] **Step 6: Reset Changelog & Session Log:** Maintained full session history from Phase 1 through Phase 20.
+
+---
+
+## 📌 2. Project Blueprint & High-Level Overview
+
+- **Project Name:** `Fatahilah Portfolio Website`
+- **Repository:** `fatahilah-mr/portfolio` (Branch `public`)
+- **Live Production URL:** [`https://fatahmr.my.id`](https://fatahmr.my.id) (Cloudflare Pages) & [`https://test.fatah.web.id/portfolio/`](https://test.fatah.web.id/portfolio/) (cPanel Test Mirror)
+- **Owner:** Fatahilah Miftahul Rahman — Juara 1 Lomba Kompetensi Siswa (LKS) SMK IT Network System Administration Kabupaten Purworejo 2026.
+- **Current Version / Milestone:** `v2.5.0 (Production Live & No-AI-Slop Compliant)`
+- **Core Value Proposition:** High-performance, SEO-optimized interactive portfolio showcasing technical lab experiments (Cisco, MikroTik, Linux, Windows Server), achievements, certifications, and AI Prompt Engineering automation capabilities.
+- **Primary Users / Consumers:** Recruiters, technical hiring managers, clients, and web search engines (Googlebot, PerplexityBot, GPTBot, etc.).
+
+---
+
+## 🛠️ 3. Tech Stack & Environment
+
+| Component | Technology | Version | Notes / Conventions |
+| :--- | :--- | :--- | :--- |
+| **Core Framework** | Astro SSG | `v5.x` | Output `static`, canonical directory format (`build.format: 'directory'`) |
+| **Styling** | Vanilla CSS | Custom | Custom CSS variables in `src/styles/global.css`, Glassmorphism (`.glass-card`), no TailwindCSS |
+| **Data Provider (CMS)** | Google Sheets API (`gviz/tq`) | `v2` | Spreadsheet ID `1YMxR6-SlP-TT0B3y6NScT4L0YH0GXZEId_PY0Jgp8fQ` with 24h `localStorage` cache |
+| **SSR Fallback HTML** | Static Astro Components | Pure HTML | Static fallback cards in HTML for 100% SEO indexing without JS reliance |
+| **i18n / Translation** | Bilingual Engine (ID/EN) | Custom DOM Engine | Centralized translation dictionary inside `src/components/FloatingLang.astro` using `data-i18n` |
+| **CI / CD Deployment** | GitHub Actions & FTPS | Node `v24.x` | Workflows in `.github/workflows/deploy.yml` publishing to Cloudflare & cPanel |
+| **Anti-FOUC Engine** | Inline Head Script | Vanilla JS | Immediate theme (`light`/`dark`) & language (`id`/`en`) hydration before rendering |
+
+---
+
+## 🏗️ 4. Architecture & Data Flow
+
+### Architecture Pattern
+This project adopts a **Static Site Generation (SSG) with Client-Side Dynamic Hydration** pattern:
+- **Build Layer:** Astro v5 compiles static HTML pages into `dist/`.
+- **Client Hydration Layer:** Inline scripts handle instant theme toggling and bilingual DOM translations via `data-i18n`.
+- **CMS Data Layer:** Google Sheets API fetches dynamic projects and certificates data with a 24-hour `localStorage` cache and static HTML fallback cards for web crawlers.
+
+### Sequence Flow
 ```mermaid
 flowchart TD
     A[Astro 5 SSG Build Engine] --> B[HTML & Vanilla CSS Bundle]
-    B --> C[Cloudflare Pages Edge Network]
+    B --> C[Cloudflare Pages / cPanel FTPS]
     
     subgraph Client-Side Architecture
         D[Anti-FOUC Theme & Lang Script] --> E[LocalStorage Engine]
@@ -33,164 +69,169 @@ flowchart TD
     C --> Client-Side Architecture
 ```
 
-| Komponen | Teknologi | Deskripsi & Implementasi |
-|---|---|---|
-| **Core Framework** | **Astro v5.0** | Output `static`, format direktori kanonikal (`build.format: 'directory'`). |
-| **Desain & Styling** | **Vanilla CSS Murni** | Terorganisasi di `src/styles/global.css` dengan CSS Custom Properties (Theme Variables), Glassmorphism (`.glass-card`), Typography `DM Sans` & `JetBrains Mono`, serta perataan fluida. |
-| **Data Provider (CMS)** | **Google Sheets API (`gviz/tq`)** | Fetch data proyek & sertifikat secara langsung dari Google Spreadsheet (`1YMxR6-SlP-TT0B3y6NScT4L0YH0GXZEId_PY0Jgp8fQ`) dengan `localStorage` cache 24 jam. |
-| **SSR Fallback HTML** | **Astro Static Elements** | Menyediakan 3 kartu statis di HTML awal untuk mengamankan perayapan bot (Googlebot, PerplexityBot, GPTBot) tanpa ketergantungan JavaScript. |
-| **Internationalization (i18n)** | **Bilingual Engine (ID/EN)** | Kamus terpusat di `src/i18n/ui.ts` yang disinkronisasikan ke mesin penerjemah DOM di `src/components/FloatingLang.astro` tanpa *page reload*. |
-| **Keamanan & Performa** | **Vanilla Anti-FOUC** | Script inline di `<head>` untuk mencegah *flash of unstyled content* saat memuat tema (`light`/`dark`) dan bahasa (`id`/`en`). |
-
 ---
 
-## 📂 3. Struktur Berkas & Direktori Utama
+## 📂 5. Directory Map & Module Responsibilities
 
 ```text
 portfolio-new/
 ├── public/
-│   ├── assets/              # Gambar, favicon, logo, & PDF CV ATS
-│   ├── llms.txt             # Berkas konteks Markdown untuk AI Search Engines
-│   ├── robots.txt           # Konfigurasi perayapan bot & tautan sitemap
-│   └── sitemap.xml          # XML sitemap statis murni W3C Datetime (7 rute)
+│   ├── assets/              # Assets, profile image, logos, and ATS Resume PDF
+│   ├── llms.txt             # Agent-readable context Markdown for AI Search Engines
+│   ├── robots.txt           # Search engine & AI crawler access rules
+│   └── sitemap.xml          # W3C Datetime XML sitemap for canonical routes
 ├── src/
-│   ├── components/          # Komponen UI Astro
-│   │   ├── AchievementHighlight.astro  # Card sorotan Juara 1 LKS 2026
-│   │   ├── ExperienceShowcase.astro    # Timeline riwayat PKL/Magang
-│   │   ├── FeaturedProjects.astro      # 3 Card proyek unggulan di Beranda
-│   │   ├── FloatingLang.astro          # Tombol ganti bahasa + penerjemah DOM
-│   │   ├── Footer.astro                # Footer & tagline resmi
-│   │   ├── HomeTeasers.astro           # Navigasi cepat beranda ke Keahlian/Pengalaman
-│   │   └── Navbar.astro                # Header, navigasi, & toggle mode malam
+│   ├── components/          # Reusable Astro UI Components
+│   │   ├── AchievementHighlight.astro  # LKS 2026 1st Place Gold Medal Highlight Card
+│   │   ├── ExperienceShowcase.astro    # PKL & Internship experience timeline
+│   │   ├── FeaturedProjects.astro      # Top 3 project teasers on Home page
+│   │   ├── FloatingLang.astro          # Floating language switcher + DOM i18n dictionary
+│   │   ├── Footer.astro                # Global footer & official branding
+│   │   ├── HomeTeasers.astro           # Home quick links to About & Contact
+│   │   └── Navbar.astro                # 3-Column CSS Grid centered header & theme toggle
 │   ├── content/             # Astro Content Collections (Storytelling Markdown)
 │   │   └── projects/        # fatahilah-portfolio.id.md & fatahilah-portfolio.en.md
-│   ├── content.config.ts    # Skema Zod untuk Content Collections
-│   ├── i18n/
-│   │   └── ui.ts            # Kamus terjemahan bilingual (ID & EN)
+│   ├── content.config.ts    # Zod schema for Content Collections
 │   ├── layouts/
-│   │   └── Layout.astro     # Main HTML wrapper, Schema.org JSON-LD, Fonts, & Meta
-│   ├── pages/               # Rute Halaman Utama
+│   │   └── Layout.astro     # Root HTML wrapper, Schema.org JSON-LD Person metadata
+│   ├── pages/               # File-based Routes
 │   │   ├── 404.astro        # Custom 404 page
-│   │   ├── about.astro      # Halaman Profil, Filosofi, & Core Focus
-│   │   ├── certificates.astro # Halaman Sertifikat, Piagam LKS, & Transkrip PKL
-│   │   ├── contact.astro    # Halaman Kontak (WA, LinkedIn, GitHub, Email, CV)
-│   │   ├── experience.astro # Halaman Riwayat Pengalaman & Pendidikan
-│   │   ├── index.astro      # Halaman Utama (Beranda / Hero / Highlights)
-│   │   ├── projects.astro   # Halaman Galeri Laboratorium & Filter CMS
-│   │   └── skills.astro     # Halaman 6 Pilar Keahlian Teknis
-│   └── styles/
-│       └── global.css       # Design tokens, CSS variables, & pemusatan teks global
-├── astro.config.mjs         # Konfigurasi Astro (output static, site URL)
-├── CONTEXT.md               # Single Source of Truth dokumentasi proyek ini
-├── GUIDE-PROJECT-AI.md      # Panduan standar dokumentasi storytelling proyek
-├── package.json             # Dependensi (astro ^5.0.0, @astrojs/sitemap ^3.7.3)
-└── vercel.json / Cloudflare # Konfigurasi deployment hosting
+│   │   ├── about.astro      # Profile, Philosophy, & 6 Core Focus Areas
+│   │   ├── certificates.astro # Certificates, LKS Awards, & Grade Transcripts
+│   │   ├── contact.astro    # Contact page (WhatsApp, LinkedIn, GitHub, Email, CV)
+│   │   ├── experience.astro # Full Experience & Education timeline
+│   │   ├── index.astro      # Full-viewport Hero & Home sections
+│   │   ├── projects.astro   # 3-Column Desktop Lab Projects Grid & CMS Filters
+│   │   └── skills.astro     # 6 Technical Expertise Pillars
+│   ├── styles/
+│   │   └── global.css       # Design tokens, CSS variables, & responsive utilities
+│   └── utils/
+│       └── url.ts           # Dynamic BASE_URL-aware link generator helper
+├── template/                # Standardized Project Template & Guardrails
+├── astro.config.mjs         # Astro SSG configuration
+├── CONTEXT.md               # Single Source of Truth architecture & session log
+└── package.json             # Dependencies & scripts
 ```
 
 ---
 
-## 📑 4. Rincian Halaman & Komponen Utama
+## 🗄️ 6. Core Domain Entities & Schemas
 
-### A. Halaman Beranda (`src/pages/index.astro`)
-* **Hero Section:** Tagline *"IT Network System Administration & Web Development"*, tombol CTA utama, dan animasi fade-in yang dioptimalkan untuk Googlebot (tanpa `animation-fill-mode: both` yang mengunci opacity ke 0).
-* **`AchievementHighlight.astro`:** Kartu visual khusus menyoroti gelar **Juara 1 LKS IT Network System Administration Purworejo 2026**.
-* **`FeaturedProjects.astro`:** Menampilkan 3 proyek terbaik dari Google Sheets CMS dengan `border-radius: 14px 14px 0 0` pada `.project-img-wrap` agar sudut kartu membulat sempurna.
-* **`HomeTeasers.astro`:** Tautan cepat menuju rute Keahlian dan Pengalaman.
+### Content Collection Schema (`src/content.config.ts`)
+```typescript
+import { defineCollection, z } from 'astro:content';
 
-### B. Halaman Tentang Saya (`src/pages/about.astro`)
-* Memuat latar belakang pendidikan (SMK Patriot Pituruh), filosofi teknis 3 pilar (Security & Reliability 99.9% Uptime, Efficient Automation, Continuous Learning), serta status profesional *Fresh Graduate TKJ 2026*.
-
-### C. Halaman Pengalaman (`src/pages/experience.astro`)
-* Timeline interaktif riwayat Praktik Kerja Lapangan (PKL) di **UPTD BLK Kebumen**, **Fazza Computer (FTTH & Serat Optik)**, dan **IMC Computer**, serta pendidikan TKJ.
-
-### D. Halaman Keahlian Teknis (`src/pages/skills.astro`)
-* Menampilkan **6 Pilar Keahlian Teknis**:
-  1. *Hardware & Cabling* (Serat Optik, Fusion Splicer, OTDR, UTP Patch Cord).
-  2. *Cisco Networking & Switching* (IOS, VLAN, Routing OSPF/BGP, Trunking, Port Security).
-  3. *MikroTik & Wireless Infrastructure* (RouterOS, Bandwidth Management Queue, Hotspot Gateway, CAPsMAN).
-  4. *Linux Server Administration* (Debian 12, Nginx, Apache, DNS Bind9, DHCP, SSH, Webmin).
-  5. *Windows Server Administration* (Windows Server 2022, Active Directory Domain Services, Group Policy).
-  6. *AI Prompt Engineering & Web Development* (Automated Diagnostics, Astro 5, Vanilla CSS, Headless CMS).
-
-### E. Halaman Galeri Proyek (`src/pages/projects.astro`)
-* Galeri eksperimen laboratorium interaktif dengan filter kategori (Semua, AI, Cisco, Linux, MikroTik, Windows Server, Website), fitur pencarian live, serta tautan repositori/topologi.
-
-### F. Halaman Sertifikat (`src/pages/certificates.astro`)
-* Menampilkan piagam LKS, sertifikat kompetensi, transkrip nilai PKL, serta tombol akses berkas Google Drive publik.
-
-### G. Halaman Kontak (`src/pages/contact.astro`)
-* Kartu kontak terpusat dengan aksen warna khusus per-tema:
-  * **WhatsApp:** Hijau `#25D366` dengan layout tombol terpusat (`flex-direction: column; align-items: center;`).
-  * **LinkedIn:** Biru `#0A66C2`.
-  * **GitHub:** Monokrom / Dark Accent.
-  * **Email:** Merah `#EA4335`.
-  * **Resume CV ATS:** Berkas PDF resmi (`https://cdn.fatahmr.my.id/portfolio/assets/CV%20Fatahilah%20Miftahul%20Rahman.pdf`).
-
----
-
-## 🌐 5. Infrastruktur SEO, AI SEO (AEO), & Metadata Entitas
-
-1. **Google Search Console & XML Sitemap (`public/sitemap.xml`):**
-   * Sitemap statis murni tanpa integrasi plugin yang bentrok dengan tag `hreflang`.
-   * Berisi 7 rute kanonikal berformat W3C Datetime (`2026-08-02`): `/`, `/about/`, `/certificates/`, `/contact/`, `/experience/`, `/projects/`, `/skills/`.
-2. **Robots.txt (`public/robots.txt`):**
-   * Mengizinkan perayapan terbuka (`User-agent: * Allow: /`) dan mendaftarkan lokasi sitemap.
-   * Memberikan akses penuh bagi bot pencari berbasis AI (`GPTBot`, `PerplexityBot`, `ClaudeBot`, `Google-Extended`, `Bingbot`).
-3. **Agent-Readable Context (`public/llms.txt`):**
-   * Menyediakan berkas Markdown ringkas untuk AI Assistants dan *Autonomous Agents* yang mengekstrak informasi profil, spesialisasi, dan tautan halaman utama.
-4. **Schema.org JSON-LD (`src/layouts/Layout.astro`):**
-   * Metadata entitas `Person` terstruktur yang mencantumkan:
-     * `name`: Fatahilah Miftahul Rahman
-     * `jobTitle`: IT Network System Administration & Web Development Specialist
-     * `award`: Juara 1 Lomba Kompetensi Siswa (LKS) IT Network System Administration Kabupaten Purworejo 2026
-     * `knowsAbout`: Array 6 pilar keahlian teknis
-     * `alumniOf`: SMK Patriot Pituruh
-     * `sameAs`: Profil resmi GitHub (`fatahilah-mr`) & LinkedIn (`fatahilah-mr`)
-
----
-
-## 📜 6. Rekapitulasi Percakapan & Evolusi Perbaikan (Fase 1 – 9)
-
-Berikut adalah riwayat kronologis lengkap perbaikan dan penguatan fitur yang telah berhasil dilakukan pada codebase ini:
-
-* **Fase 10 — Perbaikan Workflow Deployment GitHub Actions (`.github/workflows/deploy.yml`):**  
-  Menyelaraskan skrip deployment FTPS ke cPanel menggunakan referensi `.github/deploy.yml` yang teruji, memperbarui environment Node.js ke **Node.js 24**, menambahkan perintah `rm -rf dist` sebelum build untuk menghapus sisa build lama di runner, mengaktifkan `dangerous-clean-slate: true` agar server cPanel dibersihkan secara total sebelum mengunggah ulang, serta mendaftarkan pemicu otomatis untuk branch `public` & `main`.
-* **Fase 15 — Penghapusan Badge Eyebrow (Section-Badge) di Seluruh Halaman:**  
-  Menghapus seluruh elemen badge header (`.section-badge` dan `.badge-wrapper` eyebrow) dari bagian atas judul pada 7 halaman utama (`index`, `about`, `experience`, `skills`, `projects`, `certificates`, `contact`) serta komponen `ExperienceShowcase.astro` untuk memberikan tampilan header yang lebih bersih, fokus, dan minimalis.
-* **Fase 1 — Perbaikan Sitemap & Google Search Console:**  
-  Mematikan integrasi `@astrojs/sitemap` yang berpotensi menghasilkan bentrok tag `hreflang` berulang. Menggantinya dengan berkas statis `public/sitemap.xml` berstandar W3C Datetime serta menyesuaikan `public/robots.txt`.
-* **Fase 2 — Perbaikan Rendering Googlebot & SSR Fallback:**  
-  Memperbaiki masalah laporan GSC *Halaman Tidak Ditemukan* yang disebabkan oleh animasi CSS `animation-fill-mode: both` dengan `opacity: 0`. Menambahkan *SSR Static Fallback Cards* di `FeaturedProjects.astro`, `projects.astro`, dan `certificates.astro` untuk memastikan bot mendapatkan HTML murni tanpa perlu mengeksekusi Client JS.
-* **Fase 3 — Dokumentasi Proyek Storytelling AI:**  
-  Membuat dokumentasi proyek portofolio sesuai panduan `GUIDE-PROJECT-AI.md` di `src/content/projects/fatahilah-portfolio.id.md` & `fatahilah-portfolio.en.md` beserta definisi skema Zod di `src/content.config.ts`.
-* **Fase 4 — Optimasasi Halaman Kontak & Tombol WhatsApp:**  
-  Memperbaiki konflik hover `translateY`, bayangan *glow* per-tema, serta menyusun tombol *"Kirim Pesan WhatsApp Sekarang"* dengan `flex-direction: column; align-items: center;` agar terpusat secara presisi di tengah.
-* **Fase 5 — Sinkronisasi Tagline Header & Footer:**  
-  Memperbarui tagline resmi di `Footer.astro` dan `FloatingLang.astro` menjadi *"IT Network System Administration & Web Development"*.
-* **Fase 6 — Penyesuaian Sub-judul Keahlian:**  
-  Memperbarui teks sub-judul dari 4 pilar menjadi 6 pilar keahlian pada `skills.astro` dan kamus dwibahasa `FloatingLang.astro` (ID/EN).
-* **Fase 7 — Perataan Tengah Sub-judul Beranda (`global.css`):**  
-  Menambahkan `margin-left: auto; margin-right: auto;` pada `.featured-subtitle` dan `.section-subtitle` di `src/styles/global.css` untuk memastikan paragraf sub-judul berukuran `max-width: 68ch` berada presisi di tengah layar secara horizontal.
-* **Fase 8 — Implementasi AI SEO (`/ai-seo`) & Sitemap Audit (`/seo-sitemap`):**  
-  Memperbarui `public/llms.txt` dengan tautan rute kanonikal bersih, memperkaya skema JSON-LD `Person`, serta memverifikasi kesesuaian sitemap XML.
-* **Fase 9 — Perbaikan Sudut Bulat Kartu Proyek Beranda:**  
-  Menambahkan `border-radius: 14px 14px 0 0` pada `.project-img-wrap` di `FeaturedProjects.astro` sehingga gambar thumbnail tidak menutupi sudut atas kartu, menghasilkan sudut membulat yang simetris dengan halaman proyek (`projects.astro`).
-
----
-
-## ⚡ 7. Alur Kerja Perintah & Deployment
-
-### Perintah Build Lokal (Termux / Linux)
-```bash
-node ./node_modules/astro/astro.js build
+const projectsCollection = defineCollection({
+  type: 'content',
+  schema: z.object({
+    title: z.string(),
+    description: z.string(),
+    category: z.enum(['Cisco', 'MikroTik', 'Linux', 'Windows Server', 'AI', 'Website']),
+    pubDate: z.date(),
+    heroImage: z.string().optional(),
+    featured: z.boolean().default(false),
+  }),
+});
 ```
 
-### Git Workflow Standard
-```bash
-git add .
-git commit -m "jenis(cakupan): deskripsi perubahan singkat"
-git push origin public
+### Schema.org JSON-LD Metadata (`src/layouts/Layout.astro`)
+```json
+{
+  "@context": "https://schema.org",
+  "@type": "Person",
+  "name": "Fatahilah Miftahul Rahman",
+  "jobTitle": "IT Network System Administration & Web Development Specialist",
+  "award": "Juara 1 Lomba Kompetensi Siswa (LKS) IT Network System Administration Kabupaten Purworejo 2026",
+  "knowsAbout": [
+    "Hardware & Cabling",
+    "Cisco Networking",
+    "MikroTik & Wireless",
+    "Linux Server Administration",
+    "Windows Server Administration",
+    "AI Prompt Engineering & Web Development"
+  ]
+}
 ```
 
 ---
-*Dokumen CONTEXT.md ini adalah berkas acuan resmi (Single Source of Truth) untuk arsitektur, histori perbaikan, dan standar teknis proyek portofolio Fatahilah Miftahul Rahman.*
+
+## ⚠️ 7. AI Agent Guardrails & Strict Rules
+
+1. **🔒 Security & Secret Scrubbing:** Never commit API secrets or cPanel FTPS credentials to public git history.
+2. **✍️ No AI Slop Principle:** Strictly adhere to `.agents/skills/no-ai-slop/SKILL.md`. Avoid fluff, importance puffery, fake-profound taglines ("Connecting the future..."), decorative em-dashes, and abstract setups. Keep tone formal, realistic, and direct.
+3. **🌐 URL & Base Path Integrity:** Always use `getUrl(path)` from `src/utils/url.ts` or base-relative paths to ensure subdirectory support (`/portfolio/`) on cPanel test server without breaking root domain deployment (`fatahmr.my.id`).
+4. **🎨 Styling Rules:** Use Vanilla CSS in `src/styles/global.css` or scoped Astro styles. Do NOT introduce TailwindCSS unless requested.
+5. **⚡ Verification Protocol:** Never claim a task is completed without running `node ./node_modules/astro/astro.js build` to confirm zero compilation or type errors.
+
+---
+
+## 💸 8. Tech Debt & Trade-Offs Tracker
+
+| ID | Component | Description / Shortcut Taken | Impact / Risk | Recommended Remediation |
+| :--- | :--- | :--- | :--- | :--- |
+| `TD-001` | Google Sheets CMS | Fetching via client-side `gviz/tq` endpoint | Depends on Google Sheets uptime and client JS | Maintain Astro static HTML fallback cards |
+| `TD-002` | CSS Minification Warning | Esbuild warning on whitespace in `@stdin` during build | Cosmetic build warning only, no runtime impact | Clean up redundant whitespace in global CSS rules |
+
+---
+
+## 📚 9. Documentation & Resource Navigation Index
+
+- **Universal AI Instructions:** [AGENTS.md](AGENTS.md)
+- **AI-Slop Writing Skill:** [.agents/skills/no-ai-slop/SKILL.md](.agents/skills/no-ai-slop/SKILL.md)
+- **Project Context (SSOT):** [CONTEXT.md](CONTEXT.md)
+- **Storytelling Documentation Guide:** [GUIDE-PROJECT-AI.md](GUIDE-PROJECT-AI.md)
+- **Agent Context File:** [public/llms.txt](public/llms.txt)
+- **Sitemap Index:** [public/sitemap.xml](public/sitemap.xml)
+
+---
+
+## 🚀 10. Current State & Active Milestone
+
+- **Active Milestone:** `v2.5.0 — Polish, No-AI-Slop Audit, & 2D Responsive Alignment`
+- **Current Status:** 🟢 Production Ready & Fully Deployed
+- **Active Task:** Built `CONTEXT.md` matching `template/CONTEXT.md` standard.
+- **Known Blockers / Gotchas:** None. Build completes with zero errors.
+
+---
+
+## 📝 11. Session History & Chat Summary Log
+
+| Session Date | Author / Agent | Milestone / Task | Key Files Touched | Next Step / Handover |
+| :--- | :--- | :--- | :--- | :--- |
+| `2026-08-02` | Antigravity AI | Phase 1 — Sitemap & SEO Fix | `public/sitemap.xml`, `robots.txt` | Complete SEO indexing setup |
+| `2026-08-03` | Antigravity AI | Phase 2 — SSR Fallback Cards | `FeaturedProjects.astro`, `projects.astro` | Fix Googlebot rendering |
+| `2026-08-04` | Antigravity AI | Phase 3-9 — Polish & Alignment | `skills.astro`, `contact.astro`, `global.css` | UI/UX & Content refinement |
+| `2026-08-05` | Antigravity AI | Phase 10 — Node 24 CI/CD Upgrade | `.github/workflows/deploy.yml` | Upgrade deployment workflow |
+| `2026-08-05` | Antigravity AI | Phase 14 — Dynamic Routing Helper | `src/utils/url.ts` | Base-aware URL support |
+| `2026-08-05` | Antigravity AI | Phase 15 — Badge Eyebrow Removal | All 7 page files & `ExperienceShowcase.astro` | Header badge cleanup |
+| `2026-08-05` | Antigravity AI | Phase 16 — No-AI-Slop Writing Audit & Fix | `FloatingLang.astro`, `about.astro`, `AchievementHighlight.astro`, `ExperienceShowcase.astro`, `experience.astro` | Remove AI writing patterns |
+| `2026-08-05` | Antigravity AI | Phase 17 — Dead Code Removal | `src/i18n/ui.ts` deleted, `Navbar.astro`, `Footer.astro` | Remove stale imports |
+| `2026-08-07` | Antigravity AI | Phase 18 — 3-Column Projects Grid | `projects.astro` | Desktop layout responsive update |
+| `2026-08-07` | Antigravity AI | Phase 19 — Desktop Navbar Center Align | `Navbar.astro` | CSS Grid 1fr-auto-1fr true centering |
+| `2026-08-07` | Antigravity AI | Phase 20 — Full-Viewport Hero Section | `index.astro` | Set 100vh/100dvh hero height |
+| `2026-08-26` | Antigravity AI | Template CONTEXT.md Standardization | `CONTEXT.md` | Standardize CONTEXT.md format |
+
+### Session Entry: `2026-08-07` (Navbar Centering & Full-Height Hero Section)
+- **Objective:** Fix desktop Navbar menu off-center shifting and set Home Hero Section to full viewport height.
+- **Completed Work:**
+  - Updated `Navbar.astro` desktop layout to 3-column CSS Grid (`grid-template-columns: 1fr auto 1fr`) so the 7 navigation links align to exact screen center regardless of logo or theme button width differences.
+  - Updated `index.astro` `.hero-section` to `min-height: calc(100vh - 64px)` and `min-height: calc(100dvh - 64px)` with vertical centering.
+
+### Session Entry: `2026-08-26` (Template CONTEXT.md Standardization)
+- **Objective:** Reformat and standardize root `CONTEXT.md` according to the reference template in `template/CONTEXT.md`.
+- **Completed Work:**
+  - Preserved all historical context, domain technical stack details, SEO architecture, and phase histories.
+  - Applied standardized 12-section blueprint format.
+
+---
+
+## 📋 12. Backlog & Next Actions
+
+- [x] Upgrade deployment runner to Node.js 24
+- [x] Remove section eyebrow badges across all pages
+- [x] Audit and fix AI-slop text patterns using `no-ai-slop` skill
+- [x] Clean up dead code (`src/i18n/ui.ts`)
+- [x] Update projects grid to 3 columns on desktop
+- [x] Align desktop navbar links to true screen center
+- [x] Set Home Hero Section to full-viewport height (`100dvh`)
+- [x] Reformat `CONTEXT.md` using `template/CONTEXT.md` structure
