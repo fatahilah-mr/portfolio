@@ -214,6 +214,18 @@ const projectsCollection = defineCollection({
 | `2026-09-10` | Antigravity AI | Phase 22 — URL-Based i18n Routing (EN default, ID on /id & /projects/id) | `src/layouts/`, `src/components/`, `src/pages/`, `public/_redirects` | Deployed to staging `preview.fmr.web.id` |
 | `2026-09-10` | Antigravity AI | Phase 23 — Fix Blank English Content & Replace Tofu Icons | `src/components/`, `src/pages/` | Deployed to staging `preview.fmr.web.id` |
 | `2026-09-10` | Antigravity AI | Phase 24 — Mobile Horizontal Scroll Elimination & CDP Audit | `src/styles/global.css`, `Hero.astro`, `Navbar.astro`, Carousels | 30/30 viewports verified, deployed to staging |
+| `2026-09-10` | Antigravity AI | Phase 25 — Fix Hero Metrics Asymmetry & Alignment Across Viewports | `src/components/Hero.astro` | Pixel-perfect symmetry verified via CDP, deployed to staging |
+
+### Session Entry: `2026-09-10` (Phase 25: Hero Metrics Symmetry & Alignment Fix)
+- **Objective:** Fix visible asymmetry and uneven column alignment in the hero metrics container (`.hero-metrics`) on mobile and desktop viewports.
+- **Root Cause Analysis:**
+  1. **Cascade Override Bug:** `.metric-item { display: flex; flex-direction: column; align-items: flex-start; }` was declared after the `@media (max-width: 520px)` rule in `Hero.astro`. Since media queries do not increase specificity, `align-items: flex-start` overrode `align-items: center; text-align: center`, causing the numbers (`#1`, `20+`, `10+`) and labels to left-align within their respective grid cells rather than centering.
+  2. **Vertical Offset Droop:** In CSS grid without explicit `align-items: start`, the middle item (`20+` / `Verified Certs`) with 1 line of text was vertically centered relative to adjacent 2-line items, dropping its number down by 7.5px (`top: 672px` vs `664px`).
+- **Implemented Fixes:**
+  - Placed base styles with `align-items: center; text-align: center; justify-content: flex-start;` for `.metric-item`.
+  - Added `display: block; width: 100%; text-align: center;` to `.metric-lbl` and child spans.
+  - In `@media (max-width: 520px)`, configured `.hero-metrics` with `display: grid; grid-template-columns: repeat(3, 1fr); align-items: start;`.
+  - Re-verified using Chrome DevTools Protocol: at 360px viewport, all three numbers share identical `top: 667px`, all three labels share identical `top: 689px`, and the horizontal distance between item centers is exactly 103px on both sides (100% pixel-perfect symmetry).
 
 ### Session Entry: `2026-09-10` (Phase 24: Comprehensive Audit & Elimination of Mobile Horizontal Scroll / Layout Overflow)
 - **Objective:** Diagnose and eliminate horizontal scroll (layout overflow) across all pages (both `/` English default and `/id` Indonesian routes) on mobile viewports (360px - 430px) and desktop. Validate the user's hypothesis that the 3D carousels were causing horizontal overflow.

@@ -175,7 +175,7 @@
     gap: clamp(12px, 3vw, 28px);
     background: var(--bg-card);
     border: 1px solid var(--color-border);
-    padding: 12px clamp(12px, 3vw, 24px);
+    padding: 12px clamp(16px, 3vw, 28px);
     border-radius: 12px;
     margin-bottom: 28px;
     box-shadow: var(--shadow-sm);
@@ -183,12 +183,52 @@
     box-sizing: border-box;
   }
 
+  .metric-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    justify-content: flex-start;
+  }
+
+  .metric-val {
+    font-size: 1.25rem;
+    font-weight: 800;
+    color: var(--color-foreground);
+    line-height: 1.1;
+    margin-bottom: 4px;
+    text-align: center;
+  }
+
+  .metric-lbl {
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: var(--color-subtle);
+    line-height: 1.3;
+    text-align: center;
+    display: block;
+    width: 100%;
+  }
+
+  .metric-lbl span {
+    display: block;
+    text-align: center;
+  }
+
+  .metric-divider {
+    width: 1px;
+    height: 32px;
+    background-color: var(--color-border);
+    flex-shrink: 0;
+  }
+
   @media (max-width: 520px) {
     .hero-metrics {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
+      align-items: start;
       gap: 6px;
-      padding: 10px 8px;
+      padding: 12px 8px;
       width: 100%;
     }
 
@@ -199,10 +239,13 @@
     .metric-item {
       align-items: center;
       text-align: center;
+      justify-content: flex-start;
+      width: 100%;
     }
 
     .metric-val {
       font-size: 1.15rem;
+      margin-bottom: 2px;
     }
 
     .metric-lbl {
@@ -210,31 +253,6 @@
       line-height: 1.25;
       text-align: center;
     }
-  }
-
-  .metric-item {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-  }
-
-  .metric-val {
-    font-size: 1.25rem;
-    font-weight: 800;
-    color: var(--color-foreground);
-    line-height: 1.1;
-  }
-
-  .metric-lbl {
-    font-size: 0.75rem;
-    font-weight: 500;
-    color: var(--color-subtle);
-  }
-
-  .metric-divider {
-    width: 1px;
-    height: 32px;
-    background-color: var(--color-border);
   }
 
   .hero-actions {
