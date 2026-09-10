@@ -442,6 +442,22 @@ const projectsCollection = defineCollection({
   6. **Mobile Ergonomics:**
      - Ensured 100% responsive layout with zero horizontal overflow down to 360px.
 
+### Session Entry: `2026-09-10` (Phase 32: Harmonize Carousel Click Hint Badge & Swooping Arrow Colors)
+- **Objective:** Address user feedback regarding callout badge and swooping arrow colors not being relevant or harmonious with website theme.
+- **Root Cause Analysis:**
+  - The badge was previously hardcoded with near-black charcoal `rgba(24, 24, 27, 0.92)`, which in Light Mode looked like an aggressive, unstyled dark sticker against the clean white/editorial paper background.
+  - The swooping arrow was hardcoded to `#EF4444` (bright marker red), which was an accidental artifact from the user's red doodle annotation and clashed with the site's signature Cobalt/Sky Blue accent.
+- **Completed Work:**
+  1. **Theme Design System Harmonization (`src/styles/global.css`):**
+     - Updated `.carousel-hint-callout .callout-badge` in Light Mode to white frosted glass (`rgba(255, 255, 255, 0.94)`) with subtle blueprint cobalt border (`rgba(37, 99, 235, 0.25)`), high-contrast ink text (`var(--color-foreground)`), and soft blue shadow (`0 4px 16px rgba(37, 99, 235, 0.12)`).
+     - Updated Dark Mode to obsidian frosted glass (`rgba(24, 24, 27, 0.94)`) with blue border (`rgba(59, 130, 246, 0.35)`).
+     - Converted `.hint-arrow` color from hardcoded red to `var(--color-accent)` (`#2563EB` Cobalt Blue in Light Mode, `#3B82F6` in Dark Mode) with matching blue glow drop-shadow.
+  2. **Markup Upgrade (`FeaturedProjectsCarousel.astro` & `FeaturedCertificatesCarousel.astro`):**
+     - Replaced raw OS emoji `👆` with crisp SVG tap pointer icon inheriting `var(--color-accent)`.
+  3. **Verification & Live Production Health Check:**
+     - Built and pushed to `dev` (Commit `6bc4afc`).
+     - Monitored Cloudflare Pages deployment to `https://preview.fmr.web.id/`.
+
 ---
 
 ## 📋 12. Backlog & Next Actions
