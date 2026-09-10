@@ -41,6 +41,21 @@ const featuredCerts = [
 
     <!-- 3D Centered Carousel Stage -->
     <div class="carousel-stage" id="cert-carousel-stage">
+      <!-- Animated Click-Here Callout with Curved Looping Arrow (Points to Center Card) -->
+      <div class="carousel-hint-callout" id="cert-click-hint">
+        <div class="callout-badge">
+          <span>👆</span>
+          <span class="lang-id">Klik di sini untuk detail</span>
+          <span class="lang-en">Click here for details</span>
+        </div>
+        <svg class="hint-arrow" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M 38 2 C 30 10 16 14 12 22 C 8 30 24 34 28 26 C 32 16 16 20 12 36 C 10 40 12 44 14 46" 
+                stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M 8 40 L 14 46 L 20 40" 
+                stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+
       <div class="carousel-viewport" id="cert-carousel-viewport" role="region" aria-label="Galeri Sertifikat Pilihan">
         {featuredCerts.map((cert, idx) => {
           let posClass = 'hidden-card';
@@ -68,14 +83,6 @@ const featuredCerts = [
                   height="1000"
                 />
               </div>
-
-              <!-- Animated Micro-Indicator (on active card) -->
-              {idx === 0 && (
-                <div class="carousel-hint-indicator" id="cert-click-hint">
-                  <span class="lang-id">👆 Klik di sini untuk detail</span>
-                  <span class="lang-en">👆 Click here for details</span>
-                </div>
-              )}
 
               <!-- Card Info Footer -->
               <div class="carousel-card-footer">

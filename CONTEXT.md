@@ -215,6 +215,18 @@ const projectsCollection = defineCollection({
 | `2026-09-10` | Antigravity AI | Phase 23 — Fix Blank English Content & Replace Tofu Icons | `src/components/`, `src/pages/` | Deployed to staging `preview.fmr.web.id` |
 | `2026-09-10` | Antigravity AI | Phase 24 — Mobile Horizontal Scroll Elimination & CDP Audit | `src/styles/global.css`, `Hero.astro`, `Navbar.astro`, Carousels | 30/30 viewports verified, deployed to staging |
 | `2026-09-10` | Antigravity AI | Phase 25 — Fix Hero Metrics Asymmetry & Alignment Across Viewports | `src/components/Hero.astro` | Pixel-perfect symmetry verified via CDP, deployed to staging |
+| `2026-09-10` | Antigravity AI | Phase 26 — Implement Curved Looping Doodle Arrow Callout | `global.css`, `FeaturedProjectsCarousel.astro`, `FeaturedCertificatesCarousel.astro` | Visual verification passed, deployed to staging |
+
+### Session Entry: `2026-09-10` (Phase 26: Implementation of Curved Looping Doodle Arrow Callout)
+- **Objective:** Replace static inside-card pill badge with an animated curved looping doodle arrow callout pointing directly at the center card, fulfilling the user's manual sketch in `media_1789045789913.jpg` and `media_1789045790002.jpg`.
+- **Implementation:**
+  1. **Mounted Outside Card in Carousel Stage:** Moved `#project-click-hint` and `#cert-click-hint` from inside `.carousel-card` to `.carousel-stage` directly above the active card. This avoids clipping from the card's `overflow: hidden; border-radius: 12px`.
+  2. **Hand-Drawn Looping Doodle Arrow SVG:** Crafted an SVG curved path with a loop that curves down from the badge and points directly at the top center of the active card (`color: #EF4444`, matching the user's red sketch, with soft drop-shadow).
+  3. **Floating Bob Animation:** Applied gentle `hintFloatBob` keyframe animation (subtle 6px vertical floating) that catches the eye.
+  4. **Smooth Auto-Fadeout:** Integrated with the existing carousel interaction listeners (`click`, `touch`, navigation buttons) so it fades away immediately (`opacity: 0; transform: translate(-50%, -12px); pointer-events: none;`) once the user interacts.
+- **Verification:**
+  - Zero layout overflow (`docScroll === window.innerWidth` at 360px).
+  - Clean bilingual rendering (`Klik di sini untuk detail` / `Click here for details`).
 
 ### Session Entry: `2026-09-10` (Phase 25: Hero Metrics Symmetry & Alignment Fix)
 - **Objective:** Fix visible asymmetry and uneven column alignment in the hero metrics container (`.hero-metrics`) on mobile and desktop viewports.

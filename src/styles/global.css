@@ -426,41 +426,66 @@ textarea:focus-visible,
   display: block;
 }
 
-/* Floating animated micro-indicator on active card */
-.carousel-hint-indicator {
+/* ==========================================================================
+   CAROUSEL CLICK-HINT CALLOUT WITH CURVED LOOPING ARROW (Anti-Slop Visual Cue)
+   ========================================================================== */
+.carousel-hint-callout {
   position: absolute;
-  top: 14px;
-  right: 14px;
-  background: rgba(24, 24, 27, 0.88);
+  top: -16px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  z-index: 45;
+  pointer-events: none;
+  animation: hintFloatBob 2.4s ease-in-out infinite;
+  transition: opacity 0.45s ease, transform 0.45s ease;
+}
+
+@media (max-width: 640px) {
+  .carousel-hint-callout {
+    top: -14px;
+  }
+}
+
+.carousel-hint-callout .callout-badge {
+  background: rgba(24, 24, 27, 0.92);
   color: #FFFFFF;
-  padding: 6px 12px;
+  padding: 6px 14px;
   border-radius: 9999px;
   font-size: 0.75rem;
   font-weight: 600;
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.2);
   display: flex;
   align-items: center;
   gap: 6px;
-  z-index: 40;
-  pointer-events: none;
-  animation: pulseFloat 2s ease-in-out infinite;
-  transition: opacity 0.4s ease, transform 0.4s ease;
+  white-space: nowrap;
 }
 
-.carousel-hint-indicator.faded {
+.carousel-hint-callout .hint-arrow {
+  width: 44px;
+  height: 44px;
+  color: #EF4444; /* Vibrant hand-drawn doodle marker red as requested */
+  filter: drop-shadow(0 2px 4px rgba(239, 68, 68, 0.35));
+  margin-top: -4px;
+  margin-left: 36px; /* Offsets arrow to swoop gracefully from badge into card */
+}
+
+.carousel-hint-callout.faded {
   opacity: 0 !important;
-  transform: translateY(-8px) !important;
+  transform: translate(-50%, -12px) !important;
   pointer-events: none !important;
 }
 
-@keyframes pulseFloat {
+@keyframes hintFloatBob {
   0%, 100% {
-    transform: translateY(0);
+    transform: translate(-50%, 0);
   }
   50% {
-    transform: translateY(-4px);
+    transform: translate(-50%, -6px);
   }
 }
 
