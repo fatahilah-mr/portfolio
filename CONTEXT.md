@@ -472,6 +472,24 @@ const projectsCollection = defineCollection({
   3. **Verification:**
      - Verified with local Astro preview and headless Chrome CDP: captured `verified_navbar_en_mobile.png` and `verified_navbar_id_mobile.png` confirming perfect bilingual text and chevron orientation.
 
+### Session Entry: `2026-09-10` (Phase 34: Copywriting Audit & Elimination of Dev-Jargon 'Hero' from Navigation)
+- **Objective:** Eliminate developer insider jargon "Hero" from the public navigation and footer menus (replacing with intuitive "Ringkasan" / "Overview") and conduct a full-spectrum copywriting audit using `.agents/skills/copywriting`.
+- **Root Cause Analysis:**
+  - "Hero" is frontend developer terminology for the above-the-fold banner section. Visitors, recruiters, and clients do not recognize this term and may misinterpret it as "superhero".
+  - Several CTAs were weak and generic ("Click here for details", "Featured Projects" without action verbs), violating conversion copywriting standards.
+- **Completed Work:**
+  1. **Menu Item 1 Renamed Across Navigation & Footer:**
+     - Desktop Dropdown: `1. Ringkasan (Hero)` -> `1. Ringkasan` / `1. Overview`.
+     - Mobile Accordion: `1. Hero` -> `1. Ringkasan` / `1. Overview`.
+     - Footer Jump Links: `Hero` -> `Ringkasan` / `Overview`.
+  2. **CTA Copywriting Optimization (`copywriting/SKILL.md`):**
+     - Upgraded carousel callouts from weak "Klik untuk detail" / "Click here for details" to action-oriented `Lihat Detail Proyek` / `View Project Details` and `Lihat Detail Sertifikat` / `View Certificate Details`.
+     - Upgraded Hero CTA in English from noun `Featured Projects` to action verb `Explore Featured Projects`.
+     - Upgraded CV CTA in English to `Download Official CV`.
+     - Upgraded Contact CTA in Indonesian to `Hubungi Saya` and English to `Get In Touch`.
+  3. **Comprehensive Copywriting Audit:**
+     - Formulated structured analysis covering Clarity, Tone, Specificity, Proof Density, and Actionability.
+
 ---
 
 ## 📋 12. Backlog & Next Actions
