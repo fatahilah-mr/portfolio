@@ -42,6 +42,11 @@ if (pathname === '/') {
 const homeUrl = isIndonesian ? '/id' : '/';
 const projectsUrl = isIndonesian ? '/projects/id' : '/projects';
 const certsUrl = isIndonesian ? '/certificates/id' : '/certificates';
+
+// Active page detection
+const isProjects = pathname === '/projects' || pathname === '/projects/id';
+const isCerts = pathname === '/certificates' || pathname === '/certificates/id';
+const isHome = !isProjects && !isCerts;
 ---
 
 <header class="site-header" id="site-header">
@@ -58,45 +63,56 @@ const certsUrl = isIndonesian ? '/certificates/id' : '/certificates';
         <li class="nav-item has-dropdown" id="desktop-dropdown-wrapper">
           <button 
             type="button" 
-            class="nav-link dropdown-toggle" 
+            class={`nav-link dropdown-toggle ${isHome ? 'active' : ''}`} 
             id="nav-home" 
             aria-expanded="false" 
             aria-haspopup="true"
             aria-controls="desktop-dropdown-menu"
+            aria-current={isHome ? 'page' : undefined}
+            data-home-url={homeUrl}
           >
-            <span class="lang-id">Beranda</span>
-            <span class="lang-en">Home</span>
+            <span class="nav-home-label">
+              <span class="lang-id">Beranda</span>
+              <span class="lang-en">Home</span>
+            </span>
+            <span class={`active-section-badge ${!isHome ? 'hidden' : ''}`} id="active-section-badge">
+              <span class="active-dot"></span>
+              <span id="active-section-text">
+                <span class="lang-id">Ringkasan</span>
+                <span class="lang-en">Overview</span>
+              </span>
+            </span>
             <svg class="dropdown-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
               <path d="m6 9 6 6 6-6"/>
             </svg>
           </button>
           <!-- Dropdown Menu for 7 Sections -->
           <div class="dropdown-menu" id="desktop-dropdown-menu" role="menu">
-            <a href={`${homeUrl}#hero`} class="dropdown-link">
+            <a href={`${homeUrl}#hero`} class="dropdown-link active" data-section="hero">
               <span class="lang-id">1. Ringkasan</span>
               <span class="lang-en">1. Overview</span>
             </a>
-            <a href={`${homeUrl}#about`} class="dropdown-link">
+            <a href={`${homeUrl}#about`} class="dropdown-link" data-section="about">
               <span class="lang-id">2. Tentang Saya</span>
               <span class="lang-en">2. About Me</span>
             </a>
-            <a href={`${homeUrl}#skills`} class="dropdown-link">
+            <a href={`${homeUrl}#skills`} class="dropdown-link" data-section="skills">
               <span class="lang-id">3. Keahlian Teknis</span>
               <span class="lang-en">3. Technical Skills</span>
             </a>
-            <a href={`${homeUrl}#experience`} class="dropdown-link">
+            <a href={`${homeUrl}#experience`} class="dropdown-link" data-section="experience">
               <span class="lang-id">4. Pengalaman & Prestasi</span>
               <span class="lang-en">4. Experience & Awards</span>
             </a>
-            <a href={`${homeUrl}#projects`} class="dropdown-link">
+            <a href={`${homeUrl}#projects`} class="dropdown-link" data-section="projects">
               <span class="lang-id">5. Proyek Unggulan</span>
               <span class="lang-en">5. Featured Projects</span>
             </a>
-            <a href={`${homeUrl}#certificates`} class="dropdown-link">
+            <a href={`${homeUrl}#certificates`} class="dropdown-link" data-section="certificates">
               <span class="lang-id">6. Sertifikat Pilihan</span>
               <span class="lang-en">6. Top Certificates</span>
             </a>
-            <a href={`${homeUrl}#contact`} class="dropdown-link">
+            <a href={`${homeUrl}#contact`} class="dropdown-link" data-section="contact">
               <span class="lang-id">7. Kontak & Diskusi</span>
               <span class="lang-en">7. Contact & Discussion</span>
             </a>
@@ -105,7 +121,12 @@ const certsUrl = isIndonesian ? '/certificates/id' : '/certificates';
 
         <!-- Item 2: Proyek -->
         <li class="nav-item">
-          <a href={projectsUrl} class="nav-link" id="nav-projects">
+          <a 
+            href={projectsUrl} 
+            class={`nav-link ${isProjects ? 'active' : ''}`} 
+            id="nav-projects"
+            aria-current={isProjects ? 'page' : undefined}
+          >
             <span class="lang-id">Proyek</span>
             <span class="lang-en">Projects</span>
           </a>
@@ -113,7 +134,12 @@ const certsUrl = isIndonesian ? '/certificates/id' : '/certificates';
 
         <!-- Item 3: Sertifikat -->
         <li class="nav-item">
-          <a href={certsUrl} class="nav-link" id="nav-certs">
+          <a 
+            href={certsUrl} 
+            class={`nav-link ${isCerts ? 'active' : ''}`} 
+            id="nav-certs"
+            aria-current={isCerts ? 'page' : undefined}
+          >
             <span class="lang-id">Sertifikat</span>
             <span class="lang-en">Certificates</span>
           </a>
@@ -186,7 +212,7 @@ const certsUrl = isIndonesian ? '/certificates/id' : '/certificates';
     <div class="mobile-drawer-inner container">
       <!-- Section Accordion for Beranda -->
       <div class="mobile-accordion">
-        <button class="mobile-accordion-btn" id="mobile-beranda-accordion" aria-expanded="true">
+        <button class={`mobile-accordion-btn ${isHome ? 'active' : ''}`} id="mobile-beranda-accordion" aria-expanded="true">
           <span class="lang-id">Beranda (7 Bagian)</span>
           <span class="lang-en">Home (7 Sections)</span>
           <svg class="accordion-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -194,43 +220,51 @@ const certsUrl = isIndonesian ? '/certificates/id' : '/certificates';
           </svg>
         </button>
         <div class="mobile-accordion-content" id="mobile-beranda-sublinks">
-          <a href={`${homeUrl}#hero`} class="mobile-sublink">
+          <a href={`${homeUrl}#hero`} class="mobile-sublink active" data-section="hero">
             <span class="lang-id">1. Ringkasan</span>
             <span class="lang-en">1. Overview</span>
           </a>
-          <a href={`${homeUrl}#about`} class="mobile-sublink">
+          <a href={`${homeUrl}#about`} class="mobile-sublink" data-section="about">
             <span class="lang-id">2. Tentang Saya</span>
             <span class="lang-en">2. About Me</span>
           </a>
-          <a href={`${homeUrl}#skills`} class="mobile-sublink">
+          <a href={`${homeUrl}#skills`} class="mobile-sublink" data-section="skills">
             <span class="lang-id">3. Keahlian Teknis</span>
             <span class="lang-en">3. Technical Skills</span>
           </a>
-          <a href={`${homeUrl}#experience`} class="mobile-sublink">
+          <a href={`${homeUrl}#experience`} class="mobile-sublink" data-section="experience">
             <span class="lang-id">4. Pengalaman</span>
             <span class="lang-en">4. Experience</span>
           </a>
-          <a href={`${homeUrl}#projects`} class="mobile-sublink">
+          <a href={`${homeUrl}#projects`} class="mobile-sublink" data-section="projects">
             <span class="lang-id">5. Proyek Unggulan</span>
             <span class="lang-en">5. Featured Projects</span>
           </a>
-          <a href={`${homeUrl}#certificates`} class="mobile-sublink">
+          <a href={`${homeUrl}#certificates`} class="mobile-sublink" data-section="certificates">
             <span class="lang-id">6. Sertifikat Pilihan</span>
             <span class="lang-en">6. Top Certificates</span>
           </a>
-          <a href={`${homeUrl}#contact`} class="mobile-sublink">
+          <a href={`${homeUrl}#contact`} class="mobile-sublink" data-section="contact">
             <span class="lang-id">7. Kontak</span>
             <span class="lang-en">7. Contact</span>
           </a>
         </div>
       </div>
 
-      <a href={projectsUrl} class="mobile-mainlink">
+      <a 
+        href={projectsUrl} 
+        class={`mobile-mainlink ${isProjects ? 'active' : ''}`}
+        aria-current={isProjects ? 'page' : undefined}
+      >
         <span class="lang-id">Katalog Proyek Lengkap</span>
         <span class="lang-en">Full Projects Catalog</span>
       </a>
 
-      <a href={certsUrl} class="mobile-mainlink">
+      <a 
+        href={certsUrl} 
+        class={`mobile-mainlink ${isCerts ? 'active' : ''}`}
+        aria-current={isCerts ? 'page' : undefined}
+      >
         <span class="lang-id">Katalog Sertifikat Lengkap</span>
         <span class="lang-en">Full Certificates Catalog</span>
       </a>
@@ -296,27 +330,81 @@ const certsUrl = isIndonesian ? '/certificates/id' : '/certificates';
   .nav-link {
     display: inline-flex;
     align-items: center;
-    gap: 4px;
+    gap: 6px;
     font-size: 0.9375rem;
     font-weight: 500;
     color: var(--color-muted);
-    padding: 8px 4px;
-    transition: color 0.15s ease;
+    padding: 6px 12px;
+    border-radius: 9999px;
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    border: 1px solid transparent;
+    text-decoration: none;
+    position: relative;
   }
 
   button.nav-link {
     background: transparent;
-    border: none;
     font-family: inherit;
     font-size: 0.9375rem;
-    font-weight: 500;
     cursor: pointer;
     line-height: inherit;
   }
 
-  .nav-link:hover,
+  .nav-link:hover {
+    color: var(--color-foreground);
+    background: var(--bg-surface);
+  }
+
+  .nav-link.active,
   .nav-link[aria-current="page"] {
     color: var(--color-foreground);
+    font-weight: 600;
+    background: var(--bg-surface);
+    border-color: var(--color-border);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+  }
+
+  :global(.dark) .nav-link.active,
+  :global(.dark) .nav-link[aria-current="page"] {
+    background: rgba(255, 255, 255, 0.06);
+    border-color: rgba(255, 255, 255, 0.12);
+  }
+
+  /* Active Section Pill (Shows current section on Home) */
+  .active-section-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 2px 8px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    border-radius: 9999px;
+    background: rgba(37, 99, 235, 0.08);
+    color: var(--color-accent);
+    border: 1px solid rgba(37, 99, 235, 0.2);
+    transition: all 0.2s ease;
+    margin-left: 2px;
+  }
+
+  :global(.dark) .active-section-badge {
+    background: rgba(56, 189, 248, 0.12);
+    border-color: rgba(56, 189, 248, 0.25);
+    color: var(--color-accent);
+  }
+
+  .active-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--color-accent);
+    box-shadow: 0 0 6px var(--color-accent);
+    flex-shrink: 0;
+    animation: pulse-dot 2s infinite ease-in-out;
+  }
+
+  @keyframes pulse-dot {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.6; transform: scale(0.85); }
   }
 
   .dropdown-chevron {
@@ -328,7 +416,7 @@ const certsUrl = isIndonesian ? '/certificates/id' : '/certificates';
     position: absolute;
     top: 100%;
     left: 0;
-    width: 230px;
+    width: 240px;
     background: var(--bg-card);
     border: 1px solid var(--color-border);
     border-radius: 10px;
@@ -361,7 +449,9 @@ const certsUrl = isIndonesian ? '/certificates/id' : '/certificates';
   }
 
   .dropdown-link {
-    display: block;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
     padding: 8px 12px;
     font-size: 0.875rem;
     font-weight: 500;
@@ -373,6 +463,30 @@ const certsUrl = isIndonesian ? '/certificates/id' : '/certificates';
   .dropdown-link:hover {
     color: var(--color-foreground);
     background-color: var(--bg-surface);
+  }
+
+  .dropdown-link.active,
+  .dropdown-link[aria-current="true"] {
+    color: var(--color-accent);
+    background: rgba(37, 99, 235, 0.08);
+    font-weight: 600;
+  }
+
+  :global(.dark) .dropdown-link.active,
+  :global(.dark) .dropdown-link[aria-current="true"] {
+    color: var(--color-accent);
+    background: rgba(56, 189, 248, 0.12);
+  }
+
+  .dropdown-link.active::after,
+  .dropdown-link[aria-current="true"]::after {
+    content: '';
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: var(--color-accent);
+    box-shadow: 0 0 5px var(--color-accent);
+    flex-shrink: 0;
   }
 
   /* Header Actions */
@@ -479,6 +593,16 @@ const certsUrl = isIndonesian ? '/certificates/id' : '/certificates';
     color: var(--color-foreground);
     border-radius: 8px;
     background: var(--bg-surface);
+    border-left: 3px solid transparent;
+    transition: all 0.15s ease;
+    text-decoration: none;
+  }
+
+  .mobile-mainlink.active,
+  .mobile-mainlink[aria-current="page"] {
+    color: var(--color-accent);
+    border-left-color: var(--color-accent);
+    font-weight: 700;
   }
 
   .mobile-accordion {
@@ -499,6 +623,13 @@ const certsUrl = isIndonesian ? '/certificates/id' : '/certificates';
     font-weight: 600;
     color: var(--color-foreground);
     cursor: pointer;
+    border-left: 3px solid transparent;
+    transition: all 0.15s ease;
+  }
+
+  .mobile-accordion-btn.active {
+    color: var(--color-accent);
+    border-left-color: var(--color-accent);
   }
 
   .accordion-chevron {
@@ -513,8 +644,8 @@ const certsUrl = isIndonesian ? '/certificates/id' : '/certificates';
   .mobile-accordion-content {
     display: flex;
     flex-direction: column;
-    padding: 8px 14px;
-    gap: 6px;
+    padding: 8px 10px;
+    gap: 4px;
     background: var(--bg-card);
   }
 
@@ -523,15 +654,45 @@ const certsUrl = isIndonesian ? '/certificates/id' : '/certificates';
   }
 
   .mobile-sublink {
-    padding: 6px 8px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 10px;
     font-size: 0.9rem;
     color: var(--color-muted);
-    border-radius: 4px;
+    border-radius: 6px;
+    border-left: 3px solid transparent;
+    transition: all 0.15s ease;
+    text-decoration: none;
   }
 
   .mobile-sublink:hover {
     color: var(--color-accent);
     background: var(--bg-surface);
+  }
+
+  .mobile-sublink.active,
+  .mobile-sublink[aria-current="true"] {
+    color: var(--color-accent);
+    background: rgba(37, 99, 235, 0.08);
+    border-left-color: var(--color-accent);
+    font-weight: 600;
+  }
+
+  :global(.dark) .mobile-sublink.active,
+  :global(.dark) .mobile-sublink[aria-current="true"] {
+    background: rgba(56, 189, 248, 0.12);
+  }
+
+  .mobile-sublink.active::after,
+  .mobile-sublink[aria-current="true"]::after {
+    content: '';
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--color-accent);
+    box-shadow: 0 0 6px var(--color-accent);
+    flex-shrink: 0;
   }
 
   .hidden {
@@ -613,6 +774,18 @@ const certsUrl = isIndonesian ? '/certificates/id' : '/certificates';
     if (!wrapper || !toggleBtn || !menu) return;
 
     toggleBtn.addEventListener('click', (e) => {
+      const pathname = window.location.pathname.replace(/\/$/, '') || '/';
+      const isProjects = pathname === '/projects' || pathname === '/projects/id';
+      const isCerts = pathname === '/certificates' || pathname === '/certificates/id';
+      const isHome = !isProjects && !isCerts;
+
+      if (!isHome) {
+        // When not on home page, clicking Beranda navigates directly to home
+        const homeUrl = toggleBtn.getAttribute('data-home-url') || '/';
+        window.location.href = homeUrl;
+        return;
+      }
+
       e.stopPropagation();
       const isOpen = wrapper.classList.toggle('is-open');
       toggleBtn.setAttribute('aria-expanded', String(isOpen));
@@ -644,10 +817,138 @@ const certsUrl = isIndonesian ? '/certificates/id' : '/certificates';
     });
   }
 
+  // Scrollspy & Active Section Indicator for Home Page
+  function setupScrollspy() {
+    const pathname = window.location.pathname.replace(/\/$/, '') || '/';
+    const isProjects = pathname === '/projects' || pathname === '/projects/id';
+    const isCerts = pathname === '/certificates' || pathname === '/certificates/id';
+    const isHome = !isProjects && !isCerts;
+
+    const activeBadge = document.getElementById('active-section-badge');
+    const activeText = document.getElementById('active-section-text');
+    const dropdownLinks = document.querySelectorAll('.dropdown-link[data-section]');
+    const mobileSublinks = document.querySelectorAll('.mobile-sublink[data-section]');
+
+    if (!isHome || !activeBadge || !activeText) {
+      if (activeBadge) activeBadge.classList.add('hidden');
+      return;
+    }
+
+    const sectionData = {
+      hero: { id: 'Ringkasan', en: 'Overview' },
+      about: { id: 'Tentang Saya', en: 'About Me' },
+      skills: { id: 'Keahlian Teknis', en: 'Technical Skills' },
+      experience: { id: 'Pengalaman', en: 'Experience' },
+      projects: { id: 'Proyek Unggulan', en: 'Featured Projects' },
+      certificates: { id: 'Sertifikat Pilihan', en: 'Top Certificates' },
+      contact: { id: 'Kontak', en: 'Contact' },
+    };
+
+    const sectionIds = ['hero', 'about', 'skills', 'experience', 'projects', 'certificates', 'contact'];
+    const sectionElements = sectionIds
+      .map(id => document.getElementById(id))
+      .filter(el => Boolean(el));
+
+    if (sectionElements.length === 0) return;
+
+    let currentSection = 'hero';
+
+    function updateActiveState(sectionId) {
+      if (!sectionData[sectionId]) return;
+      currentSection = sectionId;
+
+      // Update badge text with bilingual spans so language switcher works smoothly
+      const data = sectionData[sectionId];
+      if (data && activeText) {
+        activeText.innerHTML = '<span class="lang-id">' + data.id + '</span><span class="lang-en">' + data.en + '</span>';
+      }
+
+      // Update desktop dropdown links
+      dropdownLinks.forEach(link => {
+        const match = link.getAttribute('data-section') === sectionId;
+        link.classList.toggle('active', match);
+        if (match) {
+          link.setAttribute('aria-current', 'true');
+        } else {
+          link.removeAttribute('aria-current');
+        }
+      });
+
+      // Update mobile sublinks
+      mobileSublinks.forEach(link => {
+        const match = link.getAttribute('data-section') === sectionId;
+        link.classList.toggle('active', match);
+        if (match) {
+          link.setAttribute('aria-current', 'true');
+        } else {
+          link.removeAttribute('aria-current');
+        }
+      });
+    }
+
+    // Tune IntersectionObserver for active reading zone
+    const observer = new IntersectionObserver((entries) => {
+      const intersectingEntries = entries.filter(e => e.isIntersecting);
+      if (intersectingEntries.length > 0) {
+        intersectingEntries.sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top);
+        updateActiveState(intersectingEntries[0].target.id);
+      }
+    }, {
+      root: null,
+      rootMargin: '-15% 0px -50% 0px',
+      threshold: [0, 0.2, 0.5, 0.8]
+    });
+
+    sectionElements.forEach(el => observer.observe(el));
+
+    // Fallback scroll listener for top and bottom edge bounds
+    let scrollTimeout;
+    window.addEventListener('scroll', () => {
+      clearTimeout(scrollTimeout);
+      scrollTimeout = setTimeout(() => {
+        const scrollY = window.scrollY;
+        if (scrollY < 100) {
+          updateActiveState('hero');
+          return;
+        }
+        if ((window.innerHeight + scrollY) >= (document.documentElement.scrollHeight - 80)) {
+          updateActiveState('contact');
+          return;
+        }
+      }, 50);
+    }, { passive: true });
+
+    // Immediate update on link click
+    dropdownLinks.forEach(link => {
+      link.addEventListener('click', () => {
+        const sec = link.getAttribute('data-section');
+        if (sec) updateActiveState(sec);
+      });
+    });
+
+    mobileSublinks.forEach(link => {
+      link.addEventListener('click', () => {
+        const sec = link.getAttribute('data-section');
+        if (sec) updateActiveState(sec);
+      });
+    });
+
+    // Hash or initial scroll check
+    if (window.location.hash) {
+      const hashId = window.location.hash.replace('#', '');
+      if (sectionData[hashId]) {
+        updateActiveState(hashId);
+      }
+    } else if (window.scrollY < 100) {
+      updateActiveState('hero');
+    }
+  }
+
   function initNavbar() {
     setupThemeToggle();
     setupMobileDrawer();
     setupDesktopDropdown();
+    setupScrollspy();
   }
 
   if (document.readyState === 'loading') {

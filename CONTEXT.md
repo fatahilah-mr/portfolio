@@ -523,6 +523,27 @@ const projectsCollection = defineCollection({
     - `verified_cert_modal_no_format.png`: Modal description text confirmed as `Issuer: LKS SMK Kabupaten Purworejo • Year: 2026` with zero format text.
     - `verified_certs_scroll_cards.png`: Verified across multiple cards with different combinations of Featured and Transcript.
 
+### Session Entry: `2026-09-11` (Phase 37: Implement Navbar Active State Indicator & Scrollspy for Pages and Sections)
+- **Objective:**
+  - Implement active indicators across the navbar for both pages (`Beranda`, `Proyek`, `Sertifikat`) and sections (`Ringkasan`, `Tentang Saya`, `Keahlian Teknis`, `Pengalaman`, `Proyek Unggulan`, `Sertifikat Pilihan`, `Kontak`).
+- **Architectural & Design Implementation:**
+  - *Page Active State:*
+    - Integrated active link styling (`.nav-link.active`, `aria-current="page"`) with surface card background, subtle border, and high-contrast text.
+    - Updated mobile drawer with `.mobile-mainlink.active` and `aria-current="page"` featuring left accent border (`border-left: 3px solid var(--color-accent)`).
+    - Added smart navigation: when on `/projects` or `/certificates`, clicking `Beranda` / `Home` directly navigates to the home URL (`data-home-url`), while on the home page it toggles the sections dropdown.
+  - *Dynamic Scrollspy & Active Section Badge:*
+    - Added `#active-section-badge` pill with a pulsing dot indicator (`.active-dot`) directly inside the `Beranda` / `Home` dropdown button.
+    - Attached `IntersectionObserver` with root margin `-15% 0px -50% 0px` to track the 7 sections (`#hero`, `#about`, `#skills`, `#experience`, `#projects`, `#certificates`, `#contact`).
+    - Dynamically updates badge text with bilingual spans (`<span class="lang-id">...</span><span class="lang-en">...</span>`) to maintain 100% compatibility with CSS language switching.
+    - Highlights active item in desktop dropdown menu (`.dropdown-link.active`) and mobile accordion sublinks (`.mobile-sublink.active`) with accent background, font weight, and dot indicator.
+- **Verification & Visual Health Check:**
+  - Verified local build with `npm run build` (all 12 routes built cleanly).
+  - Executed automated browser inspection script on preview server with hard watchdog timeout:
+    - `verified_navbar_home_desktop.png`: Verified desktop home top view shows `Beranda • Ringkasan ▾` active pill badge.
+    - `verified_navbar_scrolled_desktop.png`: Verified sticky navbar updates badge to `Beranda • Pengalaman ▾` when scrolled to Experience section.
+    - `verified_navbar_projects_desktop.png`: Verified `/projects/id` highlights `Proyek` while `Beranda` badge is hidden.
+    - `verified_navbar_mobile_drawer.png`: Verified mobile drawer highlights `1. Ringkasan` with blue accent border and glowing dot indicator.
+
 ---
 
 ## 📋 12. Backlog & Next Actions
