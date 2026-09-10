@@ -250,6 +250,10 @@ const projectsCollection = defineCollection({
      - Configured 301 redirects in `public/_redirects` for `/about`, `/skills`, `/experience`, `/contact`.
   8. **Security & Zero Secrets Guarantee:**
      - Full repository secret scan passed. Zero tokens, API keys, or credentials in tracked files.
+  9. **Mobile Polish & Visual Revision:**
+     - Removed hero credential badge pill per user request.
+     - Added global `.hidden { display: none !important; }` in `global.css` to fix language switching so English text does not render concurrently with Indonesian text.
+     - Constrained carousel catalog CTA buttons (`/projects` & `/certificates`) with bounded padding, `max-width: 320px` on mobile, and responsive text wrapping to eliminate edge overflow.
 
 ---
 

@@ -177,8 +177,50 @@ const featuredProjects = [
   }
 
   .carousel-view-all {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    margin-top: 32px;
+    padding: 0 16px;
+    box-sizing: border-box;
+  }
+
+  .carousel-view-all .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 12px 24px;
+    font-size: 0.9375rem;
+    font-weight: 600;
+    line-height: 1.4;
+    border-radius: 10px;
+    border: 1px solid var(--color-border);
+    background: var(--bg-card);
+    color: var(--color-foreground) !important;
+    box-shadow: var(--shadow-sm);
+    max-width: 100%;
     text-align: center;
-    margin-top: 28px;
+    transition: all 0.2s ease;
+    box-sizing: border-box;
+  }
+
+  .carousel-view-all .btn:hover {
+    border-color: var(--color-border-hover);
+    background: var(--bg-card-hover);
+    box-shadow: var(--shadow-md);
+    transform: translateY(-1px);
+  }
+
+  @media (max-width: 480px) {
+    .carousel-view-all .btn {
+      width: 100%;
+      max-width: 320px;
+      padding: 11px 16px;
+      font-size: 0.875rem;
+      white-space: normal;
+    }
   }
 </style>
 
