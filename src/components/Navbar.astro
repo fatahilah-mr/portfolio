@@ -47,6 +47,9 @@ const certsUrl = isIndonesian ? '/certificates/id' : '/certificates';
 const isProjects = pathname === '/projects' || pathname === '/projects/id';
 const isCerts = pathname === '/certificates' || pathname === '/certificates/id';
 const isHome = !isProjects && !isCerts;
+
+// Anchor href helper: direct hash on home page to avoid page reloads, full path on external pages
+const getSectionHref = (id: string) => isHome ? `#${id}` : `${homeUrl}#${id}`;
 ---
 
 <header class="site-header" id="site-header">
@@ -88,31 +91,31 @@ const isHome = !isProjects && !isCerts;
           </button>
           <!-- Dropdown Menu for 7 Sections -->
           <div class="dropdown-menu" id="desktop-dropdown-menu" role="menu">
-            <a href={`${homeUrl}#hero`} class={`dropdown-link ${isHome ? 'active' : ''}`} data-section="hero" aria-current={isHome ? 'true' : undefined}>
+            <a href={getSectionHref('hero')} class={`dropdown-link ${isHome ? 'active' : ''}`} data-section="hero" aria-current={isHome ? 'true' : undefined}>
               <span class="lang-id">1. Ringkasan</span>
               <span class="lang-en">1. Overview</span>
             </a>
-            <a href={`${homeUrl}#about`} class="dropdown-link" data-section="about">
+            <a href={getSectionHref('about')} class="dropdown-link" data-section="about">
               <span class="lang-id">2. Tentang Saya</span>
               <span class="lang-en">2. About Me</span>
             </a>
-            <a href={`${homeUrl}#skills`} class="dropdown-link" data-section="skills">
+            <a href={getSectionHref('skills')} class="dropdown-link" data-section="skills">
               <span class="lang-id">3. Keahlian Teknis</span>
               <span class="lang-en">3. Technical Skills</span>
             </a>
-            <a href={`${homeUrl}#experience`} class="dropdown-link" data-section="experience">
+            <a href={getSectionHref('experience')} class="dropdown-link" data-section="experience">
               <span class="lang-id">4. Pengalaman & Prestasi</span>
               <span class="lang-en">4. Experience & Awards</span>
             </a>
-            <a href={`${homeUrl}#projects`} class="dropdown-link" data-section="projects">
+            <a href={getSectionHref('projects')} class="dropdown-link" data-section="projects">
               <span class="lang-id">5. Proyek Unggulan</span>
               <span class="lang-en">5. Featured Projects</span>
             </a>
-            <a href={`${homeUrl}#certificates`} class="dropdown-link" data-section="certificates">
+            <a href={getSectionHref('certificates')} class="dropdown-link" data-section="certificates">
               <span class="lang-id">6. Sertifikat Pilihan</span>
               <span class="lang-en">6. Top Certificates</span>
             </a>
-            <a href={`${homeUrl}#contact`} class="dropdown-link" data-section="contact">
+            <a href={getSectionHref('contact')} class="dropdown-link" data-section="contact">
               <span class="lang-id">7. Kontak & Diskusi</span>
               <span class="lang-en">7. Contact & Discussion</span>
             </a>
@@ -220,31 +223,31 @@ const isHome = !isProjects && !isCerts;
           </svg>
         </button>
         <div class={`mobile-accordion-content ${!isHome ? 'hidden' : ''}`} id="mobile-beranda-sublinks">
-          <a href={`${homeUrl}#hero`} class={`mobile-sublink ${isHome ? 'active' : ''}`} data-section="hero" aria-current={isHome ? 'true' : undefined}>
+          <a href={getSectionHref('hero')} class={`mobile-sublink ${isHome ? 'active' : ''}`} data-section="hero" aria-current={isHome ? 'true' : undefined}>
             <span class="lang-id">1. Ringkasan</span>
             <span class="lang-en">1. Overview</span>
           </a>
-          <a href={`${homeUrl}#about`} class="mobile-sublink" data-section="about">
+          <a href={getSectionHref('about')} class="mobile-sublink" data-section="about">
             <span class="lang-id">2. Tentang Saya</span>
             <span class="lang-en">2. About Me</span>
           </a>
-          <a href={`${homeUrl}#skills`} class="mobile-sublink" data-section="skills">
+          <a href={getSectionHref('skills')} class="mobile-sublink" data-section="skills">
             <span class="lang-id">3. Keahlian Teknis</span>
             <span class="lang-en">3. Technical Skills</span>
           </a>
-          <a href={`${homeUrl}#experience`} class="mobile-sublink" data-section="experience">
+          <a href={getSectionHref('experience')} class="mobile-sublink" data-section="experience">
             <span class="lang-id">4. Pengalaman</span>
             <span class="lang-en">4. Experience</span>
           </a>
-          <a href={`${homeUrl}#projects`} class="mobile-sublink" data-section="projects">
+          <a href={getSectionHref('projects')} class="mobile-sublink" data-section="projects">
             <span class="lang-id">5. Proyek Unggulan</span>
             <span class="lang-en">5. Featured Projects</span>
           </a>
-          <a href={`${homeUrl}#certificates`} class="mobile-sublink" data-section="certificates">
+          <a href={getSectionHref('certificates')} class="mobile-sublink" data-section="certificates">
             <span class="lang-id">6. Sertifikat Pilihan</span>
             <span class="lang-en">6. Top Certificates</span>
           </a>
-          <a href={`${homeUrl}#contact`} class="mobile-sublink" data-section="contact">
+          <a href={getSectionHref('contact')} class="mobile-sublink" data-section="contact">
             <span class="lang-id">7. Kontak</span>
             <span class="lang-en">7. Contact</span>
           </a>
@@ -861,10 +864,12 @@ const isHome = !isProjects && !isCerts;
 
     if (sectionElements.length === 0) return;
 
-    let currentSection = 'hero';
+    let currentSection = '';
+    let isClickLocked = false;
+    let clickLockTimer = null;
 
     function updateActiveState(sectionId) {
-      if (!sectionData[sectionId]) return;
+      if (!sectionData[sectionId] || currentSection === sectionId) return;
       currentSection = sectionId;
 
       // Update badge text with bilingual spans so language switcher works smoothly
@@ -896,61 +901,113 @@ const isHome = !isProjects && !isCerts;
       });
     }
 
-    // Tune IntersectionObserver for active reading zone
-    const observer = new IntersectionObserver((entries) => {
-      const intersectingEntries = entries.filter(e => e.isIntersecting);
-      if (intersectingEntries.length > 0) {
-        intersectingEntries.sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top);
-        updateActiveState(intersectingEntries[0].target.id);
+    // Deterministic position-based section detector (focal reading line below sticky navbar)
+    function determineActiveSection() {
+      if (isClickLocked) return;
+
+      const scrollY = window.scrollY;
+
+      // 1. Very top edge
+      if (scrollY < 80) {
+        updateActiveState('hero');
+        return;
       }
-    }, {
-      root: null,
-      rootMargin: '-15% 0px -50% 0px',
-      threshold: [0, 0.2, 0.5, 0.8]
-    });
 
-    sectionElements.forEach(el => observer.observe(el));
+      // 2. Very bottom edge (contact section)
+      if ((window.innerHeight + scrollY) >= (document.documentElement.scrollHeight - 60)) {
+        updateActiveState('contact');
+        return;
+      }
 
-    // Fallback scroll listener for top and bottom edge bounds
-    let scrollTimeout;
-    window.addEventListener('scroll', () => {
-      clearTimeout(scrollTimeout);
-      scrollTimeout = setTimeout(() => {
-        const scrollY = window.scrollY;
-        if (scrollY < 100) {
-          updateActiveState('hero');
-          return;
+      // 3. Focal reading line: 160px from top (clears 64px header + spacing)
+      const focalY = 160;
+      let matchedSection = null;
+
+      for (let i = 0; i < sectionElements.length; i++) {
+        const el = sectionElements[i];
+        const rect = el.getBoundingClientRect();
+        if (rect.top <= focalY && rect.bottom > focalY) {
+          matchedSection = el.id;
+          break;
         }
-        if ((window.innerHeight + scrollY) >= (document.documentElement.scrollHeight - 80)) {
-          updateActiveState('contact');
-          return;
-        }
-      }, 50);
-    }, { passive: true });
+      }
 
-    // Immediate update on link click
+      // Fallback: pick section closest above focal line if between boundaries
+      if (!matchedSection) {
+        let closestDist = -Infinity;
+        for (let i = 0; i < sectionElements.length; i++) {
+          const el = sectionElements[i];
+          const rect = el.getBoundingClientRect();
+          if (rect.top <= focalY && rect.top > closestDist) {
+            closestDist = rect.top;
+            matchedSection = el.id;
+          }
+        }
+      }
+
+      if (matchedSection) {
+        updateActiveState(matchedSection);
+      }
+    }
+
+    // Throttled scroll & resize via requestAnimationFrame
+    let ticking = false;
+    function onScroll() {
+      if (!ticking) {
+        requestAnimationFrame(() => {
+          determineActiveSection();
+          ticking = false;
+        });
+        ticking = true;
+      }
+    }
+
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onScroll, { passive: true });
+
+    // Handle section click: immediately activate and temporarily lock against smooth scroll interference
+    function handleSectionClick(sectionId) {
+      if (!sectionData[sectionId]) return;
+      isClickLocked = true;
+      clearTimeout(clickLockTimer);
+      updateActiveState(sectionId);
+      clickLockTimer = setTimeout(() => {
+        isClickLocked = false;
+        determineActiveSection();
+      }, 700);
+    }
+
     dropdownLinks.forEach(link => {
       link.addEventListener('click', () => {
         const sec = link.getAttribute('data-section');
-        if (sec) updateActiveState(sec);
+        if (sec) handleSectionClick(sec);
       });
     });
 
     mobileSublinks.forEach(link => {
       link.addEventListener('click', () => {
         const sec = link.getAttribute('data-section');
-        if (sec) updateActiveState(sec);
+        if (sec) handleSectionClick(sec);
       });
     });
 
-    // Hash or initial scroll check
+    // Hash change or initial sync
+    window.addEventListener('hashchange', () => {
+      const hashId = window.location.hash.replace('#', '');
+      if (sectionData[hashId]) {
+        handleSectionClick(hashId);
+      }
+    });
+
     if (window.location.hash) {
       const hashId = window.location.hash.replace('#', '');
       if (sectionData[hashId]) {
-        updateActiveState(hashId);
+        handleSectionClick(hashId);
+      } else {
+        determineActiveSection();
       }
-    } else if (window.scrollY < 100) {
-      updateActiveState('hero');
+    } else {
+      determineActiveSection();
     }
   }
 

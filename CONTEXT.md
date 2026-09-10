@@ -561,6 +561,24 @@ const projectsCollection = defineCollection({
     - `verified_projects_drawer_expanded_fixed.png`: Verified that if user manually expands `Beranda (7 Bagian)` on `/projects/id`, none of the 7 sublinks have an active highlight.
     - `verified_certs_drawer_fixed.png`: Verified on `/certificates/id` that `Beranda (7 Bagian)` is collapsed and inactive; `Katalog Sertifikat Lengkap` is the only active link.
 
+### Session Entry: `2026-09-11` (Phase 39: Fix "Tentang Saya" Section Activation via Deterministic Focal-Line Scrollspy)
+- **Objective:**
+  - Resolve issue where clicking or scrolling to "Tentang Saya" (`#about`) failed to activate the item, causing "Ringkasan" (`#hero`) to remain highlighted.
+- **Root Cause Analysis:**
+  - *IntersectionObserver Batched Callback Flaw:* An `IntersectionObserver` callback only passes elements that *changed* intersection state in that tick. During smooth scroll towards `#about`, `#hero` crossed an intersection threshold while `#about` was already stationary in the viewport, causing `#hero` to be delivered as the only intersecting element in `entries` and overwriting the active state back to `#hero`. When `#hero` fully exited, `entries` had `isIntersecting: false`, leaving the state stuck on `#hero`.
+  - *Full Path URL Fragment Reload:* Links were using `${homeUrl}#about` (e.g. `/id#about`). When already on `/id/`, clicking a full pathname link can cause browsers to trigger document navigations rather than clean in-page fragment jumps.
+- **Architectural & Design Implementation:**
+  - *Deterministic Focal-Line Position Detector:* Replaced the flawed `IntersectionObserver` sorting with a deterministic focal reading line detector (`focalY = 160px`, clearing the sticky header + breathing room) using `getBoundingClientRect()` throttled via `requestAnimationFrame`. Sections are verified against `rect.top <= focalY && rect.bottom > focalY`.
+  - *Click Lock Mechanism:* Clicking any section link immediately invokes `updateActiveState(sectionId)` and engages a temporary scroll lock (`700ms`) preventing intermediate smooth scroll frames from resetting the target.
+  - *In-Page Anchor Helper:* Added `getSectionHref(id)` to use direct fragment `#id` when on the home page (`isHome`), ensuring instant native smooth scrolling with zero full-page navigation attempts.
+- **Verification & Visual Health Check:**
+  - Verified local build with `npm run build` (all 12 routes built cleanly in 10.06s).
+  - Executed automated Chrome CDP test script:
+    - Initial top position verified active: `hero`.
+    - Clicked `2. Tentang Saya`: Scrolled to `805px`, active badge updated to `Tentang Saya`, sublink updated to `about`.
+    - Reopened mobile drawer: Verified `2. Tentang Saya` actively highlighted (`aboutLinkActive: true`, `heroLinkActive: false`).
+    - Captured screenshot: `verified_about_active_drawer.png`.
+
 ---
 
 ## 📋 12. Backlog & Next Actions
