@@ -80,6 +80,11 @@ html {
   overflow-x: clip;
 }
 
+/* Sticky navbar (64px) offset clearance for in-page section navigation */
+section[id] {
+  scroll-margin-top: 80px;
+}
+
 body {
   min-height: 100vh;
   display: flex;

@@ -55,16 +55,23 @@ const certsUrl = isIndonesian ? '/certificates/id' : '/certificates';
     <nav class="desktop-nav" aria-label="Navigasi Utama">
       <ul class="nav-menu">
         <!-- Item 1: Beranda with Section Dropdown -->
-        <li class="nav-item has-dropdown">
-          <a href={`${homeUrl}#hero`} class="nav-link" id="nav-home">
+        <li class="nav-item has-dropdown" id="desktop-dropdown-wrapper">
+          <button 
+            type="button" 
+            class="nav-link dropdown-toggle" 
+            id="nav-home" 
+            aria-expanded="false" 
+            aria-haspopup="true"
+            aria-controls="desktop-dropdown-menu"
+          >
             <span class="lang-id">Beranda</span>
             <span class="lang-en">Home</span>
-            <svg class="dropdown-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <svg class="dropdown-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
               <path d="m6 9 6 6 6-6"/>
             </svg>
-          </a>
+          </button>
           <!-- Dropdown Menu for 7 Sections -->
-          <div class="dropdown-menu">
+          <div class="dropdown-menu" id="desktop-dropdown-menu" role="menu">
             <a href={`${homeUrl}#hero`} class="dropdown-link">
               <span class="lang-id">1. Ringkasan (Hero)</span>
               <span class="lang-en">1. Summary (Hero)</span>
@@ -276,6 +283,16 @@ const certsUrl = isIndonesian ? '/certificates/id' : '/certificates';
     transition: color 0.15s ease;
   }
 
+  button.nav-link {
+    background: transparent;
+    border: none;
+    font-family: inherit;
+    font-size: 0.9375rem;
+    font-weight: 500;
+    cursor: pointer;
+    line-height: inherit;
+  }
+
   .nav-link:hover,
   .nav-link[aria-current="page"] {
     color: var(--color-foreground);
@@ -302,12 +319,23 @@ const certsUrl = isIndonesian ? '/certificates/id' : '/certificates';
     z-index: 1050;
   }
 
+  .dropdown-menu::before {
+    content: '';
+    position: absolute;
+    top: -8px;
+    left: 0;
+    right: 0;
+    height: 8px;
+  }
+
   .has-dropdown:hover .dropdown-menu,
-  .has-dropdown:focus-within .dropdown-menu {
+  .has-dropdown:focus-within .dropdown-menu,
+  .has-dropdown.is-open .dropdown-menu {
     display: flex;
   }
 
-  .has-dropdown:hover .dropdown-chevron {
+  .has-dropdown:hover .dropdown-chevron,
+  .has-dropdown.is-open .dropdown-chevron {
     transform: rotate(180deg);
   }
 
@@ -550,8 +578,54 @@ const certsUrl = isIndonesian ? '/certificates/id' : '/certificates';
     });
   }
 
-  document.addEventListener('DOMContentLoaded', () => {
+  // Desktop dropdown setup
+  function setupDesktopDropdown() {
+    const wrapper = document.getElementById('desktop-dropdown-wrapper');
+    const toggleBtn = document.getElementById('nav-home');
+    const menu = document.getElementById('desktop-dropdown-menu');
+    if (!wrapper || !toggleBtn || !menu) return;
+
+    toggleBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const isOpen = wrapper.classList.toggle('is-open');
+      toggleBtn.setAttribute('aria-expanded', String(isOpen));
+    });
+
+    // Close dropdown when clicking outside
+    document.addEventListener('click', (e) => {
+      if (!wrapper.contains(e.target)) {
+        wrapper.classList.remove('is-open');
+        toggleBtn.setAttribute('aria-expanded', 'false');
+      }
+    });
+
+    // Close dropdown when clicking any item
+    menu.querySelectorAll('.dropdown-link').forEach(link => {
+      link.addEventListener('click', () => {
+        wrapper.classList.remove('is-open');
+        toggleBtn.setAttribute('aria-expanded', 'false');
+      });
+    });
+
+    // Close on Escape key
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && wrapper.classList.contains('is-open')) {
+        wrapper.classList.remove('is-open');
+        toggleBtn.setAttribute('aria-expanded', 'false');
+        toggleBtn.focus();
+      }
+    });
+  }
+
+  function initNavbar() {
     setupThemeToggle();
     setupMobileDrawer();
-  });
+    setupDesktopDropdown();
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initNavbar);
+  } else {
+    initNavbar();
+  }
 </script>
