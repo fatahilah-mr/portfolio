@@ -71,7 +71,15 @@
       <!-- 3 Key Pillars Column -->
       <div class="pillars-col">
         <div class="editorial-card pillar-card">
-          <div class="pillar-icon">🌐</div>
+          <div class="pillar-icon" aria-hidden="true">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="16" y="16" width="6" height="6" rx="1"></rect>
+              <rect x="2" y="16" width="6" height="6" rx="1"></rect>
+              <rect x="9" y="2" width="6" height="6" rx="1"></rect>
+              <path d="M5 16v-3a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v3"></path>
+              <path d="M12 12V8"></path>
+            </svg>
+          </div>
           <div class="pillar-content">
             <h4>
               <span class="lang-id">Jaringan Enterprise & Routing</span>
@@ -85,7 +93,14 @@
         </div>
 
         <div class="editorial-card pillar-card">
-          <div class="pillar-icon">🐧</div>
+          <div class="pillar-icon" aria-hidden="true">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect width="20" height="8" x="2" y="2" rx="2" ry="2"></rect>
+              <rect width="20" height="8" x="2" y="14" rx="2" ry="2"></rect>
+              <line x1="6" x2="6.01" y1="6" y2="6"></line>
+              <line x1="6" x2="6.01" y1="18" y2="18"></line>
+            </svg>
+          </div>
           <div class="pillar-content">
             <h4>
               <span class="lang-id">Server Linux & Infrastruktur</span>
@@ -99,7 +114,13 @@
         </div>
 
         <div class="editorial-card pillar-card">
-          <div class="pillar-icon">⚡</div>
+          <div class="pillar-icon" aria-hidden="true">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="m18 16 4-4-4-4"></path>
+              <path d="m6 8-4 4 4 4"></path>
+              <path d="m14.5 4-5 16"></path>
+            </svg>
+          </div>
           <div class="pillar-content">
             <h4>
               <span class="lang-id">Pengembangan Web & Edge Cloud</span>
@@ -118,19 +139,19 @@
 
 <style>
   .about-section {
-    border-bottom: 1px solid var(--color-border);
+    background: var(--bg-main);
   }
 
   .about-grid {
     display: grid;
     grid-template-columns: 1fr;
-    gap: 24px;
+    gap: 32px;
   }
 
-  @media (min-width: 960px) {
+  @media (min-width: 900px) {
     .about-grid {
-      grid-template-columns: 1.15fr 1fr;
-      align-items: stretch;
+      grid-template-columns: 1.1fr 1fr;
+      align-items: start;
     }
   }
 
@@ -196,13 +217,16 @@
   }
 
   .pillar-icon {
-    font-size: 1.6rem;
-    line-height: 1;
-    padding: 10px;
+    width: 44px;
+    height: 44px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
     background: var(--bg-surface);
     border-radius: 10px;
     border: 1px solid var(--color-border);
     flex-shrink: 0;
+    color: var(--color-accent);
   }
 
   .pillar-content h4 {

@@ -216,6 +216,10 @@ const projectsCollection = defineCollection({
 | `2026-09-10` | Antigravity AI | Phase 24 — Mobile Horizontal Scroll Elimination & CDP Audit | `src/styles/global.css`, `Hero.astro`, `Navbar.astro`, Carousels | 30/30 viewports verified, deployed to staging |
 | `2026-09-10` | Antigravity AI | Phase 25 — Fix Hero Metrics Asymmetry & Alignment Across Viewports | `src/components/Hero.astro` | Pixel-perfect symmetry verified via CDP, deployed to staging |
 | `2026-09-10` | Antigravity AI | Phase 26 — Implement Curved Looping Doodle Arrow Callout | `global.css`, `FeaturedProjectsCarousel.astro`, `FeaturedCertificatesCarousel.astro` | Visual verification passed, deployed to staging |
+| `2026-09-11` | Antigravity AI | Phase 37 — Navbar Active Section Indicator with Bilingual Synchronized Pill | `src/components/Navbar.astro` | Staging verified, deployed to `preview.fmr.web.id` |
+| `2026-09-11` | Antigravity AI | Phase 38 — Fix Beranda Sublink Highlighted on Catalog Pages | `src/components/Navbar.astro` | Staging verified, deployed to `preview.fmr.web.id` |
+| `2026-09-11` | Antigravity AI | Phase 39 — Fix "Tentang Saya" Section Activation via Deterministic Focal-Line Scrollspy | `src/components/Navbar.astro` | Staging verified, deployed to `preview.fmr.web.id` |
+| `2026-09-11` | Antigravity AI | Phase 40 — Replace Contact, About & Experience Emojis with Professional SVG Marks | `src/components/ContactSection.astro`, `AboutSection.astro`, `ExperienceSection.astro` | Staging verified, deployed to `preview.fmr.web.id` |
 
 ### Session Entry: `2026-09-10` (Phase 26: Implementation of Curved Looping Doodle Arrow Callout)
 - **Objective:** Replace static inside-card pill badge with an animated curved looping doodle arrow callout pointing directly at the center card, fulfilling the user's manual sketch in `media_1789045789913.jpg` and `media_1789045790002.jpg`.
@@ -573,11 +577,33 @@ const projectsCollection = defineCollection({
   - *In-Page Anchor Helper:* Added `getSectionHref(id)` to use direct fragment `#id` when on the home page (`isHome`), ensuring instant native smooth scrolling with zero full-page navigation attempts.
 - **Verification & Visual Health Check:**
   - Verified local build with `npm run build` (all 12 routes built cleanly in 10.06s).
+
+### Session Entry: `2026-09-11` (Phase 40: Replace Contact, About & Experience Emojis with Professional SVG Marks)
+- **Objective:**
+  - Eliminate amateur emojis from the Contact Section (`✉️`, `💼`, and the squid emoji `🐙` mistakenly used for GitHub) and replace them with authentic, engineering-grade SVG marks.
+  - Audit and modernize all other remaining decorative emojis across the core portfolio pages (`🌐`, `🐧`, `⚡` in About pillars and `🥇` in Experience award pill).
+- **Root Cause & Anti-Slop Analysis:**
+  - Using emojis as UI icons (especially `🐙` for GitHub) degrades professional engineering credibility, conveys an "AI slop" or prototype appearance, and renders inconsistently across OS/browser emoji fonts.
+- **Architectural & Design Implementation:**
+  - *Contact Section Icons:*
+    - Replaced `✉️` with clean Lucide Mail SVG.
+    - Replaced `💼` with clean Lucide LinkedIn SVG.
+    - Replaced `🐙` with the official GitHub Octocat SVG mark.
+    - Upgraded `.contact-card-icon` container with a dedicated 44x44px rounded container (`border: 1px solid var(--color-border); background: var(--bg-surface-elevated);`), smooth transitions, and subtle hover glow.
+  - *About Section Pillars:*
+    - Replaced `🌐` with clean Network Topology / Enterprise Routing SVG.
+    - Replaced `🐧` with clean dual Server Rack SVG.
+    - Replaced `⚡` with clean Code `< / >` SVG.
+    - Standardized `.pillar-icon` to 44x44px flex center container with accent color styling.
+  - *Experience Section Award Pill:*
+    - Replaced `🥇` in `<span class="award-pill">` with clean inline Medal ribbon SVG with `display: inline-flex; align-items: center; gap: 5px;`.
+- **Verification & Visual Health Check:**
+  - Verified local build with `npm run build` (all 12 routes built cleanly in 9.54s).
   - Executed automated Chrome CDP test script:
-    - Initial top position verified active: `hero`.
-    - Clicked `2. Tentang Saya`: Scrolled to `805px`, active badge updated to `Tentang Saya`, sublink updated to `about`.
-    - Reopened mobile drawer: Verified `2. Tentang Saya` actively highlighted (`aboutLinkActive: true`, `heroLinkActive: false`).
-    - Captured screenshot: `verified_about_active_drawer.png`.
+    - `verified_contact_section_desktop.png`: Verified desktop contact cards feature crisp SVG icons in engineering containers.
+    - `verified_about_pillars_desktop.png`: Verified network, server, and web icons display sharp SVGs with active navbar indicator.
+    - `verified_experience_badge_desktop.png`: Verified "Gold Medalist" pill features clean medal ribbon SVG.
+    - `verified_contact_section_mobile.png`: Verified mobile contact section renders cleanly without layout overflow.
 
 ---
 
