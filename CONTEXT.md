@@ -359,6 +359,24 @@ const projectsCollection = defineCollection({
      - Local test confirmed 0px jump on button click, instant menu reveal, smooth section scrolling, and outside-click dismiss.
      - Cloudflare Pages deployment `7e5343a5-51ed-49a2-a3d6-570d8b872e9b` verified live on `https://preview.fmr.web.id/`.
 
+### Session Entry: `2026-09-10` (Phase 28: Fix fmr.blog Project Image CDN Filename)
+- **Objective:** Fix broken image URL for project #1 (`fmr.blog`) in project catalog and database.
+- **Root Cause Analysis:**
+  - The image filename in `src/data/projects.json`, `Database Projects Fatahilah.csv`, and `scripts/seed.sql` was set to `web-blog-1.webp`.
+  - The actual asset hosted on Cloudflare R2 / CDN is named `web-blog-01.webp` (`https://cdn.fatah.web.id/portfolio/assets/projects/web-blog/web-blog-01.webp`), causing a 404 response on the previous URL.
+- **Completed Work:**
+  1. **Source Code & Data Fix:**
+     - Updated `src/data/projects.json` line 10 to `https://cdn.fatah.web.id/portfolio/assets/projects/web-blog/web-blog-01.webp`.
+     - Updated `Database Projects Fatahilah.csv` and `scripts/seed.sql`.
+  2. **D1 Production Database Sync:**
+     - Executed SQL on Cloudflare D1 `gateway-d1` (`f71f7c73-a7b9-4166-bfd1-d4bcc84caef8`):
+       `UPDATE port_projects SET link_gambar = 'https://cdn.fatah.web.id/portfolio/assets/projects/web-blog/web-blog-01.webp' WHERE id = '1';`
+  3. **Audit of All Other Project & Certificate Images:**
+     - Tested all 10 project images and 20 certificate images/transcripts via HTTP HEAD checks. All returned 200 OK.
+  4. **Verification & Live Production Health Check:**
+     - Cloudflare Pages deployment `4fbae06a-7b3f-4378-ae9e-4c36c889b6a3` verified live on `https://preview.fmr.web.id/projects`.
+     - Live CDP evaluation confirmed `img.complete = true`, `naturalWidth = 1366`, `naturalHeight = 768`.
+
 ---
 
 ## 📋 12. Backlog & Next Actions
