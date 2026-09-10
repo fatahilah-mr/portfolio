@@ -413,6 +413,35 @@ const projectsCollection = defineCollection({
      - Verified local Astro build (`npm run build`: 12 pages rendered cleanly).
      - Pushed to `dev` (Commit `7ea3a83`).
 
+### Session Entry: `2026-09-10` (Phase 31: Full Admin Panel Visual Redesign & Sonner Toast Integration)
+- **Objective:**
+  1. Address user feedback regarding unpolished visual state of CMS Admin Panel (`/admin`).
+  2. Integrate `sonner` toast notification library (identical to `gateway` project).
+  3. Transform the entire admin panel into a world-class Obsidian Dark Solid Command Center (Gateway / Vercel Pro Style).
+- **Visual Inspection & Root Cause Analysis:**
+  - *Thumbnail Layout Blowout:* In `admin.astro`, scoped `<style>` does not attach generated data attributes to elements injected dynamically via `innerHTML`. As a result, `.table-thumb` rules were ignored by the browser, causing 1440px images to stretch the table thousands of pixels wide.
+  - *Missing .hidden rules:* Elements in the DOM did not hide properly when tab switching occurred.
+  - *Lack of Visual Depth:* The previous white theme lacked visual hierarchy, executive KPI cards, and modern controls.
+- **Architectural Implementation:**
+  1. **Sonner Integration (`sonner` + `@astrojs/react`):**
+     - Installed `@astrojs/react`, `react`, `react-dom`, and `sonner`.
+     - Created `src/components/admin/AdminToaster.jsx` mounting `<Toaster />` with dark frosted glass styling (`rgba(18, 20, 28, 0.96)`, backdrop blur 16px, border 1px solid `rgba(255,255,255,0.12)`, shadow `0 12px 36px rgba(0,0,0,0.5)`).
+     - Bound `window.toast` globally so client scripts trigger rich toasts (`success`, `error`, `info`, and non-blocking action confirmations).
+  2. **Obsidian Solid Dark Theme (`src/styles/admin.css` & `public/styles/admin.css`):**
+     - Adopted the exact design system tokens of the `gateway` project (`#090a0f`, `#12141c`, `#181a24`, `#262938`, Sky Blue `#38bdf8`, Emerald `#4ade80`).
+  3. **Executive KPI Stat Cards:**
+     - 4 metric cards for real-time overview: Total Proyek, Featured Proyek, Total Sertifikat, Notifikasi Status.
+  4. **Interactive Item Cards with Quick Controls:**
+     - Replaced table with modern item cards featuring strictly constrained thumbnails (84x52px for projects, 70x50px for certs).
+     - Added instant 1-click ▲ / ▼ reorder buttons with optimistic UI updates.
+     - Added instant 1-click `Featured` iOS/Vercel switches directly on each item row.
+     - Implemented Sonner Action Toast for delete confirmations (non-blocking).
+  5. **Dialog & Form Enhancements:**
+     - Added real-time image preview container in modals so admins can verify thumbnails immediately upon typing the CDN URL.
+     - Upgraded backend `PUT` endpoints in `functions/api/admin/projects.js` and `certificates.js` to safely support partial updates.
+  6. **Mobile Ergonomics:**
+     - Ensured 100% responsive layout with zero horizontal overflow down to 360px.
+
 ---
 
 ## 📋 12. Backlog & Next Actions
