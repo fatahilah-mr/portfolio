@@ -455,28 +455,48 @@ textarea:focus-visible,
 }
 
 .carousel-hint-callout .callout-badge {
-  background: rgba(24, 24, 27, 0.92);
-  color: #FFFFFF;
+  background: rgba(255, 255, 255, 0.94);
+  color: var(--color-foreground);
+  border: 1px solid rgba(37, 99, 235, 0.25);
+  box-shadow: 0 4px 16px rgba(37, 99, 235, 0.12), 0 2px 4px rgba(0, 0, 0, 0.04);
   padding: 6px 14px;
   border-radius: 9999px;
-  font-size: 0.75rem;
+  font-size: 0.78125rem;
   font-weight: 600;
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.2);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   display: flex;
   align-items: center;
   gap: 6px;
   white-space: nowrap;
+  transition: all 0.2s ease;
+}
+
+.carousel-hint-callout .callout-badge-icon {
+  color: var(--color-accent);
+  display: inline-flex;
 }
 
 .carousel-hint-callout .hint-arrow {
   width: 44px;
   height: 44px;
-  color: #EF4444; /* Vibrant hand-drawn doodle marker red as requested */
-  filter: drop-shadow(0 2px 4px rgba(239, 68, 68, 0.35));
+  color: var(--color-accent); /* Theme Accent: Blueprint Cobalt in Light (#2563EB) / Bright Blue in Dark (#3B82F6) */
+  filter: drop-shadow(0 2px 6px rgba(37, 99, 235, 0.35));
   margin-top: -4px;
   margin-left: 36px; /* Offsets arrow to swoop gracefully from badge into card */
+  transition: color 0.2s ease, filter 0.2s ease;
+}
+
+[data-theme="dark"] .carousel-hint-callout .callout-badge {
+  background: rgba(24, 24, 27, 0.94);
+  color: var(--color-foreground);
+  border: 1px solid rgba(59, 130, 246, 0.35);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5), 0 0 16px rgba(59, 130, 246, 0.18);
+}
+
+[data-theme="dark"] .carousel-hint-callout .hint-arrow {
+  color: var(--color-accent);
+  filter: drop-shadow(0 2px 8px rgba(59, 130, 246, 0.5));
 }
 
 .carousel-hint-callout.faded {
