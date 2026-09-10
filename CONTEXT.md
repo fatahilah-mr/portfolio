@@ -220,6 +220,7 @@ const projectsCollection = defineCollection({
 | `2026-09-11` | Antigravity AI | Phase 38 — Fix Beranda Sublink Highlighted on Catalog Pages | `src/components/Navbar.astro` | Staging verified, deployed to `preview.fmr.web.id` |
 | `2026-09-11` | Antigravity AI | Phase 39 — Fix "Tentang Saya" Section Activation via Deterministic Focal-Line Scrollspy | `src/components/Navbar.astro` | Staging verified, deployed to `preview.fmr.web.id` |
 | `2026-09-11` | Antigravity AI | Phase 40 — Replace Contact, About & Experience Emojis with Professional SVG Marks | `src/components/ContactSection.astro`, `AboutSection.astro`, `ExperienceSection.astro` | Staging verified, deployed to `preview.fmr.web.id` |
+| `2026-09-11` | Antigravity AI | Phase 41 — Update PERISAI AYOM TEMON Documentation Link | `src/data/projects.json`, `Database Projects Fatahilah.csv`, `scripts/seed.sql`, D1 | Verified & deployed to `preview.fmr.web.id` |
 
 ### Session Entry: `2026-09-10` (Phase 26: Implementation of Curved Looping Doodle Arrow Callout)
 - **Objective:** Replace static inside-card pill badge with an animated curved looping doodle arrow callout pointing directly at the center card, fulfilling the user's manual sketch in `media_1789045789913.jpg` and `media_1789045790002.jpg`.
@@ -604,6 +605,24 @@ const projectsCollection = defineCollection({
     - `verified_about_pillars_desktop.png`: Verified network, server, and web icons display sharp SVGs with active navbar indicator.
     - `verified_experience_badge_desktop.png`: Verified "Gold Medalist" pill features clean medal ribbon SVG.
     - `verified_contact_section_mobile.png`: Verified mobile contact section renders cleanly without layout overflow.
+
+### Session Entry: `2026-09-11` (Phase 41: Update PERISAI AYOM TEMON Documentation Link)
+- **Objective:**
+  - Update broken/404 documentation link for project ID #3 (`PERISAI AYOM TEMON`) to active live documentation URL (`https://blog.fatah.web.id/projects/perisai-ayom-temonid/`).
+- **Investigation & Findings:**
+  - Previous URL `https://blog.fatah.web.id/projects/ayom-temonid/` returned HTTP 404 Not Found.
+  - New target URL `https://blog.fatah.web.id/projects/perisai-ayom-temonid/` returns HTTP 200 OK.
+- **Architectural & Data Implementation:**
+  - Updated `link_dokumentasi` across all data layers:
+    1. Static SSG dataset: `src/data/projects.json` (ID: 3).
+    2. Primary data seed: `Database Projects Fatahilah.csv` (row 3).
+    3. Database migration script: `scripts/seed.sql` (row 3).
+    4. Production Cloudflare D1 database: Executed `UPDATE port_projects SET link_dokumentasi = ... WHERE id = '3'` on D1 `gateway-d1` (`f71f7c73-a7b9-4166-bfd1-d4bcc84caef8`).
+- **Verification & Visual Health Check:**
+  - Rebuilt Astro project with `npm run build` (all 12 pages compiled cleanly in 9.56s).
+  - Executed automated browser inspection script with hard timeout:
+    - Card documentation button and modal "Buka Dokumentasi & Demo" both point directly to `https://blog.fatah.web.id/projects/perisai-ayom-temonid/`.
+    - Captured screenshot: `verified_ayom_project_modal.png`.
 
 ---
 
