@@ -335,10 +335,29 @@ const projectsCollection = defineCollection({
   8. **Security & Zero Secrets Guarantee:**
      - Full repository secret scan passed. Zero tokens, API keys, or credentials in tracked files.
   9. **Mobile Polish & Visual Revision:**
-     - Removed hero credential badge pill per user request.
-     - Implemented Pure CSS zero-FOUC bilingual architecture in `global.css` using `html[lang="id"] .lang-en { display: none !important; }` and `html[lang="en"] .lang-id { display: none !important; }`, completely eliminating any simultaneous dual-language rendering under all network and script conditions.
-     - Separated legacy concatenated slash labels (`Email Resmi / Official Email`, `Sekolah / Alma Mater`) into individual `.lang-id` and `.lang-en` elements.
-     - Constrained carousel catalog CTA buttons (`/projects` & `/certificates`) with bounded padding, `max-width: 320px` on mobile, and responsive text wrapping to eliminate edge overflow.
+      - Removed hero credential badge pill per user request.
+      - Implemented Pure CSS zero-FOUC bilingual architecture in `global.css` using `html[lang="id"] .lang-en { display: none !important; }` and `html[lang="en"] .lang-id { display: none !important; }`, completely eliminating any simultaneous dual-language rendering under all network and script conditions.
+      - Separated legacy concatenated slash labels (`Email Resmi / Official Email`, `Sekolah / Alma Mater`) into individual `.lang-id` and `.lang-en` elements.
+      - Constrained carousel catalog CTA buttons (`/projects` & `/certificates`) with bounded padding, `max-width: 320px` on mobile, and responsive text wrapping to eliminate edge overflow.
+
+### Session Entry: `2026-09-10` (Phase 27: Desktop Navbar Dropdown Toggle & Scroll Margin Optimization)
+- **Objective:** Fix desktop Home navigation item jumping straight to `#hero` instead of revealing the 7-section dropdown menu upon user interaction, and calibrate sticky navbar scroll clearance.
+- **Root Cause Analysis:**
+  - The desktop Home navigation item was marked up as `<a href="${homeUrl}#hero" class="nav-link" id="nav-home">`.
+  - When a user clicked/tapped "Home" (especially on touch devices, tablets, or mobile devices in "Desktop Site" mode), the browser executed a native anchor navigation to `#hero`, jumping immediately to the top of the page rather than allowing the user to inspect and select an item from the 7-section dropdown.
+- **Completed Work:**
+  1. **Accessible W3C WAI-ARIA Dropdown Button (`src/components/Navbar.astro`):**
+     - Converted `nav-home` from `<a href="...">` to `<button type="button" class="nav-link dropdown-toggle" id="nav-home" aria-expanded="false" aria-haspopup="true" aria-controls="desktop-dropdown-menu">`.
+     - Added button reset styling (`background: transparent; border: none; font-family: inherit; cursor: pointer;`).
+     - Added pseudo-element hover bridge (`.dropdown-menu::before`) to prevent premature mouse-leave hover loss.
+  2. **Deterministic Toggle & Outside Click Script:**
+     - Added `setupDesktopDropdown()` to toggle `.is-open` class and `aria-expanded` attributes on click without altering URL hash or page scroll position.
+     - Added outside-click dismiss listener (`document.addEventListener('click')`), item-selection dismiss listener, and Escape key accessibility listener.
+  3. **In-Page Scroll Clearance (`src/styles/global.css`):**
+     - Added `section[id] { scroll-margin-top: 80px; }` ensuring that when any anchor link (`#about`, `#skills`, `#experience`, `#projects`, `#certificates`, `#contact`) is clicked, the section title is positioned with a clean 80px clearance below the sticky header.
+  4. **Verification & Deployment:**
+     - Local test confirmed 0px jump on button click, instant menu reveal, smooth section scrolling, and outside-click dismiss.
+     - Cloudflare Pages deployment `7e5343a5-51ed-49a2-a3d6-570d8b872e9b` verified live on `https://preview.fmr.web.id/`.
 
 ---
 
