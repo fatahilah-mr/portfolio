@@ -109,6 +109,9 @@ const filterCategories = [
 
               <div class="card-footer">
                 <div class="card-tags">
+                  {cert.is_featured === 1 && (
+                    <span class="featured-badge">Featured ★</span>
+                  )}
                   {cert.tombol_transkrip === 'ada' && (
                     <span class="transcript-tag">
                       <span class="lang-id">+ Transkrip Nilai</span>
@@ -117,15 +120,10 @@ const filterCategories = [
                   )}
                 </div>
 
-                <div class="card-actions">
-                  {cert.is_featured === 1 && (
-                    <span class="featured-badge">Featured ★</span>
-                  )}
-                  <button class="btn btn-secondary btn-sm open-cert-btn">
-                    <span class="lang-id">Lihat Detail</span>
-                    <span class="lang-en">View Details</span>
-                  </button>
-                </div>
+                <button class="btn btn-secondary btn-sm open-cert-btn">
+                  <span class="lang-id">Lihat Detail</span>
+                  <span class="lang-en">View Details</span>
+                </button>
               </div>
             </div>
           </article>
@@ -335,10 +333,7 @@ const filterCategories = [
     flex-wrap: wrap;
   }
 
-  .card-actions {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
+  .open-cert-btn {
     margin-left: auto;
     flex-shrink: 0;
   }

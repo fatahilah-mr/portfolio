@@ -243,8 +243,11 @@
       }
 
       if (titleEl) titleEl.textContent = cert.nama_sertifikat || '';
+      const isEn = document.documentElement.getAttribute('lang') === 'en';
       if (descEl) {
-        descEl.textContent = `Penerbit: ${cert.penerbit} • Tahun: ${cert.tahun} • Tipe: Format ${cert.tipe || 'horizontal'}.`;
+        descEl.textContent = isEn
+          ? `Issuer: ${cert.penerbit} • Year: ${cert.tahun}`
+          : `Penerbit: ${cert.penerbit} • Tahun: ${cert.tahun}`;
       }
 
       // Transcript handling

@@ -509,6 +509,20 @@ const projectsCollection = defineCollection({
     - `verified_certs_catalog_desktop.png`: Verified clean 3-column desktop grid with synchronized year alignment across varying issuer lengths.
     - `verified_projects_catalog_mobile.png`: Verified removal of "Complete Catalog" badge.
 
+### Session Entry: `2026-09-11` (Phase 36: Fix Certificate Modal Redundant Format Metadata & Dock Featured Badge to Far Left)
+- **Objective:**
+  1. Fix certificate detail modal still displaying obsolete metadata `• Tipe: Format horizontal.` in `src/components/DetailModal.astro`.
+  2. Dock `Featured ★` badge strictly to the far-left corner (`di pojok kiri`) of the card footer instead of floating in the center.
+- **Architectural & Design Implementation:**
+  - *Detail Modal Obsolete Format Purge:* In `src/components/DetailModal.astro`, removed `• Tipe: Format ${cert.tipe || 'horizontal'}.` from `descEl`. The modal now strictly renders clean bilingual metadata: `Issuer: ${cert.penerbit} • Year: ${cert.tahun}` (EN) and `Penerbit: ${cert.penerbit} • Tahun: ${cert.tahun}` (ID).
+  - *Card Footer Alignment Standardized:* In `src/pages/certificates.astro` and `src/pages/certificates/id.astro`, moved `{cert.is_featured === 1 && <span class="featured-badge">Featured ★</span>}` directly into `.card-tags` as the first item on the far-left. Eliminated `.card-actions` wrapper entirely. Added `.open-cert-btn { margin-left: auto; flex-shrink: 0; }` so the action button always docks cleanly to the far-right corner, while badges (`Featured ★` and `+ Transcript`) always anchor firmly to the far-left corner.
+- **Verification & Visual Health Check:**
+  - Verified local build with `npm run build` (all 12 pages rendered cleanly).
+  - Automated browser evaluation confirmed:
+    - `verified_certs_far_left_mobile.png`: `Featured ★` is docked to the far-left (`pojok kiri`), and `View Details` is pinned to the far-right (`pojok kanan`).
+    - `verified_cert_modal_no_format.png`: Modal description text confirmed as `Issuer: LKS SMK Kabupaten Purworejo • Year: 2026` with zero format text.
+    - `verified_certs_scroll_cards.png`: Verified across multiple cards with different combinations of Featured and Transcript.
+
 ---
 
 ## 📋 12. Backlog & Next Actions
