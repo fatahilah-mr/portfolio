@@ -381,5 +381,27 @@ const featuredCerts = [
 
     updateCarousel(0);
     startAutoPlay();
+
+    // Live D1 dynamic sync
+    fetch('/api/certificates')
+      .then(res => res.ok ? res.json() : null)
+      .then(dbCerts => {
+        if (!Array.isArray(dbCerts) || dbCerts.length === 0) return;
+        const certMap = new Map(dbCerts.map(c => [String(c.id), c]));
+        cards.forEach(card => {
+          try {
+            const curData = JSON.parse(card.getAttribute('data-cert') || '{}');
+            const dbData = certMap.get(String(curData.id));
+            if (dbData) {
+              if (dbData.link_gambar && dbData.link_gambar !== curData.link_gambar) {
+                const img = card.querySelector('img');
+                if (img) img.src = dbData.link_gambar;
+              }
+              card.setAttribute('data-cert', JSON.stringify({ ...curData, ...dbData }));
+            }
+          } catch (_) {}
+        });
+      })
+      .catch(() => {});
   })();
 </script>

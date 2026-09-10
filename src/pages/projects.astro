@@ -417,11 +417,22 @@ const categories = ['Semua', 'Website', 'Cisco', 'MikroTik', 'AI'];
     // Client-side dynamic refresh from D1 API
     fetch('/api/projects')
       .then(res => res.ok ? res.json() : null)
-      .then(data => {
-        if (Array.isArray(data) && data.length > 0) {
-          // Verify if data updated from CMS
-          // If counts or updated_at differ, update attributes
-        }
+      .then(dbProjects => {
+        if (!Array.isArray(dbProjects) || dbProjects.length === 0) return;
+        const projectMap = new Map(dbProjects.map(p => [String(p.id), p]));
+        cards.forEach(card => {
+          try {
+            const curData = JSON.parse(card.getAttribute('data-project') || '{}');
+            const dbData = projectMap.get(String(curData.id));
+            if (dbData) {
+              if (dbData.link_gambar && dbData.link_gambar !== curData.link_gambar) {
+                const img = card.querySelector('img');
+                if (img) img.src = dbData.link_gambar;
+              }
+              card.setAttribute('data-project', JSON.stringify({ ...curData, ...dbData }));
+            }
+          } catch (_) {}
+        });
       })
       .catch(() => {});
   })();
