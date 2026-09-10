@@ -98,7 +98,7 @@ const certsUrl = isIndonesian ? '/certificates/id' : '/certificates';
             </a>
             <a href={`${homeUrl}#contact`} class="dropdown-link">
               <span class="lang-id">7. Kontak & Diskusi</span>
-              <span class="lang-en">7. Contact</span>
+              <span class="lang-en">7. Contact & Discussion</span>
             </a>
           </div>
         </li>
@@ -186,7 +186,7 @@ const certsUrl = isIndonesian ? '/certificates/id' : '/certificates';
     <div class="mobile-drawer-inner container">
       <!-- Section Accordion for Beranda -->
       <div class="mobile-accordion">
-        <button class="mobile-accordion-btn" id="mobile-beranda-accordion">
+        <button class="mobile-accordion-btn" id="mobile-beranda-accordion" aria-expanded="true">
           <span class="lang-id">Beranda (7 Bagian)</span>
           <span class="lang-en">Home (7 Sections)</span>
           <svg class="accordion-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -194,13 +194,34 @@ const certsUrl = isIndonesian ? '/certificates/id' : '/certificates';
           </svg>
         </button>
         <div class="mobile-accordion-content" id="mobile-beranda-sublinks">
-          <a href={`${homeUrl}#hero`} class="mobile-sublink">1. Hero</a>
-          <a href={`${homeUrl}#about`} class="mobile-sublink">2. Tentang Saya</a>
-          <a href={`${homeUrl}#skills`} class="mobile-sublink">3. Keahlian Teknis</a>
-          <a href={`${homeUrl}#experience`} class="mobile-sublink">4. Pengalaman</a>
-          <a href={`${homeUrl}#projects`} class="mobile-sublink">5. Proyek Unggulan</a>
-          <a href={`${homeUrl}#certificates`} class="mobile-sublink">6. Sertifikat Pilihan</a>
-          <a href={`${homeUrl}#contact`} class="mobile-sublink">7. Kontak</a>
+          <a href={`${homeUrl}#hero`} class="mobile-sublink">
+            <span class="lang-id">1. Hero</span>
+            <span class="lang-en">1. Hero</span>
+          </a>
+          <a href={`${homeUrl}#about`} class="mobile-sublink">
+            <span class="lang-id">2. Tentang Saya</span>
+            <span class="lang-en">2. About Me</span>
+          </a>
+          <a href={`${homeUrl}#skills`} class="mobile-sublink">
+            <span class="lang-id">3. Keahlian Teknis</span>
+            <span class="lang-en">3. Technical Skills</span>
+          </a>
+          <a href={`${homeUrl}#experience`} class="mobile-sublink">
+            <span class="lang-id">4. Pengalaman</span>
+            <span class="lang-en">4. Experience</span>
+          </a>
+          <a href={`${homeUrl}#projects`} class="mobile-sublink">
+            <span class="lang-id">5. Proyek Unggulan</span>
+            <span class="lang-en">5. Featured Projects</span>
+          </a>
+          <a href={`${homeUrl}#certificates`} class="mobile-sublink">
+            <span class="lang-id">6. Sertifikat Pilihan</span>
+            <span class="lang-en">6. Top Certificates</span>
+          </a>
+          <a href={`${homeUrl}#contact`} class="mobile-sublink">
+            <span class="lang-id">7. Kontak</span>
+            <span class="lang-en">7. Contact</span>
+          </a>
         </div>
       </div>
 
@@ -480,6 +501,15 @@ const certsUrl = isIndonesian ? '/certificates/id' : '/certificates';
     cursor: pointer;
   }
 
+  .accordion-chevron {
+    transition: transform 0.25s ease;
+    transform: rotate(180deg);
+  }
+
+  .mobile-accordion-btn[aria-expanded="false"] .accordion-chevron {
+    transform: rotate(0deg);
+  }
+
   .mobile-accordion-content {
     display: flex;
     flex-direction: column;
@@ -558,13 +588,10 @@ const certsUrl = isIndonesian ? '/certificates/id' : '/certificates';
 
     const accordionBtn = document.getElementById('mobile-beranda-accordion');
     const sublinks = document.getElementById('mobile-beranda-sublinks');
-    const chevron = accordionBtn?.querySelector('.accordion-chevron');
 
     accordionBtn?.addEventListener('click', () => {
       const isHidden = sublinks?.classList.toggle('hidden');
-      if (chevron) {
-        chevron.style.transform = isHidden ? 'rotate(0deg)' : 'rotate(180deg)';
-      }
+      accordionBtn.setAttribute('aria-expanded', String(!isHidden));
     });
 
     // Close drawer when any sublink is clicked

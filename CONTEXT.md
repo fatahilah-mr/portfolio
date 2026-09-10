@@ -458,6 +458,20 @@ const projectsCollection = defineCollection({
      - Built and pushed to `dev` (Commit `6bc4afc`).
      - Monitored Cloudflare Pages deployment to `https://preview.fmr.web.id/`.
 
+### Session Entry: `2026-09-10` (Phase 33: Fix Mobile Navbar Drawer Bilingual Translation & Accordion State)
+- **Objective:** Fix navbar drawer anomalies where section sublinks were hardcoded in Indonesian on the English version, and fix accordion chevron state synchronization.
+- **Root Cause Analysis:**
+  - The 7 sublinks inside `.mobile-accordion-content` in `src/components/Navbar.astro` were hardcoded plain Indonesian text (`1. Hero`, `2. Tentang Saya`, `3. Keahlian Teknis`, `4. Pengalaman`, `5. Proyek Unggulan`, `6. Sertifikat Pilihan`, `7. Kontak`) without `<span class="lang-id">` / `<span class="lang-en">` spans. The pure CSS i18n system therefore could not switch them to English on `/`.
+  - The accordion chevron lacked initial open state rotation (`rotate(180deg)`) and smooth CSS transitions, causing it to point downward even when the list was already expanded.
+- **Completed Work:**
+  1. **Bilingual Markup (`src/components/Navbar.astro`):**
+     - Wrapped each of the 7 mobile sublinks with `<span class="lang-id">` and `<span class="lang-en">` matching section nomenclature (`2. About Me`, `3. Technical Skills`, `4. Experience`, `5. Featured Projects`, `6. Top Certificates`, `7. Contact`).
+     - Harmonized desktop dropdown item 7 to `<span class="lang-en">7. Contact & Discussion</span>`.
+  2. **Accessible Accordion State & Chevron Animation:**
+     - Added `aria-expanded="true"` and CSS-driven transform transition for `.accordion-chevron` (`rotate(180deg)` when open, `rotate(0deg)` when collapsed).
+  3. **Verification:**
+     - Verified with local Astro preview and headless Chrome CDP: captured `verified_navbar_en_mobile.png` and `verified_navbar_id_mobile.png` confirming perfect bilingual text and chevron orientation.
+
 ---
 
 ## 📋 12. Backlog & Next Actions
