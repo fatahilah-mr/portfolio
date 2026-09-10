@@ -377,6 +377,20 @@ const projectsCollection = defineCollection({
      - Cloudflare Pages deployment `4fbae06a-7b3f-4378-ae9e-4c36c889b6a3` verified live on `https://preview.fmr.web.id/projects`.
      - Live CDP evaluation confirmed `img.complete = true`, `naturalWidth = 1366`, `naturalHeight = 768`.
 
+### Session Entry: `2026-09-10` (Phase 29: Update PERISAI AYOM TEMON Project Image CDN URL)
+- **Objective:** Update project image URL for project #3 (`PERISAI AYOM TEMON`) to latest CDN URL provided by user (`web-ayom-temon-1.webp`).
+- **Completed Work:**
+  1. **Source Code & Data Fix:**
+     - Updated `src/data/projects.json` line 36 to `https://cdn.fatah.web.id/portfolio/assets/projects/web-ayom-temon/web-ayom-temon-1.webp`.
+     - Updated `Database Projects Fatahilah.csv` and `scripts/seed.sql`.
+  2. **D1 Production Database Sync:**
+     - Executed SQL on Cloudflare D1 `gateway-d1` (`f71f7c73-a7b9-4166-bfd1-d4bcc84caef8`):
+       `UPDATE port_projects SET link_gambar = 'https://cdn.fatah.web.id/portfolio/assets/projects/web-ayom-temon/web-ayom-temon-1.webp' WHERE id = '3';`
+  3. **Verification & Live Production Health Check:**
+     - Tested HTTP HEAD on new CDN URL: returned HTTP/2 200 OK (`image/webp`, 73,580 bytes).
+     - Built and verified local static output with `npm run build`.
+     - Pushed to `dev` and monitored Cloudflare Pages deployment `b73ae9e9-e2e5-4b87-a482-2920335fbd90`.
+
 ---
 
 ## 📋 12. Backlog & Next Actions
