@@ -252,7 +252,8 @@ const projectsCollection = defineCollection({
      - Full repository secret scan passed. Zero tokens, API keys, or credentials in tracked files.
   9. **Mobile Polish & Visual Revision:**
      - Removed hero credential badge pill per user request.
-     - Added global `.hidden { display: none !important; }` in `global.css` to fix language switching so English text does not render concurrently with Indonesian text.
+     - Implemented Pure CSS zero-FOUC bilingual architecture in `global.css` using `html[lang="id"] .lang-en { display: none !important; }` and `html[lang="en"] .lang-id { display: none !important; }`, completely eliminating any simultaneous dual-language rendering under all network and script conditions.
+     - Separated legacy concatenated slash labels (`Email Resmi / Official Email`, `Sekolah / Alma Mater`) into individual `.lang-id` and `.lang-en` elements.
      - Constrained carousel catalog CTA buttons (`/projects` & `/certificates`) with bounded padding, `max-width: 320px` on mobile, and responsive text wrapping to eliminate edge overflow.
 
 ---

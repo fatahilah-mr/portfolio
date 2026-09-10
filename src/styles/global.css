@@ -563,3 +563,16 @@ textarea:focus-visible,
 .hidden {
   display: none !important;
 }
+
+/* ==========================================================================
+   PURE CSS I18N SYSTEM (Guaranteed Zero-FOUC & Zero Redundancy)
+   ========================================================================== */
+html[lang="id"] .lang-en,
+:root:not([lang="en"]) .lang-en {
+  display: none !important;
+}
+
+html[lang="en"] .lang-id {
+  display: none !important;
+}
+
