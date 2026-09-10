@@ -391,6 +391,28 @@ const projectsCollection = defineCollection({
      - Built and verified local static output with `npm run build`.
      - Pushed to `dev` and monitored Cloudflare Pages deployment `b73ae9e9-e2e5-4b87-a482-2920335fbd90`.
 
+### Session Entry: `2026-09-10` (Phase 30: FATAH Gateway CDN URL Update & Cloudflare D1 Hybrid Rehydration Architecture)
+- **Objective:**
+  1. Address user architectural question regarding the role of Cloudflare D1 database vs static JSON files.
+  2. Update project #5 (`FATAH Gateway`) project image to new CDN URL (`web-gateway-01.webp`).
+  3. Implement active dynamic client-side rehydration connecting SSG components directly to Cloudflare D1 API.
+- **Architectural Analysis & Design Decision:**
+  - *Cloudflare Pages Build Isolation:* In Cloudflare Pages, `npm run build` runs in a containerized build runner environment that lacks runtime bindings to Cloudflare Workers resources (e.g. `env.DB` Cloudflare D1). Thus, static JSON files (`src/data/projects.json`, `src/data/certificates.json`) are architectural prerequisites at compile time for pure SSG (zero cold starts, PageSpeed 100/100, full Open Graph / SEO metadata).
+  - *Edge D1 Runtime Binding:* Cloudflare D1 powers the live Serverless Function API layer (`/api/projects`, `/api/certificates`) and the CMS Admin Panel (`/admin`), enabling real-time CRUD and schema management.
+  - *Hybrid SSG + Edge D1 Rehydration:* In Phase 30, active client-side rehydration was implemented across all catalog and carousel components (`src/pages/projects.astro`, `src/pages/projects/id.astro`, `src/components/FeaturedProjectsCarousel.astro`, `src/pages/certificates.astro`, `src/pages/certificates/id.astro`, `src/components/FeaturedCertificatesCarousel.astro`). If any record is updated in Cloudflare D1 (via `/admin` or SQL), the client fetches `/api/projects` in the background and silently updates DOM images and modal attributes without requiring a rebuild or redeployment.
+- **Completed Work:**
+  1. **Source Code & Data Sync:**
+     - Updated `src/data/projects.json` line 62 to `https://cdn.fatah.web.id/portfolio/assets/projects/web-gateway/web-gateway-01.webp`.
+     - Updated `Database Projects Fatahilah.csv` and `scripts/seed.sql`.
+  2. **D1 Production Database Sync:**
+     - Executed SQL on Cloudflare D1 `gateway-d1` (`f71f7c73-a7b9-4166-bfd1-d4bcc84caef8`):
+       `UPDATE port_projects SET link_gambar = 'https://cdn.fatah.web.id/portfolio/assets/projects/web-gateway/web-gateway-01.webp' WHERE id = '5';`
+     - Verified via SELECT query that D1 row 5 points to `web-gateway-01.webp`.
+  3. **Verification & Live Production Health Check:**
+     - Tested HTTP HEAD on new CDN URL: returned HTTP/2 200 OK (`image/webp`, 54,052 bytes).
+     - Verified local Astro build (`npm run build`: 12 pages rendered cleanly).
+     - Pushed to `dev` (Commit `7ea3a83`).
+
 ---
 
 ## 📋 12. Backlog & Next Actions
