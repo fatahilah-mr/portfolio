@@ -77,13 +77,15 @@ html {
   scroll-behavior: smooth;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  overflow-x: clip;
 }
 
 body {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  overflow-x: hidden;
+  overflow-x: clip;
+  max-width: 100vw;
   background-color: var(--bg-main);
   color: var(--color-foreground);
   transition: background-color 0.25s ease, color 0.25s ease;
@@ -282,6 +284,11 @@ textarea:focus-visible,
 /* ==========================================================================
    3D CENTERED CAROUSEL COMPONENT STYLES
    ========================================================================== */
+.featured-projects-section,
+.featured-certs-section {
+  overflow-x: clip;
+}
+
 .carousel-stage {
   position: relative;
   width: 100%;
@@ -289,6 +296,7 @@ textarea:focus-visible,
   margin: 0 auto;
   perspective: 1200px;
   padding: 20px 0 40px 0;
+  overflow-x: clip;
 }
 
 .carousel-viewport {
@@ -348,6 +356,34 @@ textarea:focus-visible,
   transform: translateX(42%) scale(0.86) rotateY(-12deg) translateZ(-60px);
   opacity: 0.7;
   filter: brightness(0.92);
+}
+
+@media (max-width: 640px) {
+  .carousel-card {
+    width: 80%;
+  }
+
+  .carousel-card.prev {
+    transform: translateX(-20%) scale(0.88) rotateY(6deg) translateZ(-30px);
+  }
+
+  .carousel-card.next {
+    transform: translateX(20%) scale(0.88) rotateY(-6deg) translateZ(-30px);
+  }
+}
+
+@media (max-width: 480px) {
+  .carousel-card {
+    width: 78%;
+  }
+
+  .carousel-card.prev {
+    transform: translateX(-16%) scale(0.88) rotateY(4deg) translateZ(-20px);
+  }
+
+  .carousel-card.next {
+    transform: translateX(16%) scale(0.88) rotateY(-4deg) translateZ(-20px);
+  }
 }
 
 .carousel-card.hidden-card {

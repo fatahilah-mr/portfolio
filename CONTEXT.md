@@ -213,6 +213,31 @@ const projectsCollection = defineCollection({
 | `2026-09-10` | Antigravity AI | Phase 21 — Semi-SPA Overhaul, 3D Carousels, Cloudflare D1 & CMS Admin | `src/`, `functions/api/`, `migrations/`, `public/` | Live staging review on `https://preview.fmr.web.id` |
 | `2026-09-10` | Antigravity AI | Phase 22 — URL-Based i18n Routing (EN default, ID on /id & /projects/id) | `src/layouts/`, `src/components/`, `src/pages/`, `public/_redirects` | Deployed to staging `preview.fmr.web.id` |
 | `2026-09-10` | Antigravity AI | Phase 23 — Fix Blank English Content & Replace Tofu Icons | `src/components/`, `src/pages/` | Deployed to staging `preview.fmr.web.id` |
+| `2026-09-10` | Antigravity AI | Phase 24 — Mobile Horizontal Scroll Elimination & CDP Audit | `src/styles/global.css`, `Hero.astro`, `Navbar.astro`, Carousels | 30/30 viewports verified, deployed to staging |
+
+### Session Entry: `2026-09-10` (Phase 24: Comprehensive Audit & Elimination of Mobile Horizontal Scroll / Layout Overflow)
+- **Objective:** Diagnose and eliminate horizontal scroll (layout overflow) across all pages (both `/` English default and `/id` Indonesian routes) on mobile viewports (360px - 430px) and desktop. Validate the user's hypothesis that the 3D carousels were causing horizontal overflow.
+- **Root Cause Analysis (Empirical CDP automated inspection):**
+  1. **3D Carousel Stacking & Transforms:** On mobile screens (360px - 430px), `.carousel-card.next` with `translateX(28%)` translated the right edge of the card beyond the viewport boundary to 373px (+13px overflow on 360px). Furthermore, neither `html`, `body`, nor `.carousel-stage` had strict `overflow-x: clip`, allowing 3D transforms to breach the root scroll container.
+  2. **Hero Metrics Box Intrinsic Expansion:** The `.hero-metrics` container in `Hero.astro` had `display: inline-flex` with fixed gaps and text. On Indonesian text ("Proyek Unggulan", "Kompetensi Teruji", etc.), its intrinsic width reached 438px, exceeding a 360px mobile viewport by +78px.
+  3. **Inline Span Bounding Box in Carousel Titles:** Carousel card `.footer-title span` elements were inline elements (`display: inline`). Even though `.footer-title` had `white-space: nowrap; text-overflow: ellipsis;`, an inline child `<span>`'s DOM text run expanded up to 801px.
+- **Implemented Fixes:**
+  1. `global.css`:
+     - Added `overflow-x: clip;` to `html`, `body` (with `max-width: 100vw;`), `.carousel-stage`, `.featured-projects-section`, and `.featured-certs-section`.
+     - Calibrated mobile 3D carousel responsive rules:
+       - `@media (max-width: 640px)`: `width: 80%; transform: translateX(±20%) scale(0.88) rotateY(±6deg) translateZ(-30px);`
+       - `@media (max-width: 480px)`: `width: 78%; transform: translateX(±16%) scale(0.88) rotateY(±4deg) translateZ(-20px);`
+       - Math verification: On 360px viewport, card right edge is at 348.45px (< 360px) and left edge is at 11.55px (> 0px), perfectly visible in 3D perspective with zero clipping and zero horizontal scroll.
+  2. `Hero.astro`:
+     - Added `@media (max-width: 520px)` converting `.hero-metrics` into a 3-column responsive CSS grid (`grid-template-columns: repeat(3, 1fr)`), hiding vertical dividers and optimizing font sizes to fit 360px mobile viewports seamlessly.
+  3. `Navbar.astro`:
+     - Added `@media (max-width: 380px)` micro-adjustments for ultra-narrow mobile viewports.
+  4. `FeaturedProjectsCarousel.astro` & `FeaturedCertificatesCarousel.astro`:
+     - Added `min-width: 0; overflow: hidden;` to `.footer-meta`.
+     - Added `.footer-title span { display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%; }`.
+- **Verification Results:**
+  - Automated Chrome DevTools Protocol (CDP) headless test executed across 6 pages (`/`, `/id`, `/projects`, `/projects/id`, `/certificates`, `/certificates/id`) at 5 viewports (360px, 375px, 390px, 412px, 1280px).
+  - 30/30 tests passed with `docScroll = window.innerWidth` and `overflowingElements = 0` (100% zero overflow).
 
 ### Session Entry: `2026-09-10` (Phase 23: Fix Blank Content on English Pages & Replace Tofu Icons)
 - **Objective:** Diagnose and fix why screenshot captures on `preview.fmr.web.id` showed empty/blank cards, missing labels, and broken icons on mobile devices.

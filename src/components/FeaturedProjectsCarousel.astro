@@ -149,6 +149,8 @@ const featuredProjects = [
 
   .footer-meta {
     max-width: 85%;
+    min-width: 0;
+    overflow: hidden;
   }
 
   .footer-category {
@@ -168,6 +170,14 @@ const featuredProjects = [
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+  }
+
+  .footer-title span {
+    display: block;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%;
   }
 
   .footer-arrow {

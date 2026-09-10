@@ -479,6 +479,26 @@ const certsUrl = isIndonesian ? '/certificates/id' : '/certificates';
   .hidden {
     display: none !important;
   }
+
+  @media (max-width: 380px) {
+    .brand-name {
+      font-size: 1rem;
+    }
+
+    .header-actions {
+      gap: 6px;
+    }
+
+    .lang-btn {
+      padding: 4px 6px;
+      font-size: 0.75rem;
+    }
+
+    .action-btn {
+      width: 32px;
+      height: 32px;
+    }
+  }
 </style>
 
 <script is:inline>

@@ -149,6 +149,8 @@ const featuredCerts = [
 
   .footer-meta {
     max-width: 80%;
+    min-width: 0;
+    overflow: hidden;
   }
 
   .cert-meta-row {
@@ -178,6 +180,14 @@ const featuredCerts = [
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+  }
+
+  .footer-title span {
+    display: block;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%;
   }
 
   .transcript-badge {
