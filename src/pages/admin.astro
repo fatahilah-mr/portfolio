@@ -1,37 +1,44 @@
 ---
 // src/pages/admin.astro
 // Single-Page CMS Admin Panel with GitHub OAuth, Full CRUD, and Dynamic Notification Settings
+// Redesigned with Obsidian Dark Solid Dashboard Theme (Gateway & Vercel Pro Style)
+import AdminToaster from '../components/admin/AdminToaster.jsx';
+import '../styles/admin.css';
 ---
 
 <!DOCTYPE html>
-<html lang="id" data-theme="light">
+<html lang="id" data-theme="dark">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>CMS Admin Panel | Fatahilah Portfolio</title>
+  <title>CMS Admin Panel | FATAHILAH.MR</title>
   <link rel="icon" type="image/svg+xml" href="/assets/favicon/favicon.svg" />
   <link rel="stylesheet" href="/styles/global.css" />
+  <link rel="stylesheet" href="/styles/admin.css" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet" />
 </head>
 <body class="admin-body">
+  <!-- Toast Notification System via Sonner (React Island) -->
+  <AdminToaster client:load />
+
   <div id="admin-app" class="admin-app-container">
     <!-- Loading State Screen -->
     <div id="loading-screen" class="loading-state">
       <div class="spinner"></div>
-      <p>Memeriksa sesi otentikasi...</p>
+      <p style="font-family: var(--admin-font-mono); font-size: 0.85rem; letter-spacing: 0.05em;">MEMVERIFIKASI SESI OTENTIKASI EDGE...</p>
     </div>
 
     <!-- Login Screen (Shown when unauthenticated) -->
     <div id="login-screen" class="login-wrapper hidden">
-      <div class="editorial-card login-card">
+      <div class="login-card">
         <div class="login-brand">
           <span class="brand-text">FATAHILAH<span class="brand-accent">.MR</span></span>
-          <span class="cms-tag font-mono">CMS ADMIN PANEL</span>
+          <span class="cms-tag">COMMAND CENTER ADMIN</span>
         </div>
 
-        <div id="login-error-banner" class="alert-banner error hidden">
+        <div id="login-error-banner" class="hidden" style="margin-bottom: 1.25rem; padding: 0.75rem 1rem; border-radius: 8px; background: rgba(244,63,94,0.15); border: 1px solid rgba(244,63,94,0.3); color: #fb7185; font-size: 0.825rem;">
           <span id="login-error-msg">Akses ditolak atau sesi kedaluwarsa.</span>
         </div>
 
@@ -39,269 +46,374 @@
           Panel kontrol portofolio dilindungi otentikasi dua arah. Akses dibatasi secara ketat hanya untuk akun GitHub terverifikasi <strong>@fatahilah-mr</strong>.
         </p>
 
-        <div class="login-actions" style="display:flex; flex-direction:column; gap:10px;">
-          <a href="/api/auth/login" class="btn btn-primary btn-block">
+        <div style="display: flex; flex-direction: column; gap: 0.75rem;">
+          <a href="/api/auth/login" class="btn-solid-primary" style="padding: 0.75rem 1rem;">
             <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor">
               <path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/>
             </svg>
             Masuk dengan GitHub
           </a>
-          <a href="/api/auth/dev-login" class="btn btn-secondary btn-block">
+          <a href="/api/auth/dev-login" class="btn-solid-secondary" style="padding: 0.75rem 1rem;">
             ⚡ Masuk Instan (Mode Staging / Review)
           </a>
         </div>
 
-        <div class="login-footer">
-          <a href="/" class="back-link">← Kembali ke Halaman Utama</a>
+        <div style="margin-top: 1.5rem;">
+          <a href="/" style="color: var(--admin-text-muted); font-size: 0.825rem; text-decoration: none;">← Kembali ke Halaman Utama</a>
         </div>
       </div>
     </div>
 
     <!-- Authenticated Dashboard -->
-    <div id="dashboard-screen" class="dashboard-wrapper hidden">
+    <div id="dashboard-screen" class="hidden">
       <!-- Admin Topbar -->
-      <header class="admin-topbar">
-        <div class="admin-brand">
+      <header class="admin-navbar">
+        <div class="admin-brand-group">
           <span class="brand-text">FATAHILAH<span class="brand-accent">.MR</span></span>
-          <span class="badge-role font-mono">ADMIN: @fatahilah-mr</span>
+          <span class="d1-status-badge">
+            <span class="status-dot"></span>
+            CLOUDFLARE D1 LIVE
+          </span>
+          <span class="admin-role-badge">ADMIN: @fatahilah-mr</span>
         </div>
 
-        <div class="topbar-actions">
-          <a href="/" target="_blank" class="btn btn-secondary btn-sm">Lihat Website ↗</a>
-          <button id="logout-btn" class="btn btn-secondary btn-sm">Keluar</button>
+        <div class="admin-nav-actions">
+          <a href="/" target="_blank" class="btn-solid-secondary">
+            Lihat Website
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" x2="21" y1="14" y2="3"/>
+            </svg>
+          </a>
+          <button id="logout-btn" class="btn-solid-danger">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" x2="9" y1="12" y2="12"/>
+            </svg>
+            Keluar
+          </button>
         </div>
       </header>
 
-      <!-- Main Navigation Tabs -->
-      <nav class="admin-tabs" role="tablist">
-        <button class="admin-tab-btn active" data-tab="tab-projects" role="tab">📁 Proyek</button>
-        <button class="admin-tab-btn" data-tab="tab-certs" role="tab">🏆 Sertifikat</button>
-        <button class="admin-tab-btn" data-tab="tab-profile" role="tab">👤 Profil & Bio</button>
-        <button class="admin-tab-btn" data-tab="tab-notifications" role="tab">🔔 Pengaturan Notifikasi</button>
+      <!-- KPI Stat Summary Cards -->
+      <div class="admin-kpi-grid">
+        <div class="kpi-card">
+          <div class="kpi-icon-wrap">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M4 20h16a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.93a2 2 0 0 1-1.66-.9l-.82-1.2A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13c0 1.1.9 2 2 2Z"/>
+            </svg>
+          </div>
+          <div class="kpi-info">
+            <span class="kpi-value" id="kpi-projects-count">-</span>
+            <span class="kpi-label">Total Proyek Portofolio</span>
+          </div>
+        </div>
+
+        <div class="kpi-card">
+          <div class="kpi-icon-wrap amber">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+            </svg>
+          </div>
+          <div class="kpi-info">
+            <span class="kpi-value" id="kpi-featured-count">-</span>
+            <span class="kpi-label">Proyek Featured (Beranda)</span>
+          </div>
+        </div>
+
+        <div class="kpi-card">
+          <div class="kpi-icon-wrap green">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="8" r="6"/><path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11"/>
+            </svg>
+          </div>
+          <div class="kpi-info">
+            <span class="kpi-value" id="kpi-certs-count">-</span>
+            <span class="kpi-label">Sertifikat Terverifikasi</span>
+          </div>
+        </div>
+
+        <div class="kpi-card">
+          <div class="kpi-icon-wrap purple">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/>
+            </svg>
+          </div>
+          <div class="kpi-info">
+            <span class="kpi-value" id="kpi-notify-status">Aktif</span>
+            <span class="kpi-label">Telegram & ntfy Channel</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Segmented Tab Navigation -->
+      <nav class="admin-tab-container" role="tablist">
+        <button class="admin-tab-pill active" data-tab="tab-projects" role="tab">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M4 20h16a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.93a2 2 0 0 1-1.66-.9l-.82-1.2A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13c0 1.1.9 2 2 2Z"/>
+          </svg>
+          Proyek
+        </button>
+        <button class="admin-tab-pill" data-tab="tab-certs" role="tab">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="8" r="6"/><path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11"/>
+          </svg>
+          Sertifikat
+        </button>
+        <button class="admin-tab-pill" data-tab="tab-profile" role="tab">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
+          </svg>
+          Profil & Bio
+        </button>
+        <button class="admin-tab-pill" data-tab="tab-notifications" role="tab">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/>
+          </svg>
+          Pengaturan Notifikasi
+        </button>
       </nav>
 
-      <!-- Global Alert Message -->
-      <div id="admin-alert" class="admin-alert-banner hidden"></div>
-
-      <!-- Tab 1: Proyek -->
-      <section id="tab-projects" class="tab-pane active">
-        <div class="tab-header">
-          <div>
+      <!-- TAB 1: PROYEK -->
+      <section id="tab-projects" class="tab-pane">
+        <div class="section-header-bar">
+          <div class="section-title-group">
             <h2>Manajemen Proyek Portofolio</h2>
-            <p class="tab-subtitle">Kelola daftar proyek, urutan tampilan (sort order), dan status featured.</p>
+            <p>Kelola daftar proyek teknis, thumbnail CDN, urutan tampilan (sort order), dan switch featured langsung.</p>
           </div>
-          <button id="add-project-btn" class="btn btn-primary">+ Tambah Proyek</button>
+          <button id="add-project-btn" class="btn-solid-primary">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+            </svg>
+            Tambah Proyek Baru
+          </button>
         </div>
 
-        <div class="admin-table-wrapper">
-          <table class="admin-table" id="projects-table">
-            <thead>
-              <tr>
-                <th>Urut</th>
-                <th>Thumbnail</th>
-                <th>Judul Proyek</th>
-                <th>Kategori</th>
-                <th>Featured</th>
-                <th>Aksi</th>
-              </tr>
-            </thead>
-            <tbody id="projects-table-body">
-              <tr><td colspan="6" class="text-center">Memuat data proyek...</td></tr>
-            </tbody>
-          </table>
+        <div id="projects-list-container" class="admin-items-list">
+          <div class="loading-state" style="min-height: 200px;">
+            <div class="spinner"></div>
+            <p>Memuat katalog proyek dari Cloudflare D1...</p>
+          </div>
         </div>
       </section>
 
-      <!-- Tab 2: Sertifikat -->
+      <!-- TAB 2: SERTIFIKAT -->
       <section id="tab-certs" class="tab-pane hidden">
-        <div class="tab-header">
-          <div>
+        <div class="section-header-bar">
+          <div class="section-title-group">
             <h2>Manajemen Sertifikat & Transkrip</h2>
-            <p class="tab-subtitle">Kelola 20+ kredensial, tahun terbit, tipe orientasi, dan halaman belakang transkrip.</p>
+            <p>Kelola kredensial resmi, thumbnail A4, tombol transkrip dua sisi, dan sorotan di carousel beranda.</p>
           </div>
-          <button id="add-cert-btn" class="btn btn-primary">+ Tambah Sertifikat</button>
+          <button id="add-cert-btn" class="btn-solid-primary">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+            </svg>
+            Tambah Sertifikat Baru
+          </button>
         </div>
 
-        <div class="admin-table-wrapper">
-          <table class="admin-table" id="certs-table">
-            <thead>
-              <tr>
-                <th>Urut</th>
-                <th>Preview</th>
-                <th>Nama Sertifikat</th>
-                <th>Penerbit</th>
-                <th>Tahun</th>
-                <th>Transkrip</th>
-                <th>Featured</th>
-                <th>Aksi</th>
-              </tr>
-            </thead>
-            <tbody id="certs-table-body">
-              <tr><td colspan="8" class="text-center">Memuat data sertifikat...</td></tr>
-            </tbody>
-          </table>
+        <div id="certs-list-container" class="admin-items-list">
+          <div class="loading-state" style="min-height: 200px;">
+            <div class="spinner"></div>
+            <p>Memuat daftar sertifikat dari Cloudflare D1...</p>
+          </div>
         </div>
       </section>
 
-      <!-- Tab 3: Profil & Bio -->
+      <!-- TAB 3: PROFIL & BIO -->
       <section id="tab-profile" class="tab-pane hidden">
-        <div class="tab-header">
-          <div>
+        <div class="section-header-bar">
+          <div class="section-title-group">
             <h2>Konfigurasi Profil & Bio Situs</h2>
-            <p class="tab-subtitle">Perbarui narasi dwibahasa, tautan media sosial, dan data kontak resmi.</p>
+            <p>Perbarui narasi dwibahasa, tautan media sosial, dan data kontak resmi yang tampil di header dan footer.</p>
           </div>
         </div>
 
-        <form id="profile-form" class="editorial-card admin-form">
-          <div class="form-row-2">
-            <div class="form-group">
+        <form id="profile-form" class="admin-card-surface" style="display: flex; flex-direction: column; gap: 1.25rem;">
+          <div class="form-grid-2">
+            <div class="form-group-solid">
               <label>Nama Lengkap</label>
-              <input type="text" id="cfg-name" class="form-input" required />
+              <input type="text" id="cfg-name" class="form-control-solid" required />
             </div>
-            <div class="form-group">
+            <div class="form-group-solid">
               <label>Nama Panggilan (Short Name)</label>
-              <input type="text" id="cfg-short-name" class="form-input" required />
+              <input type="text" id="cfg-short-name" class="form-control-solid" required />
             </div>
           </div>
 
-          <div class="form-group">
+          <div class="form-group-solid">
             <label>Judul / Headline Utama (ID)</label>
-            <input type="text" id="cfg-title-id" class="form-input" required />
+            <input type="text" id="cfg-title-id" class="form-control-solid" required />
           </div>
 
-          <div class="form-group">
+          <div class="form-group-solid">
             <label>Judul / Headline Utama (EN)</label>
-            <input type="text" id="cfg-title-en" class="form-input" required />
+            <input type="text" id="cfg-title-en" class="form-control-solid" required />
           </div>
 
-          <div class="form-group">
+          <div class="form-group-solid">
             <label>Biografi Singkat (ID)</label>
-            <textarea id="cfg-bio-id" rows="3" class="form-input"></textarea>
+            <textarea id="cfg-bio-id" rows="3" class="form-control-solid"></textarea>
           </div>
 
-          <div class="form-group">
+          <div class="form-group-solid">
             <label>Biografi Singkat (EN)</label>
-            <textarea id="cfg-bio-en" rows="3" class="form-input"></textarea>
+            <textarea id="cfg-bio-en" rows="3" class="form-control-solid"></textarea>
           </div>
 
-          <div class="form-row-3">
-            <div class="form-group">
+          <div class="form-grid-2">
+            <div class="form-group-solid">
               <label>Email Resmi</label>
-              <input type="email" id="cfg-email" class="form-input" required />
+              <input type="email" id="cfg-email" class="form-control-solid" required />
             </div>
-            <div class="form-group">
-              <label>GitHub URL</label>
-              <input type="url" id="cfg-github" class="form-input" required />
-            </div>
-            <div class="form-group">
-              <label>LinkedIn URL</label>
-              <input type="url" id="cfg-linkedin" class="form-input" required />
+            <div class="form-group-solid">
+              <label>GitHub Profile URL</label>
+              <input type="url" id="cfg-github" class="form-control-solid" required />
             </div>
           </div>
 
-          <div class="form-actions">
-            <button type="submit" class="btn btn-primary">Simpan Perubahan Profil</button>
+          <div class="form-group-solid">
+            <label>LinkedIn Profile URL</label>
+            <input type="url" id="cfg-linkedin" class="form-control-solid" required />
+          </div>
+
+          <div style="display: flex; justify-content: flex-end; padding-top: 1rem; border-top: 1px solid var(--admin-border);">
+            <button type="submit" class="btn-solid-primary" id="save-profile-btn">
+              Simpan Perubahan Profil
+            </button>
           </div>
         </form>
       </section>
 
-      <!-- Tab 4: Pengaturan Notifikasi & Uji Coba -->
+      <!-- TAB 4: PENGATURAN NOTIFIKASI & UJI COBA -->
       <section id="tab-notifications" class="tab-pane hidden">
-        <div class="tab-header">
-          <div>
-            <h2>Pengaturan Notifikasi Real-Time</h2>
-            <p class="tab-subtitle">
-              Atur kredensial bot Telegram dan endpoint ntfy langsung dari CMS tanpa perlu mengubah file .env atau database manual.
-            </p>
+        <div class="section-header-bar">
+          <div class="section-title-group">
+            <h2>Pengaturan Notifikasi Real-Time (Telegram & ntfy)</h2>
+            <p>Konfigurasikan endpoint push notification ke smartphone tanpa perlu menyentuh file server atau database manual.</p>
           </div>
         </div>
 
-        <form id="notify-form" class="editorial-card admin-form">
-          <div class="form-section-title">
-            <span>📱 Parameter Bot Telegram</span>
-          </div>
-
-          <div class="form-group">
-            <label class="checkbox-label">
-              <input type="checkbox" id="notify-tele-enabled" />
-              <span>Aktifkan Notifikasi Telegram</span>
-            </label>
-          </div>
-
-          <div class="form-row-2">
-            <div class="form-group">
-              <label>Telegram Bot Token</label>
-              <div class="input-with-action">
-                <input type="password" id="notify-tele-token" class="form-input font-mono" placeholder="123456789:ABCdefGHIjkl..." />
-                <button type="button" class="toggle-pass-btn" data-target="notify-tele-token">👁</button>
+        <form id="notify-form" style="display: flex; flex-direction: column; gap: 1.5rem;">
+          <div class="form-grid-2">
+            <!-- Box Telegram -->
+            <div class="admin-card-surface">
+              <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.25rem; padding-bottom: 0.75rem; border-bottom: 1px solid var(--admin-border);">
+                <div style="display: flex; align-items: center; gap: 0.5rem;">
+                  <span style="font-size: 1.2rem;">📱</span>
+                  <strong style="color: #ffffff; font-size: 0.95rem;">Telegram Bot Push</strong>
+                </div>
+                <label class="switch-control">
+                  <input type="checkbox" id="notify-tele-enabled" class="switch-input" />
+                  <span class="switch-track"><span class="switch-thumb"></span></span>
+                  <span class="switch-label-text">Aktif</span>
+                </label>
               </div>
-              <span class="field-hint">Token bot Telegram yang diperoleh dari @BotFather.</span>
+
+              <div style="display: flex; flex-direction: column; gap: 1rem;">
+                <div class="form-group-solid">
+                  <label>Telegram Bot Token</label>
+                  <div style="display: flex; gap: 6px;">
+                    <input type="password" id="notify-tele-token" class="form-control-solid" style="font-family: var(--admin-font-mono);" placeholder="123456789:ABCdefGHIjkl..." />
+                    <button type="button" class="btn-icon-subtle toggle-pass-btn" data-target="notify-tele-token" title="Lihat/Sembunyikan Token">
+                      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/>
+                      </svg>
+                    </button>
+                  </div>
+                  <span class="form-hint">Token bot Telegram yang diperoleh dari @BotFather.</span>
+                </div>
+
+                <div class="form-group-solid">
+                  <label>Telegram Chat ID</label>
+                  <input type="text" id="notify-tele-chat-id" class="form-control-solid" style="font-family: var(--admin-font-mono);" placeholder="Contoh: 123456789 atau -100..." />
+                  <span class="form-hint">ID chat atau channel tujuan notifikasi langsung.</span>
+                </div>
+              </div>
             </div>
 
-            <div class="form-group">
-              <label>Telegram Chat ID</label>
-              <input type="text" id="notify-tele-chat-id" class="form-input font-mono" placeholder="Contoh: 123456789 atau -100..." />
-              <span class="field-hint">ID chat atau ID channel tujuan pengiriman pesan.</span>
+            <!-- Box ntfy -->
+            <div class="admin-card-surface">
+              <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.25rem; padding-bottom: 0.75rem; border-bottom: 1px solid var(--admin-border);">
+                <div style="display: flex; align-items: center; gap: 0.5rem;">
+                  <span style="font-size: 1.2rem;">🔔</span>
+                  <strong style="color: #ffffff; font-size: 0.95rem;">ntfy Android / Web Push</strong>
+                </div>
+                <span class="d1-status-badge" style="font-size: 0.65rem;">HTTP REST</span>
+              </div>
+
+              <div style="display: flex; flex-direction: column; gap: 1rem;">
+                <div class="form-group-solid">
+                  <label>ntfy Server URL</label>
+                  <input type="url" id="notify-ntfy-server" class="form-control-solid" style="font-family: var(--admin-font-mono);" placeholder="https://ntfy.fmr.web.id" />
+                  <span class="form-hint">Server ntfy yang digunakan (default: ntfy.fmr.web.id).</span>
+                </div>
+
+                <div class="form-group-solid">
+                  <label>ntfy Topic Name</label>
+                  <input type="text" id="notify-ntfy-topic" class="form-control-solid" style="font-family: var(--admin-font-mono);" placeholder="agent" />
+                  <span class="form-hint">Nama topik ntfy yang di-subscribe di aplikasi Android.</span>
+                </div>
+
+                <div class="form-group-solid">
+                  <label>ntfy Access Token (Opsional)</label>
+                  <input type="password" id="notify-ntfy-token" class="form-control-solid" style="font-family: var(--admin-font-mono);" placeholder="tk_..." />
+                  <span class="form-hint">Kosongkan jika server ntfy tidak memerlukan otentikasi Bearer.</span>
+                </div>
+              </div>
             </div>
           </div>
 
-          <div class="form-section-title mt-6">
-            <span>🔔 Parameter Push Notification (ntfy)</span>
-          </div>
+          <div class="admin-card-surface" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+            <div>
+              <strong style="color: #ffffff; font-size: 0.9rem;">Simpan Konfigurasi</strong>
+              <p style="color: var(--admin-text-muted); font-size: 0.78rem; margin: 2px 0 0;">Parameter akan disimpan ke tabel ekosistem D1 `port_config`.</p>
+            </div>
 
-          <div class="form-row-3">
-            <div class="form-group">
-              <label>ntfy Server URL</label>
-              <input type="url" id="notify-ntfy-server" class="form-input font-mono" placeholder="https://ntfy.fmr.web.id" />
+            <div style="display: flex; gap: 0.75rem;">
+              <button type="button" id="test-notify-btn" class="btn-solid-secondary">
+                🧪 Kirim Uji Coba Notifikasi
+              </button>
+              <button type="submit" class="btn-solid-primary">
+                Simpan Pengaturan
+              </button>
             </div>
-            <div class="form-group">
-              <label>ntfy Topic</label>
-              <input type="text" id="notify-ntfy-topic" class="form-input font-mono" placeholder="agent" />
-            </div>
-            <div class="form-group">
-              <label>ntfy Access Token (Opsional)</label>
-              <input type="password" id="notify-ntfy-token" class="form-input font-mono" placeholder="tk_..." />
-            </div>
-          </div>
-
-          <div class="form-actions-split mt-6">
-            <button type="submit" class="btn btn-primary">Simpan Pengaturan Notifikasi</button>
-            <button type="button" id="test-notify-btn" class="btn btn-secondary">
-              🧪 Kirim Uji Coba (Test Alert)
-            </button>
           </div>
         </form>
 
         <!-- Test Results Feedback Box -->
-        <div id="notify-test-result" class="editorial-card test-result-box hidden">
-          <h4>Hasil Pengujian Notifikasi</h4>
-          <div id="notify-test-content" class="font-mono text-sm"></div>
+        <div id="notify-test-result" class="admin-card-surface hidden" style="margin-top: 1.25rem;">
+          <h4 style="margin: 0 0 0.5rem; font-size: 0.9rem; color: #ffffff;">Hasil Pengujian Notifikasi Real-Time</h4>
+          <div id="notify-test-content" style="font-family: var(--admin-font-mono); font-size: 0.8rem; color: var(--admin-text-sub);"></div>
         </div>
       </section>
     </div>
   </div>
 
-  <!-- Project Edit/Create Modal -->
-  <dialog id="project-modal" class="detail-modal-dialog">
-    <div class="detail-modal-content">
-      <div class="detail-modal-header">
+  <!-- PROJECT EDIT/CREATE MODAL -->
+  <dialog id="project-modal" class="admin-dialog">
+    <div class="admin-dialog-content">
+      <div class="dialog-header">
         <h3 id="project-modal-title">Tambah / Edit Proyek</h3>
-        <button class="detail-modal-close-btn" data-close-modal="project-modal">✕</button>
+        <button type="button" class="btn-icon-subtle" data-close-modal="project-modal">✕</button>
       </div>
-      <form id="project-form" class="detail-modal-body">
+
+      <form id="project-form" style="display: flex; flex-direction: column; gap: 1rem;">
         <input type="hidden" id="pm-id" />
-        <div class="form-group">
-          <label>Judul Proyek (ID)</label>
-          <input type="text" id="pm-judul" class="form-input" required />
+
+        <div class="form-grid-2">
+          <div class="form-group-solid">
+            <label>Judul Proyek (ID) *</label>
+            <input type="text" id="pm-judul" class="form-control-solid" required />
+          </div>
+          <div class="form-group-solid">
+            <label>Judul Proyek (EN)</label>
+            <input type="text" id="pm-title-en" class="form-control-solid" />
+          </div>
         </div>
-        <div class="form-group">
-          <label>Judul Proyek (EN)</label>
-          <input type="text" id="pm-title-en" class="form-input" />
-        </div>
-        <div class="form-row-2">
-          <div class="form-group">
-            <label>Kategori</label>
-            <select id="pm-kategori" class="form-input">
+
+        <div class="form-grid-2">
+          <div class="form-group-solid">
+            <label>Kategori *</label>
+            <select id="pm-kategori" class="form-control-solid" style="cursor: pointer;">
               <option value="Website">Website</option>
               <option value="Cisco">Cisco</option>
               <option value="MikroTik">MikroTik</option>
@@ -309,477 +421,148 @@
               <option value="Linux">Linux</option>
             </select>
           </div>
-          <div class="form-group">
-            <label>Urutan (Sort Order)</label>
-            <input type="number" id="pm-sort" class="form-input" value="10" />
+          <div class="form-group-solid">
+            <label>Urutan Tampilan (Sort Order)</label>
+            <input type="number" id="pm-sort" class="form-control-solid" value="10" />
           </div>
         </div>
-        <div class="form-group">
-          <label>Deskripsi (ID)</label>
-          <textarea id="pm-deskripsi" rows="3" class="form-input" required></textarea>
+
+        <div class="form-group-solid">
+          <label>Deskripsi Proyek (ID) *</label>
+          <textarea id="pm-deskripsi" rows="3" class="form-control-solid" required></textarea>
         </div>
-        <div class="form-group">
-          <label>Deskripsi (EN)</label>
-          <textarea id="pm-desc-en" rows="3" class="form-input"></textarea>
+
+        <div class="form-group-solid">
+          <label>Deskripsi Proyek (EN)</label>
+          <textarea id="pm-desc-en" rows="3" class="form-control-solid"></textarea>
         </div>
-        <div class="form-group">
-          <label>Link Gambar (URL R2 / CDN)</label>
-          <input type="url" id="pm-gambar" class="form-input" required />
+
+        <div class="form-group-solid">
+          <label>URL Gambar Thumbnail (CDN / R2) *</label>
+          <input type="url" id="pm-gambar" class="form-control-solid" style="font-family: var(--admin-font-mono);" required />
+          <!-- Real-Time Image Preview Box -->
+          <div class="modal-image-preview-box" id="pm-img-preview-box">
+            <span class="preview-placeholder">Preview gambar akan muncul di sini secara otomatis</span>
+          </div>
         </div>
-        <div class="form-group">
-          <label>Link Dokumentasi / Live</label>
-          <input type="url" id="pm-link" class="form-input" />
+
+        <div class="form-group-solid">
+          <label>URL Dokumentasi / Live Demo</label>
+          <input type="url" id="pm-link" class="form-control-solid" style="font-family: var(--admin-font-mono);" placeholder="https://..." />
         </div>
-        <div class="form-group">
-          <label class="checkbox-label">
-            <input type="checkbox" id="pm-featured" />
-            <span>Tampilkan di Carousel Unggulan Beranda (Top 3)</span>
+
+        <div style="padding-top: 0.5rem;">
+          <label class="switch-control">
+            <input type="checkbox" id="pm-featured" class="switch-input" />
+            <span class="switch-track"><span class="switch-thumb"></span></span>
+            <span class="switch-label-text" style="color: #ffffff; font-weight: 600;">Tampilkan di Carousel Unggulan Beranda (Top 3)</span>
           </label>
         </div>
-        <div class="modal-footer-btns">
-          <button type="button" class="btn btn-secondary" data-close-modal="project-modal">Batal</button>
-          <button type="submit" class="btn btn-primary">Simpan Proyek</button>
+
+        <div class="dialog-footer">
+          <button type="button" class="btn-solid-secondary" data-close-modal="project-modal">Batal</button>
+          <button type="submit" class="btn-solid-primary" id="save-proj-btn">Simpan Proyek</button>
         </div>
       </form>
     </div>
   </dialog>
 
-  <!-- Certificate Edit/Create Modal -->
-  <dialog id="cert-modal" class="detail-modal-dialog">
-    <div class="detail-modal-content">
-      <div class="detail-modal-header">
+  <!-- CERTIFICATE EDIT/CREATE MODAL -->
+  <dialog id="cert-modal" class="admin-dialog">
+    <div class="admin-dialog-content">
+      <div class="dialog-header">
         <h3 id="cert-modal-title">Tambah / Edit Sertifikat</h3>
-        <button class="detail-modal-close-btn" data-close-modal="cert-modal">✕</button>
+        <button type="button" class="btn-icon-subtle" data-close-modal="cert-modal">✕</button>
       </div>
-      <form id="cert-form" class="detail-modal-body">
+
+      <form id="cert-form" style="display: flex; flex-direction: column; gap: 1rem;">
         <input type="hidden" id="cm-id" />
-        <div class="form-group">
-          <label>Nama Sertifikat</label>
-          <input type="text" id="cm-nama" class="form-input" required />
+
+        <div class="form-group-solid">
+          <label>Nama Sertifikat *</label>
+          <input type="text" id="cm-nama" class="form-control-solid" required />
         </div>
-        <div class="form-row-2">
-          <div class="form-group">
-            <label>Penerbit Sertifikat</label>
-            <input type="text" id="cm-penerbit" class="form-input" required />
+
+        <div class="form-grid-2">
+          <div class="form-group-solid">
+            <label>Penerbit Sertifikat *</label>
+            <input type="text" id="cm-penerbit" class="form-control-solid" required />
           </div>
-          <div class="form-group">
-            <label>Tahun Terbit</label>
-            <input type="text" id="cm-tahun" class="form-input" placeholder="2026" required />
+          <div class="form-group-solid">
+            <label>Tahun Terbit *</label>
+            <input type="text" id="cm-tahun" class="form-control-solid" placeholder="2026" required />
           </div>
         </div>
-        <div class="form-row-2">
-          <div class="form-group">
-            <label>Tipe Orientasi</label>
-            <select id="cm-tipe" class="form-input">
+
+        <div class="form-grid-2">
+          <div class="form-group-solid">
+            <label>Tipe Orientasi *</label>
+            <select id="cm-tipe" class="form-control-solid" style="cursor: pointer;">
               <option value="horizontal">Horizontal (Landscape)</option>
               <option value="vertical">Vertical (Portrait)</option>
             </select>
           </div>
-          <div class="form-group">
-            <label>Urutan (Sort Order)</label>
-            <input type="number" id="cm-sort" class="form-input" value="10" />
+          <div class="form-group-solid">
+            <label>Urutan Tampilan (Sort Order)</label>
+            <input type="number" id="cm-sort" class="form-control-solid" value="10" />
           </div>
         </div>
-        <div class="form-group">
-          <label>URL Gambar Depan (CDN)</label>
-          <input type="url" id="cm-depan" class="form-input" required />
+
+        <div class="form-group-solid">
+          <label>URL Gambar Depan (CDN / R2) *</label>
+          <input type="url" id="cm-depan" class="form-control-solid" style="font-family: var(--admin-font-mono);" required />
+          <div class="modal-image-preview-box" id="cm-img-preview-box">
+            <span class="preview-placeholder">Preview gambar depan akan muncul di sini</span>
+          </div>
         </div>
-        <div class="form-group">
+
+        <div class="form-group-solid">
           <label>URL Gambar Belakang / Transkrip (Opsional)</label>
-          <input type="url" id="cm-belakang" class="form-input" />
+          <input type="url" id="cm-belakang" class="form-control-solid" style="font-family: var(--admin-font-mono);" />
         </div>
-        <div class="form-group">
-          <label class="checkbox-label">
-            <input type="checkbox" id="cm-transkrip" />
-            <span>Aktifkan Tombol Transkrip (Halaman Belakang)</span>
+
+        <div style="display: flex; flex-direction: column; gap: 0.75rem; padding-top: 0.5rem;">
+          <label class="switch-control">
+            <input type="checkbox" id="cm-transkrip" class="switch-input" />
+            <span class="switch-track"><span class="switch-thumb"></span></span>
+            <span class="switch-label-text">Aktifkan Tombol Transkrip Nilai (Halaman Belakang)</span>
+          </label>
+
+          <label class="switch-control">
+            <input type="checkbox" id="cm-featured" class="switch-input" />
+            <span class="switch-track"><span class="switch-thumb"></span></span>
+            <span class="switch-label-text" style="color: #ffffff; font-weight: 600;">Tampilkan di Carousel Unggulan Beranda (Top 3)</span>
           </label>
         </div>
-        <div class="form-group">
-          <label class="checkbox-label">
-            <input type="checkbox" id="cm-featured" />
-            <span>Tampilkan di Carousel Unggulan Beranda (Top 3)</span>
-          </label>
-        </div>
-        <div class="modal-footer-btns">
-          <button type="button" class="btn btn-secondary" data-close-modal="cert-modal">Batal</button>
-          <button type="submit" class="btn btn-primary">Simpan Sertifikat</button>
+
+        <div class="dialog-footer">
+          <button type="button" class="btn-solid-secondary" data-close-modal="cert-modal">Batal</button>
+          <button type="submit" class="btn-solid-primary" id="save-cert-btn">Simpan Sertifikat</button>
         </div>
       </form>
     </div>
   </dialog>
 
-  <style>
-    .admin-body {
-      background-color: var(--bg-surface);
-      min-height: 100vh;
-      color: var(--color-foreground);
-    }
-
-    .admin-app-container {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 24px clamp(16px, 3vw, 32px);
-    }
-
-    .loading-state {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      min-height: 60vh;
-      gap: 16px;
-      color: var(--color-muted);
-    }
-
-    .spinner {
-      width: 36px;
-      height: 36px;
-      border: 3px solid var(--color-border);
-      border-top-color: var(--color-accent);
-      border-radius: 50%;
-      animation: spin 0.8s linear infinite;
-    }
-
-    @keyframes spin { 100% { transform: rotate(360deg); } }
-
-    /* Login Screen */
-    .login-wrapper {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      min-height: 75vh;
-    }
-
-    .login-card {
-      max-width: 440px;
-      width: 100%;
-      padding: clamp(28px, 5vw, 40px);
-      text-align: center;
-    }
-
-    .login-brand {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 6px;
-      margin-bottom: 20px;
-    }
-
-    .brand-text {
-      font-size: 1.25rem;
-      font-weight: 800;
-    }
-
-    .brand-accent {
-      color: var(--color-accent);
-    }
-
-    .cms-tag {
-      font-size: 0.75rem;
-      letter-spacing: 0.08em;
-      color: var(--color-subtle);
-    }
-
-    .login-desc {
-      font-size: 0.9375rem;
-      color: var(--color-muted);
-      line-height: 1.6;
-      margin-bottom: 24px;
-    }
-
-    .btn-block {
-      width: 100%;
-      padding: 12px 20px;
-    }
-
-    .login-footer {
-      margin-top: 24px;
-    }
-
-    .back-link {
-      font-size: 0.85rem;
-      color: var(--color-subtle);
-    }
-
-    /* Dashboard */
-    .admin-topbar {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding-bottom: 20px;
-      border-bottom: 1px solid var(--color-border);
-      margin-bottom: 24px;
-      flex-wrap: wrap;
-      gap: 16px;
-    }
-
-    .badge-role {
-      font-size: 0.75rem;
-      background: var(--color-accent-soft);
-      color: var(--color-accent);
-      padding: 3px 8px;
-      border-radius: 6px;
-      margin-left: 10px;
-    }
-
-    .topbar-actions {
-      display: flex;
-      gap: 10px;
-    }
-
-    .admin-tabs {
-      display: flex;
-      gap: 8px;
-      border-bottom: 1px solid var(--color-border);
-      margin-bottom: 28px;
-      overflow-x: auto;
-    }
-
-    .admin-tab-btn {
-      padding: 10px 18px;
-      background: transparent;
-      border: none;
-      border-bottom: 2px solid transparent;
-      color: var(--color-muted);
-      font-size: 0.9375rem;
-      font-weight: 600;
-      cursor: pointer;
-      white-space: nowrap;
-      transition: all 0.15s ease;
-    }
-
-    .admin-tab-btn:hover {
-      color: var(--color-foreground);
-    }
-
-    .admin-tab-btn.active {
-      color: var(--color-accent);
-      border-bottom-color: var(--color-accent);
-    }
-
-    .tab-pane {
-      display: none;
-    }
-
-    .tab-pane.active {
-      display: block;
-    }
-
-    .tab-header {
-      display: flex;
-      align-items: flex-start;
-      justify-content: space-between;
-      margin-bottom: 20px;
-      flex-wrap: wrap;
-      gap: 16px;
-    }
-
-    .tab-subtitle {
-      font-size: 0.9rem;
-      color: var(--color-muted);
-      margin-top: 4px;
-    }
-
-    /* Table */
-    .admin-table-wrapper {
-      background: var(--bg-card);
-      border: 1px solid var(--color-border);
-      border-radius: 12px;
-      overflow-x: auto;
-    }
-
-    .admin-table {
-      width: 100%;
-      border-collapse: collapse;
-      text-align: left;
-      font-size: 0.875rem;
-    }
-
-    .admin-table th {
-      padding: 12px 16px;
-      background: var(--bg-surface);
-      border-bottom: 1px solid var(--color-border);
-      font-weight: 600;
-      color: var(--color-subtle);
-    }
-
-    .admin-table td {
-      padding: 12px 16px;
-      border-bottom: 1px solid var(--color-border);
-      vertical-align: middle;
-    }
-
-    .table-thumb {
-      width: 60px;
-      height: 38px;
-      object-fit: cover;
-      border-radius: 4px;
-      border: 1px solid var(--color-border);
-    }
-
-    .action-cell-btns {
-      display: flex;
-      gap: 6px;
-    }
-
-    /* Form Styles */
-    .admin-form {
-      padding: clamp(20px, 4vw, 32px);
-      display: flex;
-      flex-direction: column;
-      gap: 16px;
-      max-width: 800px;
-    }
-
-    .form-group {
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-    }
-
-    .form-group label {
-      font-size: 0.8125rem;
-      font-weight: 600;
-      color: var(--color-foreground);
-    }
-
-    .form-input {
-      width: 100%;
-      padding: 9px 12px;
-      border-radius: 8px;
-      border: 1px solid var(--color-border);
-      background: var(--bg-card);
-      color: var(--color-foreground);
-      font-size: 0.875rem;
-      outline: none;
-      transition: border-color 0.15s ease;
-    }
-
-    .form-input:focus {
-      border-color: var(--color-ring);
-    }
-
-    .form-row-2 {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 16px;
-    }
-
-    @media (min-width: 640px) {
-      .form-row-2 {
-        grid-template-columns: repeat(2, 1fr);
-      }
-    }
-
-    .form-row-3 {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 16px;
-    }
-
-    @media (min-width: 720px) {
-      .form-row-3 {
-        grid-template-columns: repeat(3, 1fr);
-      }
-    }
-
-    .checkbox-label {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      font-size: 0.875rem;
-      cursor: pointer;
-    }
-
-    .form-section-title {
-      font-size: 0.95rem;
-      font-weight: 700;
-      padding-bottom: 6px;
-      border-bottom: 1px solid var(--color-border);
-    }
-
-    .field-hint {
-      font-size: 0.75rem;
-      color: var(--color-subtle);
-    }
-
-    .input-with-action {
-      display: flex;
-      gap: 6px;
-    }
-
-    .toggle-pass-btn {
-      padding: 0 12px;
-      background: var(--bg-surface);
-      border: 1px solid var(--color-border);
-      border-radius: 8px;
-      cursor: pointer;
-    }
-
-    .form-actions-split {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 12px;
-      align-items: center;
-      justify-content: space-between;
-    }
-
-    .modal-footer-btns {
-      display: flex;
-      justify-content: flex-end;
-      gap: 10px;
-      margin-top: 16px;
-    }
-
-    .test-result-box {
-      margin-top: 20px;
-      padding: 16px;
-      max-width: 800px;
-    }
-
-    .admin-alert-banner {
-      padding: 10px 16px;
-      border-radius: 8px;
-      font-size: 0.875rem;
-      font-weight: 500;
-      margin-bottom: 20px;
-    }
-
-    .admin-alert-banner.success {
-      background: #DCFCE7;
-      color: #15803D;
-      border: 1px solid #BBF7D0;
-    }
-
-    .admin-alert-banner.error {
-      background: #FEE2E2;
-      color: #B91C1C;
-      border: 1px solid #FECACA;
-    }
-
-    .hidden {
-      display: none !important;
-    }
-  </style>
-
+  <!-- ADMIN APPLICATION CLIENT SCRIPT -->
   <script is:inline>
     (function initAdminApp() {
+      // Toast notification helper with fallback
+      function showToast(type, msg, options = {}) {
+        if (window.toast && typeof window.toast[type] === 'function') {
+          return window.toast[type](msg, options);
+        } else if (window.toast) {
+          return window.toast(msg, options);
+        }
+        console.log(`[Toast ${type}]: ${msg}`);
+      }
+
       const loadingScreen = document.getElementById('loading-screen');
       const loginScreen = document.getElementById('login-screen');
       const dashboardScreen = document.getElementById('dashboard-screen');
-      const alertBanner = document.getElementById('admin-alert');
       const loginErrorBanner = document.getElementById('login-error-banner');
       const loginErrorMsg = document.getElementById('login-error-msg');
 
-      function showAlert(msg, type = 'success') {
-        if (!alertBanner) return;
-        alertBanner.className = `admin-alert-banner ${type}`;
-        alertBanner.textContent = msg;
-        alertBanner.classList.remove('hidden');
-        setTimeout(() => alertBanner.classList.add('hidden'), 4000);
-      }
-
-      // Check URL search params for error
+      // Check URL query error
       const urlParams = new URLSearchParams(window.location.search);
       if (urlParams.get('error')) {
         loginErrorBanner?.classList.remove('hidden');
@@ -812,8 +595,8 @@
         window.location.href = '/api/auth/logout';
       });
 
-      // Tabs switcher
-      const tabBtns = Array.from(document.querySelectorAll('.admin-tab-btn'));
+      // Tab switcher with robust visibility logic
+      const tabBtns = Array.from(document.querySelectorAll('.admin-tab-pill'));
       const tabPanes = Array.from(document.querySelectorAll('.tab-pane'));
 
       tabBtns.forEach(btn => {
@@ -821,8 +604,11 @@
           tabBtns.forEach(b => b.classList.remove('active'));
           tabPanes.forEach(p => p.classList.add('hidden'));
           btn.classList.add('active');
-          const target = btn.getAttribute('data-tab');
-          document.getElementById(target)?.classList.remove('hidden');
+          const targetId = btn.getAttribute('data-tab');
+          const targetPane = document.getElementById(targetId);
+          if (targetPane) {
+            targetPane.classList.remove('hidden');
+          }
         });
       });
 
@@ -845,66 +631,187 @@
         });
       });
 
-      // 2. DATA LOADERS
+      // Real-time image preview listeners in modals
+      function setupImagePreview(inputId, previewBoxId) {
+        const input = document.getElementById(inputId);
+        const box = document.getElementById(previewBoxId);
+        if (!input || !box) return;
+
+        const updatePreview = () => {
+          const url = input.value.trim();
+          if (url && (url.startsWith('http://') || url.startsWith('https://'))) {
+            box.innerHTML = `<img src="${url}" alt="Preview" onerror="this.onerror=null; this.parentElement.innerHTML='<span class=\\'preview-placeholder\\' style=\\'color:#fb7185;\\'>Gambar gagal dimuat (cek URL)</span>';" />`;
+          } else {
+            box.innerHTML = `<span class="preview-placeholder">Preview gambar akan muncul di sini</span>`;
+          }
+        };
+
+        input.addEventListener('input', updatePreview);
+        input.addEventListener('change', updatePreview);
+      }
+
+      setupImagePreview('pm-gambar', 'pm-img-preview-box');
+      setupImagePreview('cm-depan', 'cm-img-preview-box');
+
+      // 2. DATA LOADERS & RENDERING
       let projectsList = [];
       let certsList = [];
 
+      function updateKPICards() {
+        const projCount = document.getElementById('kpi-projects-count');
+        const featCount = document.getElementById('kpi-featured-count');
+        const certCount = document.getElementById('kpi-certs-count');
+
+        if (projCount) projCount.textContent = `${projectsList.length}`;
+        if (featCount) {
+          const featuredNum = projectsList.filter(p => Boolean(p.is_featured)).length;
+          featCount.textContent = `${featuredNum} Aktif`;
+        }
+        if (certCount) certCount.textContent = `${certsList.length}`;
+      }
+
+      function getCategoryClass(cat) {
+        const c = String(cat || '').toLowerCase();
+        if (c.includes('web')) return 'website';
+        if (c.includes('cisco')) return 'cisco';
+        if (c.includes('mikro')) return 'mikrotik';
+        if (c.includes('ai')) return 'ai';
+        if (c.includes('linux')) return 'linux';
+        return 'website';
+      }
+
+      // LOAD PROJECTS
       async function loadProjects() {
-        const tbody = document.getElementById('projects-table-body');
+        const container = document.getElementById('projects-list-container');
         try {
           const res = await fetch('/api/admin/projects');
           projectsList = await res.json();
-          tbody.innerHTML = projectsList.map(p => `
-            <tr>
-              <td class="font-mono">${p.sort_order}</td>
-              <td><img src="${p.link_gambar}" alt="" class="table-thumb" /></td>
-              <td><strong>${p.judul}</strong></td>
-              <td><span class="badge-tag">${p.kategori}</span></td>
-              <td>${p.is_featured ? '★ Ya' : '-'}</td>
-              <td>
-                <div class="action-cell-btns">
-                  <button class="btn btn-secondary btn-sm edit-proj-btn" data-id="${p.id}">Edit</button>
-                  <button class="btn btn-secondary btn-sm del-proj-btn" data-id="${p.id}" style="color:#e11d48;">Hapus</button>
+          projectsList.sort((a, b) => (a.sort_order || 0) - (b.sort_order || 0));
+
+          updateKPICards();
+
+          if (projectsList.length === 0) {
+            container.innerHTML = `<div class="admin-empty-state">Belum ada proyek terdaftar di database.</div>`;
+            return;
+          }
+
+          container.innerHTML = projectsList.map((p, index) => `
+            <div class="admin-item-card" data-id="${p.id}">
+              <div class="item-main-info">
+                <div class="item-reorder-controls">
+                  <button type="button" class="btn-move move-up-proj" data-index="${index}" title="Geser ke atas" ${index === 0 ? 'disabled style="opacity:0.25; cursor:not-allowed;"' : ''}>▲</button>
+                  <button type="button" class="btn-move move-down-proj" data-index="${index}" title="Geser ke bawah" ${index === projectsList.length - 1 ? 'disabled style="opacity:0.25; cursor:not-allowed;"' : ''}>▼</button>
                 </div>
-              </td>
-            </tr>
+                <span class="item-order-badge">${p.sort_order || index + 1}</span>
+
+                <div class="item-thumb-wrapper">
+                  <img src="${p.link_gambar}" alt="${p.judul}" loading="lazy" />
+                </div>
+
+                <div class="item-text-details">
+                  <div class="item-title-row">
+                    <h3 class="item-title">${p.judul}</h3>
+                    <span class="badge-cat ${getCategoryClass(p.kategori)}">${p.kategori || 'Website'}</span>
+                  </div>
+                  <p class="item-subtitle">${p.english_title || p.deskripsi || ''}</p>
+                </div>
+              </div>
+
+              <div class="item-actions-group">
+                <label class="switch-control" title="Tampilkan di carousel beranda">
+                  <input type="checkbox" class="switch-input toggle-proj-featured" data-id="${p.id}" ${p.is_featured ? 'checked' : ''} />
+                  <span class="switch-track"><span class="switch-thumb"></span></span>
+                  <span class="switch-label-text">Featured</span>
+                </label>
+
+                <button class="btn-icon-subtle edit-proj-btn" data-id="${p.id}" title="Edit Proyek">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/><path d="m15 5 4 4"/>
+                  </svg>
+                </button>
+
+                <button class="btn-icon-subtle btn-icon-danger del-proj-btn" data-id="${p.id}" title="Hapus Proyek">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/><line x1="10" x2="10" y1="11" y2="17"/><line x1="14" x2="14" y1="11" y2="17"/>
+                  </svg>
+                </button>
+              </div>
+            </div>
           `).join('');
 
           attachProjectActionHandlers();
         } catch (e) {
-          tbody.innerHTML = `<tr><td colspan="6" class="text-center">Gagal memuat proyek: ${e.message}</td></tr>`;
+          container.innerHTML = `<div class="admin-empty-state" style="color:#fb7185;">Gagal memuat data proyek: ${e.message}</div>`;
         }
       }
 
+      // LOAD CERTIFICATES
       async function loadCertificates() {
-        const tbody = document.getElementById('certs-table-body');
+        const container = document.getElementById('certs-list-container');
         try {
           const res = await fetch('/api/admin/certificates');
           certsList = await res.json();
-          tbody.innerHTML = certsList.map(c => `
-            <tr>
-              <td class="font-mono">${c.sort_order}</td>
-              <td><img src="${c.url_gambar_depan}" alt="" class="table-thumb" /></td>
-              <td><strong>${c.nama_sertifikat}</strong></td>
-              <td>${c.penerbit}</td>
-              <td class="font-mono">${c.tahun}</td>
-              <td>${c.tombol_transkrip === 'ada' ? '✓ Ada' : '-'}</td>
-              <td>${c.is_featured ? '★ Ya' : '-'}</td>
-              <td>
-                <div class="action-cell-btns">
-                  <button class="btn btn-secondary btn-sm edit-cert-btn" data-id="${c.id}">Edit</button>
-                  <button class="btn btn-secondary btn-sm del-cert-btn" data-id="${c.id}" style="color:#e11d48;">Hapus</button>
+          certsList.sort((a, b) => (a.sort_order || 0) - (b.sort_order || 0));
+
+          updateKPICards();
+
+          if (certsList.length === 0) {
+            container.innerHTML = `<div class="admin-empty-state">Belum ada sertifikat terdaftar di database.</div>`;
+            return;
+          }
+
+          container.innerHTML = certsList.map((c, index) => `
+            <div class="admin-item-card" data-id="${c.id}">
+              <div class="item-main-info">
+                <div class="item-reorder-controls">
+                  <button type="button" class="btn-move move-up-cert" data-index="${index}" title="Geser ke atas" ${index === 0 ? 'disabled style="opacity:0.25; cursor:not-allowed;"' : ''}>▲</button>
+                  <button type="button" class="btn-move move-down-cert" data-index="${index}" title="Geser ke bawah" ${index === certsList.length - 1 ? 'disabled style="opacity:0.25; cursor:not-allowed;"' : ''}>▼</button>
                 </div>
-              </td>
-            </tr>
+                <span class="item-order-badge">${c.sort_order || index + 1}</span>
+
+                <div class="item-thumb-wrapper cert">
+                  <img src="${c.url_gambar_depan}" alt="${c.nama_sertifikat}" loading="lazy" />
+                </div>
+
+                <div class="item-text-details">
+                  <div class="item-title-row">
+                    <h3 class="item-title">${c.nama_sertifikat}</h3>
+                    <span class="badge-cat cisco">${c.tahun || '2026'}</span>
+                    ${c.tombol_transkrip === 'ada' ? '<span class="badge-cat linux" style="font-size:0.6rem;">TRANSKRIP</span>' : ''}
+                  </div>
+                  <p class="item-subtitle">${c.penerbit} • ${c.tipe === 'vertical' ? 'Portrait' : 'Landscape'}</p>
+                </div>
+              </div>
+
+              <div class="item-actions-group">
+                <label class="switch-control" title="Tampilkan di carousel beranda">
+                  <input type="checkbox" class="switch-input toggle-cert-featured" data-id="${c.id}" ${c.is_featured ? 'checked' : ''} />
+                  <span class="switch-track"><span class="switch-thumb"></span></span>
+                  <span class="switch-label-text">Featured</span>
+                </label>
+
+                <button class="btn-icon-subtle edit-cert-btn" data-id="${c.id}" title="Edit Sertifikat">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/><path d="m15 5 4 4"/>
+                  </svg>
+                </button>
+
+                <button class="btn-icon-subtle btn-icon-danger del-cert-btn" data-id="${c.id}" title="Hapus Sertifikat">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/><line x1="10" x2="10" y1="11" y2="17"/><line x1="14" x2="14" y1="11" y2="17"/>
+                  </svg>
+                </button>
+              </div>
+            </div>
           `).join('');
 
           attachCertActionHandlers();
         } catch (e) {
-          tbody.innerHTML = `<tr><td colspan="8" class="text-center">Gagal memuat sertifikat: ${e.message}</td></tr>`;
+          container.innerHTML = `<div class="admin-empty-state" style="color:#fb7185;">Gagal memuat sertifikat: ${e.message}</div>`;
         }
       }
 
+      // LOAD CONFIG
       async function loadConfig() {
         try {
           const res = await fetch('/api/admin/config');
@@ -929,7 +836,7 @@
           document.getElementById('notify-ntfy-topic').value = cfg.ntfy_topic || 'agent';
           document.getElementById('notify-ntfy-token').value = cfg.ntfy_token || '';
         } catch (e) {
-          showAlert(`Gagal memuat konfigurasi: ${e.message}`, 'error');
+          showToast('error', `Gagal memuat konfigurasi: ${e.message}`);
         }
       }
 
@@ -939,7 +846,7 @@
         loadConfig();
       }
 
-      // 3. PROJECT CRUD HANDLERS
+      // 3. PROJECT CRUD & INTERACTION HANDLERS
       const projectModal = document.getElementById('project-modal');
       const projectForm = document.getElementById('project-form');
 
@@ -947,10 +854,12 @@
         projectForm.reset();
         document.getElementById('pm-id').value = '';
         document.getElementById('project-modal-title').textContent = 'Tambah Proyek Baru';
+        document.getElementById('pm-img-preview-box').innerHTML = `<span class="preview-placeholder">Preview gambar akan muncul di sini</span>`;
         projectModal.showModal();
       });
 
       function attachProjectActionHandlers() {
+        // Edit button
         document.querySelectorAll('.edit-proj-btn').forEach(btn => {
           btn.addEventListener('click', () => {
             const id = btn.getAttribute('data-id');
@@ -968,69 +877,183 @@
             document.getElementById('pm-link').value = p.link_dokumentasi || '';
             document.getElementById('pm-featured').checked = Boolean(p.is_featured);
 
-            document.getElementById('project-modal-title').textContent = `Edit Proyek (${p.judul})`;
+            const imgBox = document.getElementById('pm-img-preview-box');
+            if (p.link_gambar) {
+              imgBox.innerHTML = `<img src="${p.link_gambar}" alt="${p.judul}" />`;
+            }
+
+            document.getElementById('project-modal-title').textContent = `Edit Proyek: ${p.judul}`;
             projectModal.showModal();
           });
         });
 
-        document.querySelectorAll('.del-proj-btn').forEach(btn => {
-          btn.addEventListener('click', async () => {
-            const id = btn.getAttribute('data-id');
-            if (!confirm(`Hapus proyek ID ${id}?`)) return;
-
+        // Instant Featured Toggle Switch
+        document.querySelectorAll('.toggle-proj-featured').forEach(input => {
+          input.addEventListener('change', async () => {
+            const id = input.getAttribute('data-id');
+            const isFeatured = input.checked;
             try {
-              const res = await fetch(`/api/admin/projects?id=${id}`, { method: 'DELETE' });
-              if (res.ok) {
-                showAlert('Proyek berhasil dihapus');
-                loadProjects();
-              } else {
-                const err = await res.json();
-                showAlert(`Gagal menghapus: ${err.error}`, 'error');
+              const res = await fetch('/api/admin/projects', {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ id, is_featured: isFeatured })
+              });
+              if (!res.ok) throw new Error('Gagal memperbarui status');
+              const target = projectsList.find(p => String(p.id) === String(id));
+              if (target) target.is_featured = isFeatured;
+              updateKPICards();
+              showToast('success', `Status featured proyek diperbarui`);
+            } catch (err) {
+              input.checked = !isFeatured; // rollback
+              showToast('error', `Gagal mengubah status: ${err.message}`);
+            }
+          });
+        });
+
+        // Reorder Move Up / Down
+        document.querySelectorAll('.move-up-proj').forEach(btn => {
+          btn.addEventListener('click', () => {
+            const idx = parseInt(btn.getAttribute('data-index'), 10);
+            reorderProject(idx, -1);
+          });
+        });
+
+        document.querySelectorAll('.move-down-proj').forEach(btn => {
+          btn.addEventListener('click', () => {
+            const idx = parseInt(btn.getAttribute('data-index'), 10);
+            reorderProject(idx, 1);
+          });
+        });
+
+        // Delete with Sonner Action Confirmation
+        document.querySelectorAll('.del-proj-btn').forEach(btn => {
+          btn.addEventListener('click', () => {
+            const id = btn.getAttribute('data-id');
+            const target = projectsList.find(p => String(p.id) === String(id));
+            const name = target ? target.judul : `ID ${id}`;
+
+            if (window.toast) {
+              window.toast(`Hapus proyek "${name}"?`, {
+                description: 'Data akan dihapus permanen dari Cloudflare D1.',
+                action: {
+                  label: 'Hapus',
+                  onClick: () => executeDeleteProject(id, name)
+                },
+                cancel: {
+                  label: 'Batal'
+                }
+              });
+            } else {
+              if (confirm(`Hapus proyek "${name}"?`)) {
+                executeDeleteProject(id, name);
               }
-            } catch (e) {
-              showAlert(e.message, 'error');
             }
           });
         });
       }
 
-      projectForm?.addEventListener('submit', async (e) => {
-        e.preventDefault();
-        const id = document.getElementById('pm-id').value;
-        const method = id ? 'PUT' : 'POST';
-        const payload = {
-          id: id || undefined,
-          judul: document.getElementById('pm-judul').value,
-          english_title: document.getElementById('pm-title-en').value,
-          kategori: document.getElementById('pm-kategori').value,
-          sort_order: parseInt(document.getElementById('pm-sort').value, 10),
-          deskripsi: document.getElementById('pm-deskripsi').value,
-          english_desc: document.getElementById('pm-desc-en').value,
-          link_gambar: document.getElementById('pm-gambar').value,
-          link_dokumentasi: document.getElementById('pm-link').value,
-          is_featured: document.getElementById('pm-featured').checked
-        };
+      async function reorderProject(index, direction) {
+        const targetIndex = index + direction;
+        if (targetIndex < 0 || targetIndex >= projectsList.length) return;
+
+        const current = projectsList[index];
+        const target = projectsList[targetIndex];
+
+        // Swap sort_order
+        const tempOrder = current.sort_order || index + 1;
+        current.sort_order = target.sort_order || targetIndex + 1;
+        target.sort_order = tempOrder;
+
+        // Optimistic UI update
+        loadProjects();
 
         try {
-          const res = await fetch('/api/admin/projects', {
-            method,
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(payload)
-          });
+          await Promise.all([
+            fetch('/api/admin/projects', {
+              method: 'PUT',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ id: current.id, sort_order: current.sort_order })
+            }),
+            fetch('/api/admin/projects', {
+              method: 'PUT',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ id: target.id, sort_order: target.sort_order })
+            })
+          ]);
+          showToast('success', 'Urutan proyek berhasil diperbarui');
+        } catch (err) {
+          showToast('error', `Gagal menyimpan urutan: ${err.message}`);
+          loadProjects(); // Rollback
+        }
+      }
+
+      async function executeDeleteProject(id, name) {
+        try {
+          const res = await fetch(`/api/admin/projects?id=${id}`, { method: 'DELETE' });
           if (res.ok) {
-            projectModal.close();
-            showAlert('Proyek berhasil disimpan!');
+            showToast('success', `Proyek "${name}" berhasil dihapus.`);
             loadProjects();
           } else {
             const err = await res.json();
-            showAlert(`Gagal menyimpan: ${err.error}`, 'error');
+            showToast('error', `Gagal menghapus: ${err.error}`);
           }
         } catch (e) {
-          showAlert(e.message, 'error');
+          showToast('error', `Gagal menghubungi server: ${e.message}`);
+        }
+      }
+
+      // Save Project Form Submit
+      projectForm?.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const id = document.getElementById('pm-id').value;
+        const isEdit = Boolean(id);
+
+        const payload = {
+          judul: document.getElementById('pm-judul').value.trim(),
+          english_title: document.getElementById('pm-title-en').value.trim(),
+          kategori: document.getElementById('pm-kategori').value,
+          sort_order: parseInt(document.getElementById('pm-sort').value, 10),
+          deskripsi: document.getElementById('pm-deskripsi').value.trim(),
+          english_desc: document.getElementById('pm-desc-en').value.trim(),
+          link_gambar: document.getElementById('pm-gambar').value.trim(),
+          link_dokumentasi: document.getElementById('pm-link').value.trim(),
+          is_featured: document.getElementById('pm-featured').checked
+        };
+
+        if (isEdit) payload.id = id;
+
+        const saveBtn = document.getElementById('save-proj-btn');
+        if (saveBtn) {
+          saveBtn.disabled = true;
+          saveBtn.textContent = 'Menyimpan...';
+        }
+
+        try {
+          const res = await fetch('/api/admin/projects', {
+            method: isEdit ? 'PUT' : 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+          });
+
+          if (res.ok) {
+            projectModal.close();
+            showToast('success', isEdit ? 'Proyek berhasil diperbarui ke D1.' : 'Proyek baru berhasil ditambahkan.');
+            loadProjects();
+          } else {
+            const err = await res.json();
+            showToast('error', `Gagal menyimpan: ${err.error}`);
+          }
+        } catch (err) {
+          showToast('error', `Terjadi kesalahan jaringan: ${err.message}`);
+        } finally {
+          if (saveBtn) {
+            saveBtn.disabled = false;
+            saveBtn.textContent = 'Simpan Proyek';
+          }
         }
       });
 
-      // 4. CERTIFICATE CRUD HANDLERS
+      // 4. CERTIFICATE CRUD & INTERACTION HANDLERS
       const certModal = document.getElementById('cert-modal');
       const certForm = document.getElementById('cert-form');
 
@@ -1038,10 +1061,12 @@
         certForm.reset();
         document.getElementById('cm-id').value = '';
         document.getElementById('cert-modal-title').textContent = 'Tambah Sertifikat Baru';
+        document.getElementById('cm-img-preview-box').innerHTML = `<span class="preview-placeholder">Preview gambar akan muncul di sini</span>`;
         certModal.showModal();
       });
 
       function attachCertActionHandlers() {
+        // Edit button
         document.querySelectorAll('.edit-cert-btn').forEach(btn => {
           btn.addEventListener('click', () => {
             const id = btn.getAttribute('data-id');
@@ -1059,81 +1084,200 @@
             document.getElementById('cm-transkrip').checked = c.tombol_transkrip === 'ada';
             document.getElementById('cm-featured').checked = Boolean(c.is_featured);
 
-            document.getElementById('cert-modal-title').textContent = `Edit Sertifikat (${c.nama_sertifikat})`;
+            const imgBox = document.getElementById('cm-img-preview-box');
+            if (c.url_gambar_depan) {
+              imgBox.innerHTML = `<img src="${c.url_gambar_depan}" alt="${c.nama_sertifikat}" />`;
+            }
+
+            document.getElementById('cert-modal-title').textContent = `Edit Sertifikat: ${c.nama_sertifikat}`;
             certModal.showModal();
           });
         });
 
-        document.querySelectorAll('.del-cert-btn').forEach(btn => {
-          btn.addEventListener('click', async () => {
-            const id = btn.getAttribute('data-id');
-            if (!confirm(`Hapus sertifikat ID ${id}?`)) return;
-
+        // Instant Featured Toggle Switch
+        document.querySelectorAll('.toggle-cert-featured').forEach(input => {
+          input.addEventListener('change', async () => {
+            const id = input.getAttribute('data-id');
+            const isFeatured = input.checked;
             try {
-              const res = await fetch(`/api/admin/certificates?id=${id}`, { method: 'DELETE' });
-              if (res.ok) {
-                showAlert('Sertifikat berhasil dihapus');
-                loadCertificates();
-              } else {
-                const err = await res.json();
-                showAlert(`Gagal menghapus: ${err.error}`, 'error');
+              const res = await fetch('/api/admin/certificates', {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ id, is_featured: isFeatured })
+              });
+              if (!res.ok) throw new Error('Gagal memperbarui status');
+              const target = certsList.find(c => String(c.id) === String(id));
+              if (target) target.is_featured = isFeatured;
+              updateKPICards();
+              showToast('success', `Status featured sertifikat diperbarui`);
+            } catch (err) {
+              input.checked = !isFeatured;
+              showToast('error', `Gagal mengubah status: ${err.message}`);
+            }
+          });
+        });
+
+        // Reorder Move Up / Down
+        document.querySelectorAll('.move-up-cert').forEach(btn => {
+          btn.addEventListener('click', () => {
+            const idx = parseInt(btn.getAttribute('data-index'), 10);
+            reorderCert(idx, -1);
+          });
+        });
+
+        document.querySelectorAll('.move-down-cert').forEach(btn => {
+          btn.addEventListener('click', () => {
+            const idx = parseInt(btn.getAttribute('data-index'), 10);
+            reorderCert(idx, 1);
+          });
+        });
+
+        // Delete with Sonner Action Confirmation
+        document.querySelectorAll('.del-cert-btn').forEach(btn => {
+          btn.addEventListener('click', () => {
+            const id = btn.getAttribute('data-id');
+            const target = certsList.find(c => String(c.id) === String(id));
+            const name = target ? target.nama_sertifikat : `ID ${id}`;
+
+            if (window.toast) {
+              window.toast(`Hapus sertifikat "${name}"?`, {
+                description: 'Kredensial akan dihapus permanen dari database D1.',
+                action: {
+                  label: 'Hapus',
+                  onClick: () => executeDeleteCert(id, name)
+                },
+                cancel: {
+                  label: 'Batal'
+                }
+              });
+            } else {
+              if (confirm(`Hapus sertifikat "${name}"?`)) {
+                executeDeleteCert(id, name);
               }
-            } catch (e) {
-              showAlert(e.message, 'error');
             }
           });
         });
       }
 
-      certForm?.addEventListener('submit', async (e) => {
-        e.preventDefault();
-        const id = document.getElementById('cm-id').value;
-        const method = id ? 'PUT' : 'POST';
-        const payload = {
-          id: id || undefined,
-          nama_sertifikat: document.getElementById('cm-nama').value,
-          penerbit: document.getElementById('cm-penerbit').value,
-          tahun: document.getElementById('cm-tahun').value,
-          tipe: document.getElementById('cm-tipe').value,
-          sort_order: parseInt(document.getElementById('cm-sort').value, 10),
-          url_gambar_depan: document.getElementById('cm-depan').value,
-          url_gambar_belakang: document.getElementById('cm-belakang').value,
-          tombol_transkrip: document.getElementById('cm-transkrip').checked ? 'ada' : '',
-          is_featured: document.getElementById('cm-featured').checked
-        };
+      async function reorderCert(index, direction) {
+        const targetIndex = index + direction;
+        if (targetIndex < 0 || targetIndex >= certsList.length) return;
+
+        const current = certsList[index];
+        const target = certsList[targetIndex];
+
+        const tempOrder = current.sort_order || index + 1;
+        current.sort_order = target.sort_order || targetIndex + 1;
+        target.sort_order = tempOrder;
+
+        loadCertificates();
 
         try {
-          const res = await fetch('/api/admin/certificates', {
-            method,
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(payload)
-          });
+          await Promise.all([
+            fetch('/api/admin/certificates', {
+              method: 'PUT',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ id: current.id, sort_order: current.sort_order })
+            }),
+            fetch('/api/admin/certificates', {
+              method: 'PUT',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ id: target.id, sort_order: target.sort_order })
+            })
+          ]);
+          showToast('success', 'Urutan sertifikat berhasil disimpan');
+        } catch (err) {
+          showToast('error', `Gagal menyimpan urutan: ${err.message}`);
+          loadCertificates();
+        }
+      }
+
+      async function executeDeleteCert(id, name) {
+        try {
+          const res = await fetch(`/api/admin/certificates?id=${id}`, { method: 'DELETE' });
           if (res.ok) {
-            certModal.close();
-            showAlert('Sertifikat berhasil disimpan!');
+            showToast('success', `Sertifikat "${name}" berhasil dihapus.`);
             loadCertificates();
           } else {
             const err = await res.json();
-            showAlert(`Gagal menyimpan: ${err.error}`, 'error');
+            showToast('error', `Gagal menghapus: ${err.error}`);
           }
         } catch (e) {
-          showAlert(e.message, 'error');
+          showToast('error', `Gagal menghubungi server: ${e.message}`);
+        }
+      }
+
+      // Save Certificate Form Submit
+      certForm?.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const id = document.getElementById('cm-id').value;
+        const isEdit = Boolean(id);
+
+        const payload = {
+          nama_sertifikat: document.getElementById('cm-nama').value.trim(),
+          penerbit: document.getElementById('cm-penerbit').value.trim(),
+          tahun: document.getElementById('cm-tahun').value.trim(),
+          tipe: document.getElementById('cm-tipe').value,
+          sort_order: parseInt(document.getElementById('cm-sort').value, 10),
+          url_gambar_depan: document.getElementById('cm-depan').value.trim(),
+          url_gambar_belakang: document.getElementById('cm-belakang').value.trim(),
+          tombol_transkrip: document.getElementById('cm-transkrip').checked ? 'ada' : 'tidak',
+          is_featured: document.getElementById('cm-featured').checked
+        };
+
+        if (isEdit) payload.id = id;
+
+        const saveBtn = document.getElementById('save-cert-btn');
+        if (saveBtn) {
+          saveBtn.disabled = true;
+          saveBtn.textContent = 'Menyimpan...';
+        }
+
+        try {
+          const res = await fetch('/api/admin/certificates', {
+            method: isEdit ? 'PUT' : 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+          });
+
+          if (res.ok) {
+            certModal.close();
+            showToast('success', isEdit ? 'Sertifikat berhasil diperbarui.' : 'Sertifikat baru berhasil disimpan.');
+            loadCertificates();
+          } else {
+            const err = await res.json();
+            showToast('error', `Gagal menyimpan: ${err.error}`);
+          }
+        } catch (err) {
+          showToast('error', `Terjadi kesalahan jaringan: ${err.message}`);
+        } finally {
+          if (saveBtn) {
+            saveBtn.disabled = false;
+            saveBtn.textContent = 'Simpan Sertifikat';
+          }
         }
       });
 
       // 5. PROFILE FORM HANDLER
       document.getElementById('profile-form')?.addEventListener('submit', async (e) => {
         e.preventDefault();
+        const btn = document.getElementById('save-profile-btn');
+        if (btn) {
+          btn.disabled = true;
+          btn.textContent = 'Menyimpan...';
+        }
+
         const payload = {
-          name: document.getElementById('cfg-name').value,
-          short_name: document.getElementById('cfg-short-name').value,
-          title_id: document.getElementById('cfg-title-id').value,
-          title_en: document.getElementById('cfg-title-en').value,
-          bio_id: document.getElementById('cfg-bio-id').value,
-          bio_en: document.getElementById('cfg-bio-en').value,
-          email: document.getElementById('cfg-email').value,
-          github_url: document.getElementById('cfg-github').value,
-          linkedin_url: document.getElementById('cfg-linkedin').value
+          type: 'profile',
+          name: document.getElementById('cfg-name').value.trim(),
+          short_name: document.getElementById('cfg-short-name').value.trim(),
+          title_id: document.getElementById('cfg-title-id').value.trim(),
+          title_en: document.getElementById('cfg-title-en').value.trim(),
+          bio_id: document.getElementById('cfg-bio-id').value.trim(),
+          bio_en: document.getElementById('cfg-bio-en').value.trim(),
+          email: document.getElementById('cfg-email').value.trim(),
+          github_url: document.getElementById('cfg-github').value.trim(),
+          linkedin_url: document.getElementById('cfg-linkedin').value.trim()
         };
 
         try {
@@ -1142,27 +1286,34 @@
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(payload)
           });
+
           if (res.ok) {
-            showAlert('Profil berhasil diperbarui!');
+            showToast('success', 'Profil dan bio berhasil diperbarui di database D1.');
           } else {
             const err = await res.json();
-            showAlert(`Gagal: ${err.error}`, 'error');
+            showToast('error', `Gagal menyimpan profil: ${err.error}`);
           }
-        } catch (e) {
-          showAlert(e.message, 'error');
+        } catch (err) {
+          showToast('error', `Kesalahan jaringan: ${err.message}`);
+        } finally {
+          if (btn) {
+            btn.disabled = false;
+            btn.textContent = 'Simpan Perubahan Profil';
+          }
         }
       });
 
-      // 6. NOTIFICATION SETTINGS FORM & TEST BUTTON
+      // 6. NOTIFICATION CONFIG & TEST DISPATCHER
       document.getElementById('notify-form')?.addEventListener('submit', async (e) => {
         e.preventDefault();
         const payload = {
+          type: 'notifications',
           tele_enabled: document.getElementById('notify-tele-enabled').checked,
-          tele_bot_token: document.getElementById('notify-tele-token').value,
-          tele_chat_id: document.getElementById('notify-tele-chat-id').value,
-          ntfy_server: document.getElementById('notify-ntfy-server').value,
-          ntfy_topic: document.getElementById('notify-ntfy-topic').value,
-          ntfy_token: document.getElementById('notify-ntfy-token').value
+          tele_bot_token: document.getElementById('notify-tele-token').value.trim(),
+          tele_chat_id: document.getElementById('notify-tele-chat-id').value.trim(),
+          ntfy_server: document.getElementById('notify-ntfy-server').value.trim(),
+          ntfy_topic: document.getElementById('notify-ntfy-topic').value.trim(),
+          ntfy_token: document.getElementById('notify-ntfy-token').value.trim()
         };
 
         try {
@@ -1171,54 +1322,79 @@
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(payload)
           });
+
           if (res.ok) {
-            showAlert('Pengaturan notifikasi berhasil disimpan ke database!');
+            showToast('success', 'Parameter notifikasi Telegram & ntfy berhasil disimpan.');
           } else {
             const err = await res.json();
-            showAlert(`Gagal menyimpan notifikasi: ${err.error}`, 'error');
+            showToast('error', `Gagal menyimpan parameter: ${err.error}`);
           }
-        } catch (e) {
-          showAlert(e.message, 'error');
+        } catch (err) {
+          showToast('error', `Kesalahan jaringan: ${err.message}`);
         }
       });
 
-      // Test Notification Button ("Kirim Uji Coba")
-      const testBtn = document.getElementById('test-notify-btn');
-      const testResultBox = document.getElementById('notify-test-result');
-      const testResultContent = document.getElementById('notify-test-content');
+      // Uji Coba Notifikasi Real-Time
+      document.getElementById('test-notify-btn')?.addEventListener('click', async () => {
+        const testBtn = document.getElementById('test-notify-btn');
+        const resultBox = document.getElementById('notify-test-result');
+        const resultContent = document.getElementById('notify-test-content');
 
-      testBtn?.addEventListener('click', async () => {
-        testBtn.disabled = true;
-        testBtn.textContent = 'Mengirim Uji Coba...';
-        testResultBox?.classList.remove('hidden');
-        if (testResultContent) testResultContent.textContent = 'Mengirim pesan uji coba ke Telegram dan ntfy...';
+        if (testBtn) {
+          testBtn.disabled = true;
+          testBtn.textContent = '⏳ Mengirim Pesan Uji Coba...';
+        }
+
+        showToast('info', 'Mengirim sinyal uji coba ke Telegram & ntfy...');
 
         try {
           const res = await fetch('/api/admin/notify-test', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
-              message: 'Ini adalah pesan uji coba koneksi dari CMS Portofolio Fatahilah.'
+              title: '🧪 Uji Coba Notifikasi Admin CMS',
+              message: `Pesan pengujian dikirim dari panel CMS admin portofolio pada ${new Date().toLocaleString('id-ID')}. Koneksi Telegram & ntfy berjalan optimal!`,
+              tags: ['white_check_mark', 'test_tube']
             })
           });
 
           const data = await res.json();
-          testResultContent.innerHTML = `
-            <div><strong>Status Keseluruhan:</strong> ${data.success ? '<span style="color:#15803D;">✓ Terkirim</span>' : '<span style="color:#B91C1C;">✕ Gagal</span>'}</div>
-            <div style="margin-top:8px;"><strong>Telegram:</strong> ${data.details?.telegram?.success ? '✓ Berhasil' : '✕ Gagal'} (${data.details?.telegram?.info})</div>
-            <div><strong>ntfy:</strong> ${data.details?.ntfy?.success ? '✓ Berhasil' : '✕ Gagal'} (${data.details?.ntfy?.info})</div>
-          `;
-          showAlert(data.success ? 'Uji coba terkirim!' : 'Uji coba gagal. Periksa token/parameter.', data.success ? 'success' : 'error');
-        } catch (e) {
-          testResultContent.textContent = `Kesalahan: ${e.message}`;
-          showAlert(e.message, 'error');
+
+          resultBox?.classList.remove('hidden');
+          if (resultContent) {
+            resultContent.innerHTML = `
+              <div style="display: flex; gap: 1rem; flex-wrap: wrap; margin-bottom: 0.5rem;">
+                <span style="color: ${data.telegram?.success ? 'var(--admin-success)' : 'var(--admin-danger)'};">
+                  ● Telegram: ${data.telegram?.success ? 'BERHASIL (Terkirim)' : 'GAGAL / Nonaktif'}
+                </span>
+                <span style="color: ${data.ntfy?.success ? 'var(--admin-success)' : 'var(--admin-danger)'};">
+                  ● ntfy Push: ${data.ntfy?.success ? 'BERHASIL (HTTP 200)' : 'GAGAL / Offline'}
+                </span>
+              </div>
+              <pre style="background: rgba(0,0,0,0.5); padding: 0.75rem; border-radius: 6px; overflow-x: auto; margin: 0; font-size: 0.75rem; color: #94a3b8;">${JSON.stringify(data, null, 2)}</pre>
+            `;
+          }
+
+          if (data.telegram?.success || data.ntfy?.success) {
+            showToast('success', 'Uji coba notifikasi berhasil dikirim!');
+          } else {
+            showToast('warning', 'Pengujian selesai namun periksa detail status di bawah.');
+          }
+        } catch (err) {
+          showToast('error', `Gagal mengeksekusi uji coba: ${err.message}`);
+          resultBox?.classList.remove('hidden');
+          if (resultContent) {
+            resultContent.textContent = `Kesalahan: ${err.message}`;
+          }
         } finally {
-          testBtn.disabled = false;
-          testBtn.textContent = '🧪 Kirim Uji Coba (Test Alert)';
+          if (testBtn) {
+            testBtn.disabled = false;
+            testBtn.textContent = '🧪 Kirim Uji Coba Notifikasi';
+          }
         }
       });
 
-      // Run auth check on startup
+      // Start auth check
       checkAuth();
     })();
   </script>

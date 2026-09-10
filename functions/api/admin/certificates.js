@@ -88,8 +88,20 @@ export async function onRequest(context) {
         return new Response(JSON.stringify({ error: 'Certificate ID is required' }), { status: 400, headers: { 'Content-Type': 'application/json' } });
       }
 
-      const isFeatured = body.is_featured ? 1 : 0;
-      const sortOrder = parseInt(body.sort_order || 0, 10);
+      const existing = await env.DB.prepare('SELECT * FROM port_certificates WHERE id = ?').bind(body.id).first();
+      if (!existing) {
+        return new Response(JSON.stringify({ error: 'Certificate not found' }), { status: 404, headers: { 'Content-Type': 'application/json' } });
+      }
+
+      const namaSertifikat = body.nama_sertifikat !== undefined ? body.nama_sertifikat : existing.nama_sertifikat;
+      const penerbit = body.penerbit !== undefined ? body.penerbit : existing.penerbit;
+      const tahun = body.tahun !== undefined ? body.tahun : existing.tahun;
+      const tipe = body.tipe !== undefined ? body.tipe : existing.tipe;
+      const tombolTranskrip = body.tombol_transkrip !== undefined ? body.tombol_transkrip : existing.tombol_transkrip;
+      const urlGambarDepan = body.url_gambar_depan !== undefined ? body.url_gambar_depan : existing.url_gambar_depan;
+      const urlGambarBelakang = body.url_gambar_belakang !== undefined ? body.url_gambar_belakang : existing.url_gambar_belakang;
+      const isFeatured = body.is_featured !== undefined ? (body.is_featured ? 1 : 0) : existing.is_featured;
+      const sortOrder = body.sort_order !== undefined ? parseInt(body.sort_order, 10) : existing.sort_order;
 
       await env.DB.prepare(`
         UPDATE port_certificates SET
@@ -105,13 +117,13 @@ export async function onRequest(context) {
           updated_at = CURRENT_TIMESTAMP
         WHERE id = ?
       `).bind(
-        body.nama_sertifikat || '',
-        body.penerbit || '',
-        body.tahun || '',
-        body.tipe || 'horizontal',
-        body.tombol_transkrip || '',
-        body.url_gambar_depan || '',
-        body.url_gambar_belakang || '',
+        namaSertifikat,
+        penerbit,
+        tahun,
+        tipe,
+        tombolTranskrip,
+        urlGambarDepan,
+        urlGambarBelakang,
         isFeatured,
         sortOrder,
         body.id
@@ -119,7 +131,7 @@ export async function onRequest(context) {
 
       context.waitUntil(sendNotification(env, {
         title: 'CMS: Sertifikat Diperbarui',
-        message: `Sertifikat "${body.nama_sertifikat}" (ID: ${body.id}) telah diperbarui.`,
+        message: `Sertifikat "${namaSertifikat}" (ID: ${body.id}) telah diperbarui.`,
         tags: ['pencil2', 'trophy']
       }));
 

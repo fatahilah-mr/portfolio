@@ -92,9 +92,21 @@ export async function onRequest(context) {
         return new Response(JSON.stringify({ error: 'Project ID is required' }), { status: 400, headers: { 'Content-Type': 'application/json' } });
       }
 
-      const tags = JSON.stringify(body.tags || []);
-      const isFeatured = body.is_featured ? 1 : 0;
-      const sortOrder = parseInt(body.sort_order || 0, 10);
+      const existing = await env.DB.prepare('SELECT * FROM port_projects WHERE id = ?').bind(body.id).first();
+      if (!existing) {
+        return new Response(JSON.stringify({ error: 'Project not found' }), { status: 404, headers: { 'Content-Type': 'application/json' } });
+      }
+
+      const judul = body.judul !== undefined ? body.judul : existing.judul;
+      const englishTitle = body.english_title !== undefined ? body.english_title : existing.english_title;
+      const kategori = body.kategori !== undefined ? body.kategori : existing.kategori;
+      const deskripsi = body.deskripsi !== undefined ? body.deskripsi : existing.deskripsi;
+      const englishDesc = body.english_desc !== undefined ? body.english_desc : existing.english_desc;
+      const linkDok = body.link_dokumentasi !== undefined ? body.link_dokumentasi : existing.link_dokumentasi;
+      const linkGambar = body.link_gambar !== undefined ? body.link_gambar : existing.link_gambar;
+      const tags = body.tags !== undefined ? (typeof body.tags === 'string' ? body.tags : JSON.stringify(body.tags)) : existing.tags;
+      const isFeatured = body.is_featured !== undefined ? (body.is_featured ? 1 : 0) : existing.is_featured;
+      const sortOrder = body.sort_order !== undefined ? parseInt(body.sort_order, 10) : existing.sort_order;
 
       await env.DB.prepare(`
         UPDATE port_projects SET
@@ -111,13 +123,13 @@ export async function onRequest(context) {
           updated_at = CURRENT_TIMESTAMP
         WHERE id = ?
       `).bind(
-        body.judul || '',
-        body.english_title || '',
-        body.kategori || 'Website',
-        body.deskripsi || '',
-        body.english_desc || '',
-        body.link_dokumentasi || '',
-        body.link_gambar || '',
+        judul,
+        englishTitle,
+        kategori,
+        deskripsi,
+        englishDesc,
+        linkDok,
+        linkGambar,
         tags,
         isFeatured,
         sortOrder,
@@ -126,7 +138,7 @@ export async function onRequest(context) {
 
       context.waitUntil(sendNotification(env, {
         title: 'CMS: Proyek Diperbarui',
-        message: `Proyek "${body.judul}" (ID: ${body.id}) telah diperbarui.`,
+        message: `Proyek "${judul}" (ID: ${body.id}) telah diperbarui.`,
         tags: ['pencil2', 'briefcase']
       }));
 
