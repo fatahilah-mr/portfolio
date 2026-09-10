@@ -7,7 +7,7 @@ export async function getNotificationConfig(env) {
   if (env.DB) {
     try {
       const { results } = await env.DB.prepare(
-        'SELECT tele_bot_token, tele_chat_id, tele_enabled, ntfy_server, ntfy_topic, ntfy_token FROM port_site_config WHERE id = "default"'
+        'SELECT tele_bot_token, tele_chat_id, tele_enabled, ntfy_server, ntfy_topic, ntfy_token, ntfy_username, ntfy_password FROM port_site_config WHERE id = "default"'
       ).all();
       if (results && results.length > 0) {
         dbConfig = results[0];
@@ -24,6 +24,8 @@ export async function getNotificationConfig(env) {
   const ntfyServer = (dbConfig && dbConfig.ntfy_server) || env.NTFY_SERVER || 'https://ntfy.fmr.web.id';
   const ntfyTopic = (dbConfig && dbConfig.ntfy_topic) || env.NTFY_TOPIC || 'agent';
   const ntfyToken = (dbConfig && dbConfig.ntfy_token) || env.NTFY_TOKEN || '';
+  const ntfyUsername = (dbConfig && dbConfig.ntfy_username) || env.NTFY_USERNAME || '';
+  const ntfyPassword = (dbConfig && dbConfig.ntfy_password) || env.NTFY_PASSWORD || '';
 
   return {
     teleBotToken,
@@ -31,7 +33,9 @@ export async function getNotificationConfig(env) {
     teleEnabled,
     ntfyServer: ntfyServer.replace(/\/+$/, ''),
     ntfyTopic,
-    ntfyToken
+    ntfyToken,
+    ntfyUsername,
+    ntfyPassword
   };
 }
 
@@ -80,7 +84,10 @@ export async function sendNotification(env, { title, message, priority = 'defaul
         'Priority': priority,
         'Tags': tags.join(',')
       };
-      if (config.ntfyToken) {
+      if (config.ntfyUsername && config.ntfyPassword) {
+        const creds = btoa(`${config.ntfyUsername}:${config.ntfyPassword}`);
+        headers['Authorization'] = `Basic ${creds}`;
+      } else if (config.ntfyToken) {
         headers['Authorization'] = `Bearer ${config.ntfyToken}`;
       }
 

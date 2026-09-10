@@ -75,6 +75,8 @@ export async function onRequest(context) {
       const ntfy_server = body.ntfy_server !== undefined ? body.ntfy_server : existing.ntfy_server;
       const ntfy_topic = body.ntfy_topic !== undefined ? body.ntfy_topic : existing.ntfy_topic;
       const ntfy_token = body.ntfy_token !== undefined ? body.ntfy_token : existing.ntfy_token;
+      const ntfy_username = body.ntfy_username !== undefined ? body.ntfy_username : existing.ntfy_username;
+      const ntfy_password = body.ntfy_password !== undefined ? body.ntfy_password : existing.ntfy_password;
 
       await env.DB.prepare(`
         UPDATE port_site_config SET
@@ -94,6 +96,8 @@ export async function onRequest(context) {
           ntfy_server = ?,
           ntfy_topic = ?,
           ntfy_token = ?,
+          ntfy_username = ?,
+          ntfy_password = ?,
           updated_at = CURRENT_TIMESTAMP
         WHERE id = 'default'
       `).bind(
@@ -112,7 +116,9 @@ export async function onRequest(context) {
         tele_enabled,
         ntfy_server,
         ntfy_topic,
-        ntfy_token
+        ntfy_token,
+        ntfy_username,
+        ntfy_password
       ).run();
 
       context.waitUntil(sendNotification(env, {

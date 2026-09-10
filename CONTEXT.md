@@ -624,6 +624,30 @@ const projectsCollection = defineCollection({
     - Card documentation button and modal "Buka Dokumentasi & Demo" both point directly to `https://blog.fatah.web.id/projects/perisai-ayom-temonid/`.
     - Captured screenshot: `verified_ayom_project_modal.png`.
 
+### Session Entry: `2026-09-11` (Phase 42: Notification Test Display Fix & ntfy HTTP Basic Auth Support)
+- **Objective:**
+  - Fix Telegram test status displaying false negative (red "GAGAL / Nonaktif") in Admin CMS even after successful transmission.
+  - Implement full username and password configuration (HTTP Basic Authentication) for self-hosted private ntfy instances (`deny-all` ACL).
+- **Root Cause Analysis:**
+  1. *Telegram Test UI False Negative*: `/api/admin/notify-test` previously nested the results under `details.telegram` and `details.ntfy`. The frontend client script in `admin.astro` accessed `data.telegram?.success` directly, resulting in `undefined` evaluated as false, causing Telegram to falsely show red/failed despite returning HTTP 200 and successful bot delivery.
+  2. *ntfy 403 Forbidden*: The user's self-hosted private ntfy instance (`https://ntfy.fmr.web.id`) operates with `auth-default-access: "deny-all"`. The CMS admin panel previously lacked input fields and backend dispatch support for `username` and `password` credentials using HTTP Basic Auth (`Authorization: Basic base64(user:pass)`).
+- **Implementation:**
+  1. *D1 Schema Migration*:
+     - Executed SQL on D1 `gateway-d1`:
+       - `ALTER TABLE port_site_config ADD COLUMN ntfy_username TEXT DEFAULT '';`
+       - `ALTER TABLE port_site_config ADD COLUMN ntfy_password TEXT DEFAULT '';`
+  2. *Dispatcher Engine (`functions/api/_notify.js`)*:
+     - Updated `getNotificationConfig` to query `ntfy_username` and `ntfy_password`.
+     - Added HTTP Basic Auth support with `btoa(user:pass)` with priority over Bearer token, gracefully falling back if only token is configured.
+  3. *Protected Admin API (`functions/api/admin/config.js` & `notify-test.js`)*:
+     - Persisted `ntfy_username` and `ntfy_password` on PUT config.
+     - Exposed `telegram` and `ntfy` directly at top-level response payload alongside `details`.
+  4. *Admin UI & Client Logic (`src/pages/admin.astro`)*:
+     - Added inputs for `ntfy Username` and `ntfy Password` with toggle visibility button.
+     - Updated `loadConfig()`, `notify-form` submit handler, and `test-notify-btn` response handler to parse `data.details?.telegram || data.telegram` and display concise status information.
+- **Verification:**
+  - Full Astro production build (`npm run build`) succeeded in 9.09s with 0 errors.
+
 ---
 
 ## 📋 12. Backlog & Next Actions

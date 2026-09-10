@@ -31,6 +31,8 @@ export async function onRequestPost(context) {
 
     return new Response(JSON.stringify({
       success: result.telegram.success || result.ntfy.success,
+      telegram: result.telegram,
+      ntfy: result.ntfy,
       details: result
     }), {
       status: 200,

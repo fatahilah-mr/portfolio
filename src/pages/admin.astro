@@ -350,13 +350,40 @@ import '../styles/admin.css';
                 <div class="form-group-solid">
                   <label>ntfy Topic Name</label>
                   <input type="text" id="notify-ntfy-topic" class="form-control-solid" style="font-family: var(--admin-font-mono);" placeholder="agent" />
-                  <span class="form-hint">Nama topik ntfy yang di-subscribe di aplikasi Android.</span>
+                  <span class="form-hint">Nama topik ntfy yang di-subscribe di smartphone Android.</span>
+                </div>
+
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 0.75rem;">
+                  <div class="form-group-solid">
+                    <label>ntfy Username (HTTP Basic Auth)</label>
+                    <input type="text" id="notify-ntfy-user" class="form-control-solid" style="font-family: var(--admin-font-mono);" placeholder="fatah" autocomplete="off" />
+                    <span class="form-hint">Username akun instance private ntfy.</span>
+                  </div>
+                  <div class="form-group-solid">
+                    <label>ntfy Password (HTTP Basic Auth)</label>
+                    <div style="display: flex; gap: 6px;">
+                      <input type="password" id="notify-ntfy-pass" class="form-control-solid" style="font-family: var(--admin-font-mono);" placeholder="••••••••" autocomplete="new-password" />
+                      <button type="button" class="btn-icon-subtle toggle-pass-btn" data-target="notify-ntfy-pass" title="Lihat/Sembunyikan Password">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                          <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/>
+                        </svg>
+                      </button>
+                    </div>
+                    <span class="form-hint">Password akun user ntfy.</span>
+                  </div>
                 </div>
 
                 <div class="form-group-solid">
-                  <label>ntfy Access Token (Opsional)</label>
-                  <input type="password" id="notify-ntfy-token" class="form-control-solid" style="font-family: var(--admin-font-mono);" placeholder="tk_..." />
-                  <span class="form-hint">Kosongkan jika server ntfy tidak memerlukan otentikasi Bearer.</span>
+                  <label>ntfy Access Token (Alternatif Bearer Auth)</label>
+                  <div style="display: flex; gap: 6px;">
+                    <input type="password" id="notify-ntfy-token" class="form-control-solid" style="font-family: var(--admin-font-mono);" placeholder="tk_..." />
+                    <button type="button" class="btn-icon-subtle toggle-pass-btn" data-target="notify-ntfy-token" title="Lihat/Sembunyikan Token">
+                      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/>
+                      </svg>
+                    </button>
+                  </div>
+                  <span class="form-hint">Alternatif token Bearer jika tidak menggunakan username & password.</span>
                 </div>
               </div>
             </div>
@@ -834,6 +861,8 @@ import '../styles/admin.css';
           document.getElementById('notify-tele-chat-id').value = cfg.tele_chat_id || '';
           document.getElementById('notify-ntfy-server').value = cfg.ntfy_server || 'https://ntfy.fmr.web.id';
           document.getElementById('notify-ntfy-topic').value = cfg.ntfy_topic || 'agent';
+          document.getElementById('notify-ntfy-user').value = cfg.ntfy_username || '';
+          document.getElementById('notify-ntfy-pass').value = cfg.ntfy_password || '';
           document.getElementById('notify-ntfy-token').value = cfg.ntfy_token || '';
         } catch (e) {
           showToast('error', `Gagal memuat konfigurasi: ${e.message}`);
@@ -1313,6 +1342,8 @@ import '../styles/admin.css';
           tele_chat_id: document.getElementById('notify-tele-chat-id').value.trim(),
           ntfy_server: document.getElementById('notify-ntfy-server').value.trim(),
           ntfy_topic: document.getElementById('notify-ntfy-topic').value.trim(),
+          ntfy_username: document.getElementById('notify-ntfy-user')?.value.trim() || '',
+          ntfy_password: document.getElementById('notify-ntfy-pass')?.value || '',
           ntfy_token: document.getElementById('notify-ntfy-token').value.trim()
         };
 
@@ -1360,25 +1391,28 @@ import '../styles/admin.css';
 
           const data = await res.json();
 
+          const tg = data.details?.telegram || data.telegram;
+          const ntfy = data.details?.ntfy || data.ntfy;
+
           resultBox?.classList.remove('hidden');
           if (resultContent) {
             resultContent.innerHTML = `
               <div style="display: flex; gap: 1rem; flex-wrap: wrap; margin-bottom: 0.5rem;">
-                <span style="color: ${data.telegram?.success ? 'var(--admin-success)' : 'var(--admin-danger)'};">
-                  ● Telegram: ${data.telegram?.success ? 'BERHASIL (Terkirim)' : 'GAGAL / Nonaktif'}
+                <span style="color: ${tg?.success ? 'var(--admin-success)' : 'var(--admin-danger)'}; font-weight: 500;">
+                  ● Telegram: ${tg?.success ? 'BERHASIL (Terkirim)' : `GAGAL / Nonaktif (${tg?.info || 'Error'})`}
                 </span>
-                <span style="color: ${data.ntfy?.success ? 'var(--admin-success)' : 'var(--admin-danger)'};">
-                  ● ntfy Push: ${data.ntfy?.success ? 'BERHASIL (HTTP 200)' : 'GAGAL / Offline'}
+                <span style="color: ${ntfy?.success ? 'var(--admin-success)' : 'var(--admin-danger)'}; font-weight: 500;">
+                  ● ntfy Push: ${ntfy?.success ? 'BERHASIL (HTTP 200)' : `GAGAL / Offline (${ntfy?.info || 'Error'})`}
                 </span>
               </div>
               <pre style="background: rgba(0,0,0,0.5); padding: 0.75rem; border-radius: 6px; overflow-x: auto; margin: 0; font-size: 0.75rem; color: #94a3b8;">${JSON.stringify(data, null, 2)}</pre>
             `;
           }
 
-          if (data.telegram?.success || data.ntfy?.success) {
-            showToast('success', 'Uji coba notifikasi berhasil dikirim!');
+          if (tg?.success || ntfy?.success) {
+            showToast('success', 'Uji coba notifikasi berhasil diproses!');
           } else {
-            showToast('warning', 'Pengujian selesai namun periksa detail status di bawah.');
+            showToast('warning', 'Pengujian selesai namun kedua kanal gagal/nonaktif.');
           }
         } catch (err) {
           showToast('error', `Gagal mengeksekusi uji coba: ${err.message}`);
