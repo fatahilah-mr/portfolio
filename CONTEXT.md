@@ -544,6 +544,23 @@ const projectsCollection = defineCollection({
     - `verified_navbar_projects_desktop.png`: Verified `/projects/id` highlights `Proyek` while `Beranda` badge is hidden.
     - `verified_navbar_mobile_drawer.png`: Verified mobile drawer highlights `1. Ringkasan` with blue accent border and glowing dot indicator.
 
+### Session Entry: `2026-09-11` (Phase 38: Fix Beranda Sublink Highlighted on Catalog Pages)
+- **Objective:**
+  - Fix issue where `1. Ringkasan` inside `Beranda (7 Bagian)` accordion was still highlighted with blue pill background and glowing blue dot when user was navigating catalog pages (`/projects` or `/certificates`).
+- **Root Cause Analysis:**
+  - In `src/components/Navbar.astro`, `active` was hardcoded statically in HTML on `<a href={`${homeUrl}#hero`} class="dropdown-link active">` and `<a href={`${homeUrl}#hero`} class="mobile-sublink active">`.
+  - In addition, `setupScrollspy()` previously exited early on non-home pages without clearing active state classes and attributes from `dropdownLinks` and `mobileSublinks`.
+- **Architectural & Design Implementation:**
+  - *Conditional SSR Active State:* Replaced hardcoded `active` with `${isHome ? 'active' : ''}` and `aria-current={isHome ? 'true' : undefined}` on both the desktop dropdown and mobile sublinks.
+  - *Dynamic Accordion Collapse:* Set `aria-expanded={isHome ? 'true' : 'false'}` on `mobile-beranda-accordion` and added `${!isHome ? 'hidden' : ''}` to `mobile-beranda-sublinks`, ensuring the accordion is neatly collapsed by default on catalog pages.
+  - *Active State Purge in Client JS:* In `setupScrollspy()`, explicitly clear `active` and `aria-current` from all `dropdownLinks` and `mobileSublinks` whenever `!isHome`.
+- **Verification & Visual Health Check:**
+  - Verified local build with `npm run build` (all 12 routes built cleanly).
+  - Automated browser inspection script with hard timeout:
+    - `verified_projects_drawer_fixed.png`: Verified on `/projects/id` that `Beranda (7 Bagian)` is collapsed and inactive; `Katalog Proyek Lengkap` is the only active link.
+    - `verified_projects_drawer_expanded_fixed.png`: Verified that if user manually expands `Beranda (7 Bagian)` on `/projects/id`, none of the 7 sublinks have an active highlight.
+    - `verified_certs_drawer_fixed.png`: Verified on `/certificates/id` that `Beranda (7 Bagian)` is collapsed and inactive; `Katalog Sertifikat Lengkap` is the only active link.
+
 ---
 
 ## 📋 12. Backlog & Next Actions

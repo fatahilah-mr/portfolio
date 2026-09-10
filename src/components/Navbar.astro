@@ -88,7 +88,7 @@ const isHome = !isProjects && !isCerts;
           </button>
           <!-- Dropdown Menu for 7 Sections -->
           <div class="dropdown-menu" id="desktop-dropdown-menu" role="menu">
-            <a href={`${homeUrl}#hero`} class="dropdown-link active" data-section="hero">
+            <a href={`${homeUrl}#hero`} class={`dropdown-link ${isHome ? 'active' : ''}`} data-section="hero" aria-current={isHome ? 'true' : undefined}>
               <span class="lang-id">1. Ringkasan</span>
               <span class="lang-en">1. Overview</span>
             </a>
@@ -212,15 +212,15 @@ const isHome = !isProjects && !isCerts;
     <div class="mobile-drawer-inner container">
       <!-- Section Accordion for Beranda -->
       <div class="mobile-accordion">
-        <button class={`mobile-accordion-btn ${isHome ? 'active' : ''}`} id="mobile-beranda-accordion" aria-expanded="true">
+        <button class={`mobile-accordion-btn ${isHome ? 'active' : ''}`} id="mobile-beranda-accordion" aria-expanded={isHome ? 'true' : 'false'}>
           <span class="lang-id">Beranda (7 Bagian)</span>
           <span class="lang-en">Home (7 Sections)</span>
           <svg class="accordion-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <path d="m6 9 6 6 6-6"/>
           </svg>
         </button>
-        <div class="mobile-accordion-content" id="mobile-beranda-sublinks">
-          <a href={`${homeUrl}#hero`} class="mobile-sublink active" data-section="hero">
+        <div class={`mobile-accordion-content ${!isHome ? 'hidden' : ''}`} id="mobile-beranda-sublinks">
+          <a href={`${homeUrl}#hero`} class={`mobile-sublink ${isHome ? 'active' : ''}`} data-section="hero" aria-current={isHome ? 'true' : undefined}>
             <span class="lang-id">1. Ringkasan</span>
             <span class="lang-en">1. Overview</span>
           </a>
@@ -829,10 +829,20 @@ const isHome = !isProjects && !isCerts;
     const dropdownLinks = document.querySelectorAll('.dropdown-link[data-section]');
     const mobileSublinks = document.querySelectorAll('.mobile-sublink[data-section]');
 
-    if (!isHome || !activeBadge || !activeText) {
+    if (!isHome) {
       if (activeBadge) activeBadge.classList.add('hidden');
+      dropdownLinks.forEach(link => {
+        link.classList.remove('active');
+        link.removeAttribute('aria-current');
+      });
+      mobileSublinks.forEach(link => {
+        link.classList.remove('active');
+        link.removeAttribute('aria-current');
+      });
       return;
     }
+
+    if (!activeBadge || !activeText) return;
 
     const sectionData = {
       hero: { id: 'Ringkasan', en: 'Overview' },
