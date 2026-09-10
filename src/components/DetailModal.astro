@@ -35,7 +35,7 @@
           </svg>
           <span id="transcript-btn-text">
             <span class="lang-id">Lihat Halaman Belakang / Transkrip Nilai</span>
-            <span class="lang-en hidden">View Back Page / Grade Transcript</span>
+            <span class="lang-en">View Back Page / Grade Transcript</span>
           </span>
         </button>
       </div>
@@ -53,7 +53,7 @@
         <div id="modal-actions-container" class="modal-actions hidden">
           <a id="modal-live-link" href="#" target="_blank" rel="noopener noreferrer" class="btn btn-primary">
             <span class="lang-id">Buka Dokumentasi & Demo</span>
-            <span class="lang-en hidden">Open Documentation & Demo</span>
+            <span class="lang-en">Open Documentation & Demo</span>
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6M15 3h6v6M10 14 21 3"/>
             </svg>
@@ -178,9 +178,9 @@
       const btnText = togglePageBtn.querySelector('#transcript-btn-text');
       if (btnText) {
         if (isShowingBack) {
-          btnText.innerHTML = '<span class="lang-id">Kembali ke Halaman Depan</span><span class="lang-en hidden">Back to Front Page</span>';
+          btnText.innerHTML = '<span class="lang-id">Kembali ke Halaman Depan</span><span class="lang-en">Back to Front Page</span>';
         } else {
-          btnText.innerHTML = '<span class="lang-id">Lihat Halaman Belakang / Transkrip Nilai</span><span class="lang-en hidden">View Back Page / Grade Transcript</span>';
+          btnText.innerHTML = '<span class="lang-id">Lihat Halaman Belakang / Transkrip Nilai</span><span class="lang-en">View Back Page / Grade Transcript</span>';
         }
       }
     });
@@ -256,7 +256,7 @@
         transcriptBar?.classList.remove('hidden');
         const btnText = togglePageBtn?.querySelector('#transcript-btn-text');
         if (btnText) {
-          btnText.innerHTML = '<span class="lang-id">Lihat Halaman Belakang / Transkrip Nilai</span><span class="lang-en hidden">View Back Page / Grade Transcript</span>';
+          btnText.innerHTML = '<span class="lang-id">Lihat Halaman Belakang / Transkrip Nilai</span><span class="lang-en">View Back Page / Grade Transcript</span>';
         }
       } else {
         transcriptBar?.classList.add('hidden');

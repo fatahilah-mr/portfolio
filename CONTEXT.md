@@ -212,6 +212,18 @@ const projectsCollection = defineCollection({
 | `2026-08-26` | Antigravity AI | Template CONTEXT.md Standardization | `CONTEXT.md` | Standardize CONTEXT.md format |
 | `2026-09-10` | Antigravity AI | Phase 21 — Semi-SPA Overhaul, 3D Carousels, Cloudflare D1 & CMS Admin | `src/`, `functions/api/`, `migrations/`, `public/` | Live staging review on `https://preview.fmr.web.id` |
 | `2026-09-10` | Antigravity AI | Phase 22 — URL-Based i18n Routing (EN default, ID on /id & /projects/id) | `src/layouts/`, `src/components/`, `src/pages/`, `public/_redirects` | Deployed to staging `preview.fmr.web.id` |
+| `2026-09-10` | Antigravity AI | Phase 23 — Fix Blank English Content & Replace Tofu Icons | `src/components/`, `src/pages/` | Deployed to staging `preview.fmr.web.id` |
+
+### Session Entry: `2026-09-10` (Phase 23: Fix Blank Content on English Pages & Replace Tofu Icons)
+- **Objective:** Diagnose and fix why screenshot captures on `preview.fmr.web.id` showed empty/blank cards, missing labels, and broken icons on mobile devices.
+- **Root Cause Analysis:**
+  1. **Residual `.hidden` on English elements:** In the legacy client JS setup, English spans were marked with `class="lang-en hidden"`. When switching to pure CSS i18n (`html[lang="en"] .lang-id { display: none !important; }`), the `.hidden` utility class (`display: none !important;`) remained active on all 120 `.lang-en` elements. Consequently, on English pages, *both* `.lang-id` (via CSS selector) and `.lang-en` (via `.hidden`) were hidden simultaneously, causing virtually all headings, body text, buttons, and badges to disappear.
+  2. **Android Font Tofu Box (`🖧`):** The network emoji `🖧` (U+1F5A7) in `SkillsSection.astro` is unsupported by Android system fonts, rendering as an empty rectangular tofu box (`[x]`).
+- **Completed Work:**
+  1. Purged all 120 occurrences of `lang-en hidden` across all 14 Astro component and page files, restoring pure semantic `class="lang-en"`.
+  2. Pure CSS i18n now displays English text flawlessly on `html[lang="en"]` and hides it on `html[lang="id"]`, with zero FOUC and zero JS dependency.
+  3. Replaced all 4 skill group icons in `SkillsSection.astro` with crisp, modern SVG vectors (Network, Server, Code, Bot), completely eliminating tofu characters on mobile.
+  4. Verified local build (`npm run build`) and inspected `dist/index.html` to confirm all 14 test strings appear correctly.
 
 ### Session Entry: `2026-09-10` (Phase 22: URL-Based Internationalization Architecture)
 - **Objective:** Implement deterministic URL-based internationalization (i18n) where English is the primary default language on base domain paths (`/`, `/projects`, `/certificates`) and Indonesian is routed via explicit subpaths (`/id`, `/projects/id`, `/certificates/id`).
