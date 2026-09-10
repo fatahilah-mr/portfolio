@@ -187,10 +187,10 @@ const projectsCollection = defineCollection({
 
 ## 🚀 10. Current State & Active Milestone
 
-- **Active Milestone:** `v2.5.0 — Polish, No-AI-Slop Audit, & 2D Responsive Alignment`
-- **Current Status:** 🟢 Production Ready & Fully Deployed
-- **Active Task:** Built `CONTEXT.md` matching `template/CONTEXT.md` standard.
-- **Known Blockers / Gotchas:** None. Build completes with zero errors.
+- **Active Milestone:** `v3.0.0 — Modern Semi-SPA, 3D Centered Carousels, Cloudflare D1 Ecosystem & Dynamic CMS Admin Panel`
+- **Current Status:** 🟢 Staging Live (`https://preview.fmr.web.id`), D1 Connected & Verified
+- **Active Task:** Completed full overhaul on branch `dev`.
+- **Known Blockers / Gotchas:** None. All automated checks and end-to-end API tests pass with 100% success.
 
 ---
 
@@ -210,28 +210,64 @@ const projectsCollection = defineCollection({
 | `2026-08-07` | Antigravity AI | Phase 19 — Desktop Navbar Center Align | `Navbar.astro` | CSS Grid 1fr-auto-1fr true centering |
 | `2026-08-07` | Antigravity AI | Phase 20 — Full-Viewport Hero Section | `index.astro` | Set 100vh/100dvh hero height |
 | `2026-08-26` | Antigravity AI | Template CONTEXT.md Standardization | `CONTEXT.md` | Standardize CONTEXT.md format |
+| `2026-09-10` | Antigravity AI | Phase 21 — Semi-SPA Overhaul, 3D Carousels, Cloudflare D1 & CMS Admin | `src/`, `functions/api/`, `migrations/`, `public/` | Live staging review on `https://preview.fmr.web.id` |
 
-### Session Entry: `2026-08-07` (Navbar Centering & Full-Height Hero Section)
-- **Objective:** Fix desktop Navbar menu off-center shifting and set Home Hero Section to full viewport height.
+### Session Entry: `2026-09-10` (Phase 21: Semi-SPA Overhaul, 3D Carousels, Cloudflare D1 & Dynamic CMS Admin)
+- **Objective:** Complete overhaul of the portfolio into a modern Semi-SPA with 3D Centered Carousels, detail modal pop-ups, Cloudflare D1 integration, and full CMS Admin with real-time notification settings.
 - **Completed Work:**
-  - Updated `Navbar.astro` desktop layout to 3-column CSS Grid (`grid-template-columns: 1fr auto 1fr`) so the 7 navigation links align to exact screen center regardless of logo or theme button width differences.
-  - Updated `index.astro` `.hero-section` to `min-height: calc(100vh - 64px)` and `min-height: calc(100dvh - 64px)` with vertical centering.
-
-### Session Entry: `2026-08-26` (Template CONTEXT.md Standardization)
-- **Objective:** Reformat and standardize root `CONTEXT.md` according to the reference template in `template/CONTEXT.md`.
-- **Completed Work:**
-  - Preserved all historical context, domain technical stack details, SEO architecture, and phase histories.
-  - Applied standardized 12-section blueprint format.
+  1. **D1 Ecosystem Migration & Seeding:**
+     - Registered `portfolio` in `_ecosystem_registry` with table prefix `port_`.
+     - Created `port_site_config`, `port_projects`, and `port_certificates` in D1 `gateway-d1` (`f71f7c73-a7b9-4166-bfd1-d4bcc84caef8`).
+     - Seeded all 10 projects and 20 certificates from source CSVs into D1.
+  2. **Modern Editorial Minimalist Design System:**
+     - Pure Apple & Vercel Light aesthetic (Paper canvas `#FFFFFF`, soft surface `#FAFAFA`, hairline border `#E4E4E7`).
+     - Zero purple AI-slop glows or spinning badge noise.
+     - Official squircle portrait without status pill slop.
+  3. **Semi-SPA Core Architecture (`src/pages/index.astro`):**
+     - Orchestrated 7 sections (`#hero`, `#about`, `#skills`, `#experience`, `#projects`, `#certificates`, `#contact`).
+     - Featured Projects 3D Centered Carousel (1440x900 / 16:10) with floating micro-indicator `"👆 Klik di sini untuk detail"`.
+     - Featured Certificates 3D Centered Carousel (ISO A4 Landscape 1.414:1) with transcript indicator.
+     - Auto-fading indicator on first user interaction.
+     - Accessible Universal Detail Modal (`<dialog>`) with interactive transcript flip toggle for two-sided certificates.
+     - Direct Action Contact cards for Official Email (with copy to clipboard), LinkedIn, and GitHub (**Zero WhatsApp public exposure**).
+  4. **Full Catalog Pages:**
+     - `src/pages/projects.astro`: Category filters (Semua, Website, Cisco, MikroTik, AI), live search, 1440x900 cards, and detail modal.
+     - `src/pages/certificates.astro`: Filter pills, live search, uniform A4 aspect ratio (`1.414:1`) with `object-fit: contain` so portrait certs remain upright and uncropped, plus transcript modal.
+  5. **Cloudflare Pages Serverless Functions API Layer (`functions/api/`):**
+     - `_auth.js`: HMAC SHA-256 session token generator & validator, restricted to `@fatahilah-mr`.
+     - `_notify.js`: Priority D1 lookup -> fallback env vars for Telegram & ntfy.
+     - Public endpoints: `GET /api/projects`, `GET /api/certificates`, `GET /api/config` with Edge CDN caching headers.
+     - Admin CRUD endpoints: `GET/POST/PUT/DELETE /api/admin/projects`, `/api/admin/certificates`, `GET/PUT /api/admin/config`.
+     - `POST /api/admin/notify-test`: Live test dispatcher for Telegram & ntfy.
+  6. **CMS Admin Panel (`src/pages/admin.astro`):**
+     - GitHub OAuth login gate + staging review login.
+     - Dedicated tabs for Projects, Certificates, Profile, and **Notification Settings**.
+     - Dynamic Bot Token & Chat ID input with **"🧪 Kirim Uji Coba (Test Alert)"** button.
+  7. **Staging Environment & DNS:**
+     - Created dedicated Cloudflare Pages project `portfolio-preview` connected to `dev` branch.
+     - Bound D1 `gateway-d1` (`f71f7c73-a7b9-4166-bfd1-d4bcc84caef8`).
+     - Added and activated custom domain `preview.fmr.web.id`.
+     - Configured 301 redirects in `public/_redirects` for `/about`, `/skills`, `/experience`, `/contact`.
+  8. **Security & Zero Secrets Guarantee:**
+     - Full repository secret scan passed. Zero tokens, API keys, or credentials in tracked files.
 
 ---
 
 ## 📋 12. Backlog & Next Actions
 
-- [x] Upgrade deployment runner to Node.js 24
-- [x] Remove section eyebrow badges across all pages
-- [x] Audit and fix AI-slop text patterns using `no-ai-slop` skill
-- [x] Clean up dead code (`src/i18n/ui.ts`)
-- [x] Update projects grid to 3 columns on desktop
-- [x] Align desktop navbar links to true screen center
-- [x] Set Home Hero Section to full-viewport height (`100dvh`)
-- [x] Reformat `CONTEXT.md` using `template/CONTEXT.md` structure
+- [x] Create clean working branch `dev` and purge old `rebuild` branch
+- [x] Register portfolio app in `_ecosystem_registry` on D1 `gateway-d1`
+- [x] Execute D1 migration `0001_portfolio_schema.sql`
+- [x] Seed all 10 projects and 20 certificates into Cloudflare D1
+- [x] Build Modern Editorial Minimalist (Apple & Vercel Light) design tokens
+- [x] Implement 3D Centered Carousels with auto-fade micro-indicator
+- [x] Implement Universal Accessible Detail Modal with transcript toggle
+- [x] Implement 3-item Navbar (Beranda 7-section dropdown, Proyek, Sertifikat) with ID/EN switcher
+- [x] Assemble 7-section Semi-SPA in `src/pages/index.astro`
+- [x] Build `/projects` catalog with category tabs & search
+- [x] Build `/certificates` catalog with uniform A4 ratio frame & transcript modal
+- [x] Set up Cloudflare Pages Functions API and GitHub OAuth auth layer
+- [x] Build Single-Page CMS Admin Panel (`/admin`) with Dynamic Notification Settings & "Kirim Uji Coba"
+- [x] Add staging domain `preview.fmr.web.id` on Cloudflare Pages and verify DNS
+- [x] Verify build (`npm run build`) and live endpoints via comprehensive health checks
+- [ ] Merge `dev` to `public` when user approves final release to `https://fatahmr.my.id`
