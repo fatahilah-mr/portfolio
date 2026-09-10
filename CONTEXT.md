@@ -490,6 +490,25 @@ const projectsCollection = defineCollection({
   3. **Comprehensive Copywriting Audit:**
      - Formulated structured analysis covering Clarity, Tone, Specificity, Proof Density, and Actionability.
 
+### Session Entry: `2026-09-10` (Phase 35: Certificate & Project Catalog Redesign & AI Slop Badge Removal)
+- **Objective:**
+  1. Remove "Official Credentials" / "Kredensial Resmi" and "Complete Catalog" / "Katalog Lengkap" section badges from `/certificates` and `/projects` catalog pages (both EN and ID routes) as generic AI slop indicators.
+  2. Remove obsolete metadata text `"Format: {cert.tipe}"` from certificate catalog cards.
+  3. Resolve erratic card header wrapping and alignment: standardize `.card-meta` so issuer (`penerbit`) wraps gracefully on the left while the year (`tahun`) is pinned firmly to the top-right corner across all cards.
+  4. Reposition `Featured ★` badge into `.card-actions` inside `.card-footer`, immediately preceding the `Lihat Detail` / `View Details` button.
+- **Architectural & Design Implementation:**
+  - *Clean Section Headers:* Removed `<span class="section-tag">` from `src/pages/certificates.astro`, `src/pages/certificates/id.astro`, `src/pages/projects.astro`, and `src/pages/projects/id.astro`. Title and subtitle now stand authoritative and uncluttered.
+  - *Deterministic Card Meta Layout:* Changed `.card-meta` to `display: flex; align-items: flex-start; justify-content: space-between; gap: 12px;`. Gave `.card-badge` (issuer) `flex: 1; min-width: 0; line-height: 1.4;` and `.cert-year` `flex-shrink: 0; white-space: nowrap; text-align: right;`. Regardless of whether an issuer has 3 characters or 80 characters, the year sits at the exact same horizontal baseline and top-right position across all cards.
+  - *Integrated Card Footer Actions:* Placed `{cert.is_featured === 1 && <span class="featured-badge">Featured ★</span>}` inside `.card-actions` alongside the button with `margin-left: auto;`, providing balanced visual weight and pairing prominent CTAs together.
+  - *Bilingual Transcript Tags:* Upgraded transcript tag inside `.card-tags` to render `<span class="lang-id">+ Transkrip Nilai</span><span class="lang-en">+ Transcript</span>`.
+- **Verification & Visual Health Check:**
+  - Verified local build with `npm run build` (all 12 pages rendered cleanly).
+  - Executed automated browser inspection script on Astro preview server capturing both mobile (390px) and desktop (1280px) viewports:
+    - `verified_certs_catalog_mobile.png`: Verified no section badge, no "Format:" text, clean meta alignment, and `Featured ★` docked to left of CTA.
+    - `verified_certs_catalog_id_mobile.png`: Verified Indonesian locale equivalent.
+    - `verified_certs_catalog_desktop.png`: Verified clean 3-column desktop grid with synchronized year alignment across varying issuer lengths.
+    - `verified_projects_catalog_mobile.png`: Verified removal of "Complete Catalog" badge.
+
 ---
 
 ## 📋 12. Backlog & Next Actions

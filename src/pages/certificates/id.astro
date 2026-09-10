@@ -21,10 +21,6 @@ const filterCategories = [
   <section class="section-padding certs-page-section">
     <div class="container">
       <div class="section-header">
-        <span class="section-tag">
-          <span class="lang-id">Kredensial Resmi</span>
-          <span class="lang-en">Official Credentials</span>
-        </span>
         <h1 class="section-title">
           <span class="lang-id">Arsip Sertifikat & Transkrip Nilai</span>
           <span class="lang-en">Certificates & Academic Transcripts</span>
@@ -105,9 +101,6 @@ const filterCategories = [
               <div class="card-meta">
                 <span class="card-badge">{cert.penerbit}</span>
                 <span class="cert-year font-mono">{cert.tahun}</span>
-                {cert.is_featured === 1 && (
-                  <span class="featured-badge">Featured ★</span>
-                )}
               </div>
 
               <h2 class="card-title">
@@ -116,16 +109,23 @@ const filterCategories = [
 
               <div class="card-footer">
                 <div class="card-tags">
-                  <span class="type-tag font-mono">Format: {cert.tipe}</span>
                   {cert.tombol_transkrip === 'ada' && (
-                    <span class="transcript-tag">+ Transkrip Nilai</span>
+                    <span class="transcript-tag">
+                      <span class="lang-id">+ Transkrip Nilai</span>
+                      <span class="lang-en">+ Transcript</span>
+                    </span>
                   )}
                 </div>
 
-                <button class="btn btn-secondary btn-sm open-cert-btn">
-                  <span class="lang-id">Lihat Detail</span>
-                  <span class="lang-en">View Details</span>
-                </button>
+                <div class="card-actions">
+                  {cert.is_featured === 1 && (
+                    <span class="featured-badge">Featured ★</span>
+                  )}
+                  <button class="btn btn-secondary btn-sm open-cert-btn">
+                    <span class="lang-id">Lihat Detail</span>
+                    <span class="lang-en">View Details</span>
+                  </button>
+                </div>
               </div>
             </div>
           </article>
@@ -284,10 +284,10 @@ const filterCategories = [
 
   .card-meta {
     display: flex;
-    align-items: center;
-    gap: 8px;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
     margin-bottom: 8px;
-    flex-wrap: wrap;
   }
 
   .card-badge {
@@ -296,21 +296,18 @@ const filterCategories = [
     text-transform: uppercase;
     letter-spacing: 0.05em;
     color: var(--color-accent);
+    line-height: 1.4;
+    flex: 1;
+    min-width: 0;
   }
 
   .cert-year {
     font-size: 0.75rem;
     color: var(--color-subtle);
-  }
-
-  .featured-badge {
-    font-size: 0.7rem;
-    font-weight: 700;
-    padding: 2px 8px;
-    border-radius: 9999px;
-    background: rgba(234, 179, 8, 0.12);
-    color: #CA8A04;
-    border: 1px solid rgba(234, 179, 8, 0.3);
+    flex-shrink: 0;
+    white-space: nowrap;
+    padding-top: 1px;
+    text-align: right;
   }
 
   .card-title {
@@ -328,6 +325,7 @@ const filterCategories = [
     padding-top: 14px;
     border-top: 1px solid var(--color-border);
     flex-wrap: wrap;
+    margin-top: auto;
   }
 
   .card-tags {
@@ -337,13 +335,31 @@ const filterCategories = [
     flex-wrap: wrap;
   }
 
-  .type-tag {
+  .card-actions {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-left: auto;
+    flex-shrink: 0;
+  }
+
+  .featured-badge {
     font-size: 0.7rem;
-    padding: 2px 6px;
-    border-radius: 4px;
-    background: var(--bg-surface);
-    color: var(--color-subtle);
-    border: 1px solid var(--color-border);
+    font-weight: 700;
+    padding: 3px 8px;
+    border-radius: 9999px;
+    background: rgba(234, 179, 8, 0.12);
+    color: #CA8A04;
+    border: 1px solid rgba(234, 179, 8, 0.3);
+    white-space: nowrap;
+    display: inline-flex;
+    align-items: center;
+  }
+
+  :global(.dark) .featured-badge {
+    color: #FACC15;
+    background: rgba(250, 204, 21, 0.12);
+    border-color: rgba(250, 204, 21, 0.25);
   }
 
   .transcript-tag {
@@ -354,6 +370,7 @@ const filterCategories = [
     background: rgba(37, 99, 235, 0.08);
     color: var(--color-accent);
     border: 1px solid rgba(37, 99, 235, 0.2);
+    white-space: nowrap;
   }
 
   .no-results {
