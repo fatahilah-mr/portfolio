@@ -3,3 +3,21 @@
 /skills /#skills 301
 /experience /#experience 301
 /contact /#contact 301
+
+# Indonesian Anchors
+/about/id /id#about 301
+/skills/id /id#skills 301
+/experience/id /id#experience 301
+/contact/id /id#contact 301
+
+# Singular Aliases and Alternative Paths
+/project /projects 301
+/project/id /projects/id 301
+/certificate /certificates 301
+/certificate/id /certificates/id 301
+/sertifikat /certificates/id 301
+/sertifikat/id /certificates/id 301
+/id/projects /projects/id 301
+/id/project /projects/id 301
+/id/certificates /certificates/id 301
+/id/sertifikat /certificates/id 301

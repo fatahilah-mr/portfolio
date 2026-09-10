@@ -211,6 +211,29 @@ const projectsCollection = defineCollection({
 | `2026-08-07` | Antigravity AI | Phase 20 — Full-Viewport Hero Section | `index.astro` | Set 100vh/100dvh hero height |
 | `2026-08-26` | Antigravity AI | Template CONTEXT.md Standardization | `CONTEXT.md` | Standardize CONTEXT.md format |
 | `2026-09-10` | Antigravity AI | Phase 21 — Semi-SPA Overhaul, 3D Carousels, Cloudflare D1 & CMS Admin | `src/`, `functions/api/`, `migrations/`, `public/` | Live staging review on `https://preview.fmr.web.id` |
+| `2026-09-10` | Antigravity AI | Phase 22 — URL-Based i18n Routing (EN default, ID on /id & /projects/id) | `src/layouts/`, `src/components/`, `src/pages/`, `public/_redirects` | Deployed to staging `preview.fmr.web.id` |
+
+### Session Entry: `2026-09-10` (Phase 22: URL-Based Internationalization Architecture)
+- **Objective:** Implement deterministic URL-based internationalization (i18n) where English is the primary default language on base domain paths (`/`, `/projects`, `/certificates`) and Indonesian is routed via explicit subpaths (`/id`, `/projects/id`, `/certificates/id`).
+- **Completed Work:**
+  1. **URL Subpath Routing Matrix:**
+     - Root Home (`src/pages/index.astro`): English default (`lang="en"`).
+     - Indonesian Home (`src/pages/id.astro`): Indonesian locale (`lang="id"`).
+     - Projects Catalog (`src/pages/projects.astro`): English catalog (`lang="en"`).
+     - Indonesian Projects Catalog (`src/pages/projects/id.astro`): Indonesian catalog (`lang="id"`).
+     - Certificates Catalog (`src/pages/certificates.astro`): English catalog (`lang="en"`).
+     - Indonesian Certificates Catalog (`src/pages/certificates/id.astro`): Indonesian catalog (`lang="id"`).
+  2. **Semantic URL-Aware Navbar Switcher (`src/components/Navbar.astro`):**
+     - Transformed client JavaScript button toggle into semantic anchor links: `<a href={targetIdUrl}>ID</a> | <a href={targetEnUrl}>EN</a>`.
+     - Preserves catalog location seamlessly (switching from `/projects` points directly to `/projects/id` and vice-versa).
+     - Navigation links and mobile drawer automatically prepend the active language subpath.
+  3. **Deterministic Layout & Anti-FOUC Rendering (`src/layouts/Layout.astro`):**
+     - Removed client-side `localStorage` language mutation script so the static URL controls the language deterministically.
+     - Root `<html lang={lang}>` coupled with CSS `:lang` selectors guarantees zero-FOUC and completely eliminates simultaneous dual-language rendering.
+  4. **Catalog CTA Localized Routing:**
+     - `FeaturedProjectsCarousel.astro` and `FeaturedCertificatesCarousel.astro` CTA buttons now dynamically route to `/projects/id` and `/certificates/id` when viewed on Indonesian pages, and `/projects` and `/certificates` on English pages.
+  5. **Cloudflare Pages Redirect Rules (`public/_redirects`):**
+     - Added aliases for `/project` -> `/projects`, `/project/id` -> `/projects/id`, `/certificate` -> `/certificates`, `/certificate/id` -> `/certificates/id`, `/id/projects` -> `/projects/id`, `/id/certificates` -> `/certificates/id`.
 
 ### Session Entry: `2026-09-10` (Phase 21: Semi-SPA Overhaul, 3D Carousels, Cloudflare D1 & Dynamic CMS Admin)
 - **Objective:** Complete overhaul of the portfolio into a modern Semi-SPA with 3D Centered Carousels, detail modal pop-ups, Cloudflare D1 integration, and full CMS Admin with real-time notification settings.

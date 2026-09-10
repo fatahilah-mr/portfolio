@@ -1,12 +1,53 @@
 ---
 // src/components/Navbar.astro
-// Modern Editorial Navbar: 3 Main Items (Beranda + dropdown 7 sections, Proyek, Sertifikat) + ID|EN + Theme
+// Modern Editorial Navbar: 3 Main Items (Beranda + dropdown 7 sections, Proyek, Sertifikat) + ID|EN URL Routing + Theme
+interface Props {
+  lang?: 'en' | 'id';
+}
+
+const { lang } = Astro.props;
+
+// Determine current language from prop or URL
+const pathname = Astro.url.pathname.replace(/\/$/, '') || '/';
+const isIndonesian = lang === 'id' || pathname === '/id' || pathname.endsWith('/id');
+const currentLang = isIndonesian ? 'id' : 'en';
+
+// Calculate target URL for English version
+// /id -> /
+// /projects/id -> /projects
+// /certificates/id -> /certificates
+let targetEnUrl = '/';
+if (pathname === '/id') {
+  targetEnUrl = '/';
+} else if (pathname.endsWith('/id')) {
+  targetEnUrl = pathname.slice(0, -3) || '/';
+} else {
+  targetEnUrl = pathname;
+}
+
+// Calculate target URL for Indonesian version
+// / -> /id
+// /projects -> /projects/id
+// /certificates -> /certificates/id
+let targetIdUrl = '/id';
+if (pathname === '/') {
+  targetIdUrl = '/id';
+} else if (pathname.endsWith('/id')) {
+  targetIdUrl = pathname;
+} else {
+  targetIdUrl = `${pathname}/id`;
+}
+
+// Base navigation URLs based on current language
+const homeUrl = isIndonesian ? '/id' : '/';
+const projectsUrl = isIndonesian ? '/projects/id' : '/projects';
+const certsUrl = isIndonesian ? '/certificates/id' : '/certificates';
 ---
 
 <header class="site-header" id="site-header">
   <div class="container header-container">
     <!-- Brand Logo -->
-    <a href="/" class="brand-logo" aria-label="Beranda Fatahilah Portfolio">
+    <a href={homeUrl} class="brand-logo" aria-label="Fatahilah Portfolio">
       <span class="brand-name">FATAHILAH<span class="brand-accent">.MR</span></span>
     </a>
 
@@ -15,7 +56,7 @@
       <ul class="nav-menu">
         <!-- Item 1: Beranda with Section Dropdown -->
         <li class="nav-item has-dropdown">
-          <a href="/#hero" class="nav-link" id="nav-home">
+          <a href={`${homeUrl}#hero`} class="nav-link" id="nav-home">
             <span class="lang-id">Beranda</span>
             <span class="lang-en hidden">Home</span>
             <svg class="dropdown-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -24,31 +65,31 @@
           </a>
           <!-- Dropdown Menu for 7 Sections -->
           <div class="dropdown-menu">
-            <a href="/#hero" class="dropdown-link">
+            <a href={`${homeUrl}#hero`} class="dropdown-link">
               <span class="lang-id">1. Ringkasan (Hero)</span>
               <span class="lang-en hidden">1. Summary (Hero)</span>
             </a>
-            <a href="/#about" class="dropdown-link">
+            <a href={`${homeUrl}#about`} class="dropdown-link">
               <span class="lang-id">2. Tentang Saya</span>
               <span class="lang-en hidden">2. About Me</span>
             </a>
-            <a href="/#skills" class="dropdown-link">
+            <a href={`${homeUrl}#skills`} class="dropdown-link">
               <span class="lang-id">3. Keahlian Teknis</span>
               <span class="lang-en hidden">3. Technical Skills</span>
             </a>
-            <a href="/#experience" class="dropdown-link">
+            <a href={`${homeUrl}#experience`} class="dropdown-link">
               <span class="lang-id">4. Pengalaman & Prestasi</span>
               <span class="lang-en hidden">4. Experience & Awards</span>
             </a>
-            <a href="/#projects" class="dropdown-link">
+            <a href={`${homeUrl}#projects`} class="dropdown-link">
               <span class="lang-id">5. Proyek Unggulan</span>
               <span class="lang-en hidden">5. Featured Projects</span>
             </a>
-            <a href="/#certificates" class="dropdown-link">
+            <a href={`${homeUrl}#certificates`} class="dropdown-link">
               <span class="lang-id">6. Sertifikat Pilihan</span>
               <span class="lang-en hidden">6. Top Certificates</span>
             </a>
-            <a href="/#contact" class="dropdown-link">
+            <a href={`${homeUrl}#contact`} class="dropdown-link">
               <span class="lang-id">7. Kontak & Diskusi</span>
               <span class="lang-en hidden">7. Contact</span>
             </a>
@@ -57,7 +98,7 @@
 
         <!-- Item 2: Proyek -->
         <li class="nav-item">
-          <a href="/projects" class="nav-link" id="nav-projects">
+          <a href={projectsUrl} class="nav-link" id="nav-projects">
             <span class="lang-id">Proyek</span>
             <span class="lang-en hidden">Projects</span>
           </a>
@@ -65,7 +106,7 @@
 
         <!-- Item 3: Sertifikat -->
         <li class="nav-item">
-          <a href="/certificates" class="nav-link" id="nav-certs">
+          <a href={certsUrl} class="nav-link" id="nav-certs">
             <span class="lang-id">Sertifikat</span>
             <span class="lang-en hidden">Certificates</span>
           </a>
@@ -75,17 +116,26 @@
 
     <!-- Header Actions (ID/EN Switcher, Theme Toggle, Mobile Button) -->
     <div class="header-actions">
-      <!-- Language Toggle (ID | EN) -->
-      <button 
-        id="lang-toggle-btn" 
+      <!-- Language Selector (ID | EN URL Routing) -->
+      <div 
         class="lang-btn" 
+        role="group"
         aria-label="Ganti Bahasa (Switch Language)"
-        title="Ganti Bahasa ID / EN"
       >
-        <span class="lang-code active" id="lang-code-id">ID</span>
+        <a 
+          href={targetIdUrl} 
+          class={`lang-code ${isIndonesian ? 'active' : ''}`} 
+          id="lang-code-id"
+          title="Beralih ke Bahasa Indonesia"
+        >ID</a>
         <span class="lang-divider">|</span>
-        <span class="lang-code" id="lang-code-en">EN</span>
-      </button>
+        <a 
+          href={targetEnUrl} 
+          class={`lang-code ${!isIndonesian ? 'active' : ''}`} 
+          id="lang-code-en"
+          title="Switch to English"
+        >EN</a>
+      </div>
 
       <!-- Theme Switcher -->
       <button 
@@ -137,22 +187,22 @@
           </svg>
         </button>
         <div class="mobile-accordion-content" id="mobile-beranda-sublinks">
-          <a href="/#hero" class="mobile-sublink">1. Hero</a>
-          <a href="/#about" class="mobile-sublink">2. Tentang Saya</a>
-          <a href="/#skills" class="mobile-sublink">3. Keahlian Teknis</a>
-          <a href="/#experience" class="mobile-sublink">4. Pengalaman</a>
-          <a href="/#projects" class="mobile-sublink">5. Proyek Unggulan</a>
-          <a href="/#certificates" class="mobile-sublink">6. Sertifikat Pilihan</a>
-          <a href="/#contact" class="mobile-sublink">7. Kontak</a>
+          <a href={`${homeUrl}#hero`} class="mobile-sublink">1. Hero</a>
+          <a href={`${homeUrl}#about`} class="mobile-sublink">2. Tentang Saya</a>
+          <a href={`${homeUrl}#skills`} class="mobile-sublink">3. Keahlian Teknis</a>
+          <a href={`${homeUrl}#experience`} class="mobile-sublink">4. Pengalaman</a>
+          <a href={`${homeUrl}#projects`} class="mobile-sublink">5. Proyek Unggulan</a>
+          <a href={`${homeUrl}#certificates`} class="mobile-sublink">6. Sertifikat Pilihan</a>
+          <a href={`${homeUrl}#contact`} class="mobile-sublink">7. Kontak</a>
         </div>
       </div>
 
-      <a href="/projects" class="mobile-mainlink">
+      <a href={projectsUrl} class="mobile-mainlink">
         <span class="lang-id">Katalog Proyek Lengkap</span>
         <span class="lang-en hidden">Full Projects Catalog</span>
       </a>
 
-      <a href="/certificates" class="mobile-mainlink">
+      <a href={certsUrl} class="mobile-mainlink">
         <span class="lang-id">Katalog Sertifikat Lengkap</span>
         <span class="lang-en hidden">Full Certificates Catalog</span>
       </a>
@@ -292,25 +342,34 @@
     border-radius: 8px;
     background: var(--bg-surface);
     border: 1px solid var(--color-border);
-    color: var(--color-muted);
     font-size: 0.8125rem;
     font-weight: 600;
-    cursor: pointer;
     transition: all 0.15s ease;
   }
 
   .lang-btn:hover {
     border-color: var(--color-border-hover);
+  }
+
+  .lang-code {
+    color: var(--color-muted);
+    text-decoration: none;
+    transition: color 0.15s ease;
+  }
+
+  .lang-code:hover {
     color: var(--color-foreground);
   }
 
   .lang-code.active {
     color: var(--color-accent);
+    font-weight: 700;
   }
 
   .lang-divider {
     opacity: 0.4;
     font-size: 0.75rem;
+    color: var(--color-muted);
   }
 
   /* Action Buttons */
@@ -423,32 +482,6 @@
 </style>
 
 <script is:inline>
-  // Language switcher setup
-  function setupLangToggle() {
-    const btn = document.getElementById('lang-toggle-btn');
-    const idCode = document.getElementById('lang-code-id');
-    const enCode = document.getElementById('lang-code-en');
-
-    function updateLanguageView(lang) {
-      const isEn = lang === 'en';
-      document.querySelectorAll('.lang-id').forEach(el => el.classList.toggle('hidden', isEn));
-      document.querySelectorAll('.lang-en').forEach(el => el.classList.toggle('hidden', !isEn));
-      idCode?.classList.toggle('active', !isEn);
-      enCode?.classList.toggle('active', isEn);
-      document.documentElement.setAttribute('lang', lang);
-      localStorage.setItem('lang', lang);
-    }
-
-    const savedLang = localStorage.getItem('lang') || 'id';
-    updateLanguageView(savedLang);
-
-    btn?.addEventListener('click', () => {
-      const current = localStorage.getItem('lang') || 'id';
-      const next = current === 'id' ? 'en' : 'id';
-      updateLanguageView(next);
-    });
-  }
-
   // Theme switcher setup
   function setupThemeToggle() {
     const btn = document.getElementById('theme-toggle-btn');
@@ -498,7 +531,6 @@
   }
 
   document.addEventListener('DOMContentLoaded', () => {
-    setupLangToggle();
     setupThemeToggle();
     setupMobileDrawer();
   });

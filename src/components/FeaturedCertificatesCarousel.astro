@@ -3,6 +3,13 @@
 // 3D Centered Carousel with Top 3 Landscape Certificates (A4 Landscape 1.414:1), animated micro-indicator, and transcript modal trigger
 import certsData from '../data/certificates.json';
 
+interface Props {
+  lang?: 'en' | 'id';
+}
+
+const { lang = 'en' } = Astro.props;
+const catalogUrl = lang === 'id' ? '/certificates/id' : '/certificates';
+
 // Top 3 featured landscape certificates: LKS Kab Purworejo (ID: 1), LKS Provinsi Jateng (ID: 2), PKL IMC Computer (ID: 4)
 const featuredCerts = [
   certsData.find(c => c.id === '1'),
@@ -115,7 +122,7 @@ const featuredCerts = [
 
     <!-- Catalog CTA -->
     <div class="carousel-view-all">
-      <a href="/certificates" class="btn btn-secondary">
+      <a href={catalogUrl} class="btn btn-secondary">
         <span class="lang-id">Lihat Semua Sertifikat Lengkap (20+)</span>
         <span class="lang-en hidden">View All Certificates (20+)</span>
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">

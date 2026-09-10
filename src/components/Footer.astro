@@ -1,6 +1,12 @@
 ---
 // src/components/Footer.astro
 // Clean, Anti-Slop Footer with Navigation Anchors & Admin Link
+interface Props {
+  lang?: 'en' | 'id';
+}
+
+const { lang = 'en' } = Astro.props;
+const homeUrl = lang === 'id' ? '/id' : '/';
 ---
 
 <footer class="portfolio-footer">
@@ -16,13 +22,34 @@
 
       <!-- Quick Section Jumps -->
       <nav class="footer-nav" aria-label="Footer Navigasi">
-        <a href="/#hero" class="footer-nav-link">Hero</a>
-        <a href="/#about" class="footer-nav-link">Tentang</a>
-        <a href="/#skills" class="footer-nav-link">Keahlian</a>
-        <a href="/#experience" class="footer-nav-link">Pengalaman</a>
-        <a href="/#projects" class="footer-nav-link">Proyek</a>
-        <a href="/#certificates" class="footer-nav-link">Sertifikat</a>
-        <a href="/#contact" class="footer-nav-link">Kontak</a>
+        <a href={`${homeUrl}#hero`} class="footer-nav-link">
+          <span class="lang-id">Hero</span>
+          <span class="lang-en hidden">Hero</span>
+        </a>
+        <a href={`${homeUrl}#about`} class="footer-nav-link">
+          <span class="lang-id">Tentang</span>
+          <span class="lang-en hidden">About</span>
+        </a>
+        <a href={`${homeUrl}#skills`} class="footer-nav-link">
+          <span class="lang-id">Keahlian</span>
+          <span class="lang-en hidden">Skills</span>
+        </a>
+        <a href={`${homeUrl}#experience`} class="footer-nav-link">
+          <span class="lang-id">Pengalaman</span>
+          <span class="lang-en hidden">Experience</span>
+        </a>
+        <a href={`${homeUrl}#projects`} class="footer-nav-link">
+          <span class="lang-id">Proyek</span>
+          <span class="lang-en hidden">Projects</span>
+        </a>
+        <a href={`${homeUrl}#certificates`} class="footer-nav-link">
+          <span class="lang-id">Sertifikat</span>
+          <span class="lang-en hidden">Certificates</span>
+        </a>
+        <a href={`${homeUrl}#contact`} class="footer-nav-link">
+          <span class="lang-id">Kontak</span>
+          <span class="lang-en hidden">Contact</span>
+        </a>
         <a href="/admin" class="footer-nav-link admin-link" title="CMS Admin Panel">CMS Admin</a>
       </nav>
 
@@ -39,7 +66,8 @@
 
     <div class="footer-bottom">
       <p class="copyright">
-        © 2026 Fatahilah Miftahul Rahman. Hak Cipta Dilindungi.
+        <span class="lang-id">© 2026 Fatahilah Miftahul Rahman. Hak Cipta Dilindungi.</span>
+        <span class="lang-en hidden">© 2026 Fatahilah Miftahul Rahman. All Rights Reserved.</span>
       </p>
       <div class="tech-stack-pills">
         <span class="stack-pill">Astro 5</span>

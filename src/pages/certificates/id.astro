@@ -1,34 +1,40 @@
 ---
-// src/pages/projects.astro
-// Complete Project Catalog with Category Filtering, Live Search, and Universal Detail Modal
-import Layout from '../layouts/Layout.astro';
-import initialProjects from '../data/projects.json';
+// src/pages/certificates/id.astro
+// Complete Certificate Catalog (Indonesian Version)
+import Layout from '../../layouts/Layout.astro';
+import initialCerts from '../../data/certificates.json';
 
-const categories = ['Semua', 'Website', 'Cisco', 'MikroTik', 'AI'];
+const filterCategories = [
+  { id: 'all', labelId: 'Semua', labelEn: 'All' },
+  { id: 'lks', labelId: 'LKS / Vokasi', labelEn: 'LKS / Vocational' },
+  { id: 'pkl', labelId: 'PKL & Magang', labelEn: 'Internships' },
+  { id: 'network', labelId: 'Jaringan & Server', labelEn: 'Networking & Server' },
+  { id: 'ai', labelId: 'AI & Python', labelEn: 'AI & Python' }
+];
 ---
 
 <Layout 
-  title="Projects & Applied Labs | Fatahilah Miftahul Rahman" 
-  description="Complete catalog of production web applications, multi-floor Cisco network topologies, MikroTik gateways, and AI integrations."
-  lang="en"
+  title="Katalog Sertifikat & Kredensial | Fatahilah Miftahul Rahman" 
+  description="Dokumentasi resmi 20+ sertifikat kompetensi kejuaraan LKS, transkrip nilai Praktik Kerja Lapangan (PKL), dan sertifikasi teknologi IT Fatahilah Miftahul Rahman."
+  lang="id"
 >
-  <section class="section-padding projects-page-section">
+  <section class="section-padding certs-page-section">
     <div class="container">
       <div class="section-header">
         <span class="section-tag">
-          <span class="lang-id">Katalog Lengkap</span>
-          <span class="lang-en hidden">Complete Catalog</span>
+          <span class="lang-id">Kredensial Resmi</span>
+          <span class="lang-en hidden">Official Credentials</span>
         </span>
         <h1 class="section-title">
-          <span class="lang-id">Arsip Proyek & Eksperimen Lab</span>
-          <span class="lang-en hidden">Project Archive & Technical Labs</span>
+          <span class="lang-id">Arsip Sertifikat & Transkrip Nilai</span>
+          <span class="lang-en hidden">Certificates & Academic Transcripts</span>
         </h1>
         <p class="section-subtitle">
           <span class="lang-id">
-            Dokumentasi komprehensif platform web publik, desain topologi jaringan Cisco multi-lantai, gateway MikroTik, dan aplikasi AI.
+            Dokumentasi lengkap penghargaan kejuaraan vokasi, sertifikat magang industri berpredikat sangat baik, dan akreditasi teknis resmi.
           </span>
           <span class="lang-en hidden">
-            Comprehensive documentation of public web platforms, multi-floor Cisco network topologies, MikroTik gateways, and AI applications.
+            Complete archive of vocational competition awards, industrial internship records with excellent ratings, and technical accreditations.
           </span>
         </p>
       </div>
@@ -36,15 +42,16 @@ const categories = ['Semua', 'Website', 'Cisco', 'MikroTik', 'AI'];
       <!-- Controls: Category Filter & Search Bar -->
       <div class="catalog-controls">
         <!-- Category Filter Buttons -->
-        <div class="filter-pills" role="tablist" aria-label="Filter Kategori Proyek">
-          {categories.map((cat, idx) => (
+        <div class="filter-pills" role="tablist" aria-label="Filter Sertifikat">
+          {filterCategories.map((cat, idx) => (
             <button 
               class={`filter-pill ${idx === 0 ? 'active' : ''}`} 
-              data-category={cat === 'Semua' ? 'all' : cat}
+              data-filter={cat.id}
               role="tab"
               aria-selected={idx === 0 ? 'true' : 'false'}
             >
-              {cat}
+              <span class="lang-id">{cat.labelId}</span>
+              <span class="lang-en hidden">{cat.labelEn}</span>
             </button>
           ))}
         </div>
@@ -57,31 +64,33 @@ const categories = ['Semua', 'Website', 'Cisco', 'MikroTik', 'AI'];
           </svg>
           <input 
             type="text" 
-            id="project-search-input" 
-            placeholder="Cari proyek atau teknologi..." 
-            aria-label="Cari proyek"
+            id="cert-search-input" 
+            placeholder="Cari sertifikat atau penerbit..." 
+            aria-label="Cari sertifikat"
             class="search-input"
           />
         </div>
       </div>
 
-      <!-- Projects Grid (Statically pre-rendered with SSR for SEO, reactive to filters in client) -->
-      <div class="projects-grid" id="projects-grid">
-        {initialProjects.map((proj) => (
+      <!-- Certificates Grid (Uniform ISO A4 Ratio Frame 1.414:1) -->
+      <div class="certs-grid" id="certs-grid">
+        {initialCerts.map((cert) => (
           <article 
-            class="editorial-card project-catalog-card" 
-            data-category={proj.kategori}
-            data-project={JSON.stringify(proj)}
+            class="editorial-card cert-catalog-card" 
+            data-cert={JSON.stringify(cert)}
+            data-penerbit={cert.penerbit}
+            data-tipe={cert.tipe}
+            data-id={cert.id}
           >
-            <!-- 1440x900 aspect ratio thumbnail -->
-            <div class="aspect-16-10 card-thumbnail-wrap" role="button" tabindex="0" aria-label={`Buka detail ${proj.judul}`}>
+            <!-- Uniform ISO A4 Ratio (1.414:1) with object-fit: contain so portrait certs are never cropped -->
+            <div class="aspect-a4-landscape cert-thumbnail-wrap" role="button" tabindex="0" aria-label={`Buka detail sertifikat ${cert.nama_sertifikat}`}>
               <img 
-                src={proj.link_gambar} 
-                alt={proj.judul} 
+                src={cert.url_gambar_depan} 
+                alt={cert.nama_sertifikat} 
                 loading="lazy" 
                 decoding="async" 
-                width="1440" 
-                height="900"
+                width="1414" 
+                height="1000"
               />
               <div class="thumbnail-hover-overlay">
                 <span class="overlay-text">
@@ -91,60 +100,47 @@ const categories = ['Semua', 'Website', 'Cisco', 'MikroTik', 'AI'];
               </div>
             </div>
 
-            <!-- Card Info -->
+            <!-- Content -->
             <div class="card-content">
               <div class="card-meta">
-                <span class="card-badge">{proj.kategori}</span>
-                {proj.is_featured === 1 && (
+                <span class="card-badge">{cert.penerbit}</span>
+                <span class="cert-year font-mono">{cert.tahun}</span>
+                {cert.is_featured === 1 && (
                   <span class="featured-badge">Featured ★</span>
                 )}
               </div>
 
               <h2 class="card-title">
-                <span class="lang-id">{proj.judul}</span>
-                <span class="lang-en hidden">{proj.english_title || proj.judul}</span>
+                {cert.nama_sertifikat}
               </h2>
 
-              <p class="card-desc">
-                <span class="lang-id">{proj.deskripsi}</span>
-                <span class="lang-en hidden">{proj.english_desc || proj.deskripsi}</span>
-              </p>
-
-              <!-- Actions -->
               <div class="card-footer">
-                <button class="btn btn-secondary btn-sm open-detail-btn">
-                  <span class="lang-id">Detail</span>
-                  <span class="lang-en hidden">Details</span>
+                <div class="card-tags">
+                  <span class="type-tag font-mono">Format: {cert.tipe}</span>
+                  {cert.tombol_transkrip === 'ada' && (
+                    <span class="transcript-tag">+ Transkrip Nilai</span>
+                  )}
+                </div>
+
+                <button class="btn btn-secondary btn-sm open-cert-btn">
+                  <span class="lang-id">Lihat Detail</span>
+                  <span class="lang-en hidden">View Details</span>
                 </button>
-                {proj.link_dokumentasi && (
-                  <a 
-                    href={proj.link_dokumentasi} 
-                    target="_blank" 
-                    rel="noopener noreferrer" 
-                    class="btn btn-primary btn-sm"
-                  >
-                    <span class="lang-id">Dokumentasi</span>
-                    <span class="lang-en hidden">Live Docs</span>
-                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                      <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6M15 3h6v6M10 14 21 3"/>
-                    </svg>
-                  </a>
-                )}
               </div>
             </div>
           </article>
         ))}
       </div>
 
-      <div id="no-projects-found" class="no-results hidden">
-        <p>Tidak ada proyek yang sesuai dengan kriteria pencarian.</p>
+      <div id="no-certs-found" class="no-results hidden">
+        <p>Tidak ada sertifikat yang sesuai dengan kriteria pencarian.</p>
       </div>
     </div>
   </section>
 </Layout>
 
 <style>
-  .projects-page-section {
+  .certs-page-section {
     min-height: 80vh;
   }
 
@@ -223,40 +219,41 @@ const categories = ['Semua', 'Website', 'Cisco', 'MikroTik', 'AI'];
     border-color: var(--color-ring);
   }
 
-  /* Projects Grid */
-  .projects-grid {
+  /* Grid with Uniform A4 Ratio */
+  .certs-grid {
     display: grid;
     grid-template-columns: 1fr;
     gap: 24px;
   }
 
   @media (min-width: 640px) {
-    .projects-grid {
+    .certs-grid {
       grid-template-columns: repeat(2, 1fr);
     }
   }
 
   @media (min-width: 1024px) {
-    .projects-grid {
+    .certs-grid {
       grid-template-columns: repeat(3, 1fr);
     }
   }
 
-  .project-catalog-card {
+  .cert-catalog-card {
     display: flex;
     flex-direction: column;
     overflow: hidden;
   }
 
-  .card-thumbnail-wrap {
+  .cert-thumbnail-wrap {
     cursor: pointer;
     position: relative;
+    background: var(--bg-surface);
   }
 
   .thumbnail-hover-overlay {
     position: absolute;
     inset: 0;
-    background: rgba(0, 0, 0, 0.45);
+    background: rgba(0, 0, 0, 0.4);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -264,7 +261,7 @@ const categories = ['Semua', 'Website', 'Cisco', 'MikroTik', 'AI'];
     transition: opacity 0.2s ease;
   }
 
-  .card-thumbnail-wrap:hover .thumbnail-hover-overlay {
+  .cert-thumbnail-wrap:hover .thumbnail-hover-overlay {
     opacity: 1;
   }
 
@@ -290,6 +287,7 @@ const categories = ['Semua', 'Website', 'Cisco', 'MikroTik', 'AI'];
     align-items: center;
     gap: 8px;
     margin-bottom: 8px;
+    flex-wrap: wrap;
   }
 
   .card-badge {
@@ -298,6 +296,11 @@ const categories = ['Semua', 'Website', 'Cisco', 'MikroTik', 'AI'];
     text-transform: uppercase;
     letter-spacing: 0.05em;
     color: var(--color-accent);
+  }
+
+  .cert-year {
+    font-size: 0.75rem;
+    color: var(--color-subtle);
   }
 
   .featured-badge {
@@ -311,21 +314,10 @@ const categories = ['Semua', 'Website', 'Cisco', 'MikroTik', 'AI'];
   }
 
   .card-title {
-    font-size: 1.15rem;
-    margin-bottom: 8px;
-    line-height: 1.35;
-  }
-
-  .card-desc {
-    font-size: 0.875rem;
-    color: var(--color-muted);
-    line-height: 1.6;
-    margin-bottom: 20px;
+    font-size: 1.05rem;
+    margin-bottom: 16px;
+    line-height: 1.4;
     flex: 1;
-    display: -webkit-box;
-    -webkit-line-clamp: 3;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
   }
 
   .card-footer {
@@ -333,8 +325,35 @@ const categories = ['Semua', 'Website', 'Cisco', 'MikroTik', 'AI'];
     align-items: center;
     justify-content: space-between;
     gap: 8px;
-    padding-top: 16px;
+    padding-top: 14px;
     border-top: 1px solid var(--color-border);
+    flex-wrap: wrap;
+  }
+
+  .card-tags {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+
+  .type-tag {
+    font-size: 0.7rem;
+    padding: 2px 6px;
+    border-radius: 4px;
+    background: var(--bg-surface);
+    color: var(--color-subtle);
+    border: 1px solid var(--color-border);
+  }
+
+  .transcript-tag {
+    font-size: 0.7rem;
+    font-weight: 600;
+    padding: 2px 6px;
+    border-radius: 4px;
+    background: rgba(37, 99, 235, 0.08);
+    color: var(--color-accent);
+    border: 1px solid rgba(37, 99, 235, 0.2);
   }
 
   .no-results {
@@ -349,27 +368,46 @@ const categories = ['Semua', 'Website', 'Cisco', 'MikroTik', 'AI'];
 </style>
 
 <script is:inline>
-  (function initProjectsCatalog() {
+  (function initCertsCatalog() {
     const filterPills = Array.from(document.querySelectorAll('.filter-pill'));
-    const searchInput = document.getElementById('project-search-input');
-    const cards = Array.from(document.querySelectorAll('.project-catalog-card'));
-    const noResults = document.getElementById('no-projects-found');
+    const searchInput = document.getElementById('cert-search-input');
+    const cards = Array.from(document.querySelectorAll('.cert-catalog-card'));
+    const noResults = document.getElementById('no-certs-found');
 
-    let activeCategory = 'all';
+    let activeFilter = 'all';
     let searchQuery = '';
+
+    function checkFilterMatch(filter, certData) {
+      if (filter === 'all') return true;
+      const certName = (certData.nama_sertifikat || '').toLowerCase();
+      const issuer = (certData.penerbit || '').toLowerCase();
+
+      if (filter === 'lks') {
+        return certName.includes('lks') || issuer.includes('lks') || issuer.includes('dinas pendidikan');
+      }
+      if (filter === 'pkl') {
+        return certName.includes('pkl') || certData.tombol_transkrip === 'ada' || issuer.includes('blk') || issuer.includes('imc');
+      }
+      if (filter === 'network') {
+        return certName.includes('linux') || certName.includes('cisco') || certName.includes('mikrotik') || certName.includes('jaringan') || certName.includes('packet tracer') || certName.includes('cyber');
+      }
+      if (filter === 'ai') {
+        return certName.includes('ai') || certName.includes('python') || certName.includes('machine learning') || certName.includes('prompt');
+      }
+      return true;
+    }
 
     function applyFilter() {
       let visibleCount = 0;
 
       cards.forEach(card => {
-        const cat = (card.getAttribute('data-category') || '').toLowerCase().trim();
-        const projData = JSON.parse(card.getAttribute('data-project') || '{}');
-        const textContent = `${projData.judul || ''} ${projData.english_title || ''} ${projData.deskripsi || ''} ${projData.kategori || ''}`.toLowerCase();
+        const certData = JSON.parse(card.getAttribute('data-cert') || '{}');
+        const textContent = `${certData.nama_sertifikat || ''} ${certData.penerbit || ''} ${certData.tahun || ''}`.toLowerCase();
 
-        const matchesCat = activeCategory === 'all' || cat === activeCategory.toLowerCase();
+        const matchesFilter = checkFilterMatch(activeFilter, certData);
         const matchesSearch = !searchQuery || textContent.includes(searchQuery.toLowerCase());
 
-        if (matchesCat && matchesSearch) {
+        if (matchesFilter && matchesSearch) {
           card.classList.remove('hidden');
           visibleCount++;
         } else {
@@ -388,7 +426,7 @@ const categories = ['Semua', 'Website', 'Cisco', 'MikroTik', 'AI'];
         });
         pill.classList.add('active');
         pill.setAttribute('aria-selected', 'true');
-        activeCategory = pill.getAttribute('data-category') || 'all';
+        activeFilter = pill.getAttribute('data-filter') || 'all';
         applyFilter();
       });
     });
@@ -398,15 +436,14 @@ const categories = ['Semua', 'Website', 'Cisco', 'MikroTik', 'AI'];
       applyFilter();
     });
 
-    // Card click handlers for modal
     cards.forEach(card => {
-      const projData = JSON.parse(card.getAttribute('data-project') || '{}');
-      const thumb = card.querySelector('.card-thumbnail-wrap');
-      const detailBtn = card.querySelector('.open-detail-btn');
+      const certData = JSON.parse(card.getAttribute('data-cert') || '{}');
+      const thumb = card.querySelector('.cert-thumbnail-wrap');
+      const detailBtn = card.querySelector('.open-cert-btn');
 
       const openModal = () => {
-        if (window.openProjectModal) {
-          window.openProjectModal(projData);
+        if (window.openCertModal) {
+          window.openCertModal(certData);
         }
       };
 
@@ -414,14 +451,11 @@ const categories = ['Semua', 'Website', 'Cisco', 'MikroTik', 'AI'];
       detailBtn?.addEventListener('click', openModal);
     });
 
-    // Client-side dynamic refresh from D1 API
-    fetch('/api/projects')
+    // Refresh from D1 API in background
+    fetch('/api/certificates')
       .then(res => res.ok ? res.json() : null)
       .then(data => {
-        if (Array.isArray(data) && data.length > 0) {
-          // Verify if data updated from CMS
-          // If counts or updated_at differ, update attributes
-        }
+        // Cache warm / verification
       })
       .catch(() => {});
   })();

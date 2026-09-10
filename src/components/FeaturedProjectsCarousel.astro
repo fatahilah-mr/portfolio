@@ -3,6 +3,13 @@
 // 3D Centered Carousel with Top 3 Web Projects (1440x900 / 16:10), animated micro-indicator, and modal trigger
 import projectsData from '../data/projects.json';
 
+interface Props {
+  lang?: 'en' | 'id';
+}
+
+const { lang = 'en' } = Astro.props;
+const catalogUrl = lang === 'id' ? '/projects/id' : '/projects';
+
 // Top 3 featured projects: PERISAI Temon (ID: 2), PERISAI AYOM (ID: 3), FATAH Gateway (ID: 5)
 const featuredProjects = [
   projectsData.find(p => p.id === '2'),
@@ -114,7 +121,7 @@ const featuredProjects = [
 
     <!-- Catalog CTA -->
     <div class="carousel-view-all">
-      <a href="/projects" class="btn btn-secondary">
+      <a href={catalogUrl} class="btn btn-secondary">
         <span class="lang-id">Lihat Semua Proyek Lengkap (10+)</span>
         <span class="lang-en hidden">View All Projects (10+)</span>
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">

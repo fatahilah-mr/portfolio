@@ -9,16 +9,18 @@ import DetailModal from '../components/DetailModal.astro';
 export interface Props {
   title: string;
   description?: string;
+  lang?: 'en' | 'id';
 }
 
 const { 
   title, 
-  description = "Portofolio Fatahilah Miftahul Rahman - Juara 1 LKS IT Network System Administration Purworejo 2026. Spesialis infrastruktur jaringan enterprise, server Linux, dan pengembang web modern."
+  description = "Fatahilah Miftahul Rahman Portfolio - 1st Place Winner LKS IT Network System Administration 2026. Specialist in enterprise network infrastructure, Linux servers, and modern web engineering.",
+  lang = 'en'
 } = Astro.props;
 ---
 
 <!DOCTYPE html>
-<html lang="id" data-theme="light">
+<html lang={lang} data-theme="light">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -80,15 +82,12 @@ const {
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet" />
 
-  <!-- Anti-FOUC Theme & Language Init Script -->
+  <!-- Anti-FOUC Theme Init Script -->
   <script is:inline>
     (function() {
       try {
         const theme = localStorage.getItem('theme') || 'light';
         document.documentElement.setAttribute('data-theme', theme);
-
-        const lang = localStorage.getItem('lang') || 'id';
-        document.documentElement.setAttribute('lang', lang);
       } catch (e) {
         console.warn('Theme init warning:', e);
       }
@@ -98,14 +97,14 @@ const {
 <body>
   <!-- Accessible Skip Link -->
   <a href="#main-content" class="skip-to-content sr-only focus:not-sr-only">
-    Skip to main content / Langsung ke konten utama
+    {lang === 'id' ? 'Langsung ke konten utama' : 'Skip to main content'}
   </a>
 
   <!-- ARIA Live Announcer -->
   <div id="a11y-announcer" class="sr-only" aria-live="polite" aria-atomic="true"></div>
 
   <!-- Main Navigation -->
-  <Navbar />
+  <Navbar lang={lang} />
 
   <!-- Main Content -->
   <main id="main-content" tabindex="-1" class="main-wrapper">
@@ -116,7 +115,7 @@ const {
   <DetailModal />
 
   <!-- Footer -->
-  <Footer />
+  <Footer lang={lang} />
 
   <style>
     .skip-to-content:focus {
