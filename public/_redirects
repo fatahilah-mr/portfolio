@@ -1,0 +1,5 @@
+# Cloudflare Pages 301 Redirects for Legacy Multi-Page Routes into Semi-SPA Anchors
+/about /#about 301
+/skills /#skills 301
+/experience /#experience 301
+/contact /#contact 301

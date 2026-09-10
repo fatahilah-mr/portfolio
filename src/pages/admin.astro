@@ -1,0 +1,1221 @@
+---
+// src/pages/admin.astro
+// Single-Page CMS Admin Panel with GitHub OAuth, Full CRUD, and Dynamic Notification Settings
+---
+
+<!DOCTYPE html>
+<html lang="id" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CMS Admin Panel | Fatahilah Portfolio</title>
+  <link rel="icon" type="image/svg+xml" href="/assets/favicon/favicon.svg" />
+  <link rel="stylesheet" href="/styles/global.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet" />
+</head>
+<body class="admin-body">
+  <div id="admin-app" class="admin-app-container">
+    <!-- Loading State Screen -->
+    <div id="loading-screen" class="loading-state">
+      <div class="spinner"></div>
+      <p>Memeriksa sesi otentikasi...</p>
+    </div>
+
+    <!-- Login Screen (Shown when unauthenticated) -->
+    <div id="login-screen" class="login-wrapper hidden">
+      <div class="editorial-card login-card">
+        <div class="login-brand">
+          <span class="brand-text">FATAHILAH<span class="brand-accent">.MR</span></span>
+          <span class="cms-tag font-mono">CMS ADMIN PANEL</span>
+        </div>
+
+        <div id="login-error-banner" class="alert-banner error hidden">
+          <span id="login-error-msg">Akses ditolak atau sesi kedaluwarsa.</span>
+        </div>
+
+        <p class="login-desc">
+          Panel kontrol portofolio dilindungi otentikasi dua arah. Akses dibatasi secara ketat hanya untuk akun GitHub terverifikasi <strong>@fatahilah-mr</strong>.
+        </p>
+
+        <a href="/api/auth/login" class="btn btn-primary btn-block">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor">
+            <path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/>
+          </svg>
+          Masuk dengan GitHub
+        </a>
+
+        <div class="login-footer">
+          <a href="/" class="back-link">← Kembali ke Halaman Utama</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Authenticated Dashboard -->
+    <div id="dashboard-screen" class="dashboard-wrapper hidden">
+      <!-- Admin Topbar -->
+      <header class="admin-topbar">
+        <div class="admin-brand">
+          <span class="brand-text">FATAHILAH<span class="brand-accent">.MR</span></span>
+          <span class="badge-role font-mono">ADMIN: @fatahilah-mr</span>
+        </div>
+
+        <div class="topbar-actions">
+          <a href="/" target="_blank" class="btn btn-secondary btn-sm">Lihat Website ↗</a>
+          <button id="logout-btn" class="btn btn-secondary btn-sm">Keluar</button>
+        </div>
+      </header>
+
+      <!-- Main Navigation Tabs -->
+      <nav class="admin-tabs" role="tablist">
+        <button class="admin-tab-btn active" data-tab="tab-projects" role="tab">📁 Proyek</button>
+        <button class="admin-tab-btn" data-tab="tab-certs" role="tab">🏆 Sertifikat</button>
+        <button class="admin-tab-btn" data-tab="tab-profile" role="tab">👤 Profil & Bio</button>
+        <button class="admin-tab-btn" data-tab="tab-notifications" role="tab">🔔 Pengaturan Notifikasi</button>
+      </nav>
+
+      <!-- Global Alert Message -->
+      <div id="admin-alert" class="admin-alert-banner hidden"></div>
+
+      <!-- Tab 1: Proyek -->
+      <section id="tab-projects" class="tab-pane active">
+        <div class="tab-header">
+          <div>
+            <h2>Manajemen Proyek Portofolio</h2>
+            <p class="tab-subtitle">Kelola daftar proyek, urutan tampilan (sort order), dan status featured.</p>
+          </div>
+          <button id="add-project-btn" class="btn btn-primary">+ Tambah Proyek</button>
+        </div>
+
+        <div class="admin-table-wrapper">
+          <table class="admin-table" id="projects-table">
+            <thead>
+              <tr>
+                <th>Urut</th>
+                <th>Thumbnail</th>
+                <th>Judul Proyek</th>
+                <th>Kategori</th>
+                <th>Featured</th>
+                <th>Aksi</th>
+              </tr>
+            </thead>
+            <tbody id="projects-table-body">
+              <tr><td colspan="6" class="text-center">Memuat data proyek...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- Tab 2: Sertifikat -->
+      <section id="tab-certs" class="tab-pane hidden">
+        <div class="tab-header">
+          <div>
+            <h2>Manajemen Sertifikat & Transkrip</h2>
+            <p class="tab-subtitle">Kelola 20+ kredensial, tahun terbit, tipe orientasi, dan halaman belakang transkrip.</p>
+          </div>
+          <button id="add-cert-btn" class="btn btn-primary">+ Tambah Sertifikat</button>
+        </div>
+
+        <div class="admin-table-wrapper">
+          <table class="admin-table" id="certs-table">
+            <thead>
+              <tr>
+                <th>Urut</th>
+                <th>Preview</th>
+                <th>Nama Sertifikat</th>
+                <th>Penerbit</th>
+                <th>Tahun</th>
+                <th>Transkrip</th>
+                <th>Featured</th>
+                <th>Aksi</th>
+              </tr>
+            </thead>
+            <tbody id="certs-table-body">
+              <tr><td colspan="8" class="text-center">Memuat data sertifikat...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- Tab 3: Profil & Bio -->
+      <section id="tab-profile" class="tab-pane hidden">
+        <div class="tab-header">
+          <div>
+            <h2>Konfigurasi Profil & Bio Situs</h2>
+            <p class="tab-subtitle">Perbarui narasi dwibahasa, tautan media sosial, dan data kontak resmi.</p>
+          </div>
+        </div>
+
+        <form id="profile-form" class="editorial-card admin-form">
+          <div class="form-row-2">
+            <div class="form-group">
+              <label>Nama Lengkap</label>
+              <input type="text" id="cfg-name" class="form-input" required />
+            </div>
+            <div class="form-group">
+              <label>Nama Panggilan (Short Name)</label>
+              <input type="text" id="cfg-short-name" class="form-input" required />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Judul / Headline Utama (ID)</label>
+            <input type="text" id="cfg-title-id" class="form-input" required />
+          </div>
+
+          <div class="form-group">
+            <label>Judul / Headline Utama (EN)</label>
+            <input type="text" id="cfg-title-en" class="form-input" required />
+          </div>
+
+          <div class="form-group">
+            <label>Biografi Singkat (ID)</label>
+            <textarea id="cfg-bio-id" rows="3" class="form-input"></textarea>
+          </div>
+
+          <div class="form-group">
+            <label>Biografi Singkat (EN)</label>
+            <textarea id="cfg-bio-en" rows="3" class="form-input"></textarea>
+          </div>
+
+          <div class="form-row-3">
+            <div class="form-group">
+              <label>Email Resmi</label>
+              <input type="email" id="cfg-email" class="form-input" required />
+            </div>
+            <div class="form-group">
+              <label>GitHub URL</label>
+              <input type="url" id="cfg-github" class="form-input" required />
+            </div>
+            <div class="form-group">
+              <label>LinkedIn URL</label>
+              <input type="url" id="cfg-linkedin" class="form-input" required />
+            </div>
+          </div>
+
+          <div class="form-actions">
+            <button type="submit" class="btn btn-primary">Simpan Perubahan Profil</button>
+          </div>
+        </form>
+      </section>
+
+      <!-- Tab 4: Pengaturan Notifikasi & Uji Coba -->
+      <section id="tab-notifications" class="tab-pane hidden">
+        <div class="tab-header">
+          <div>
+            <h2>Pengaturan Notifikasi Real-Time</h2>
+            <p class="tab-subtitle">
+              Atur kredensial bot Telegram dan endpoint ntfy langsung dari CMS tanpa perlu mengubah file .env atau database manual.
+            </p>
+          </div>
+        </div>
+
+        <form id="notify-form" class="editorial-card admin-form">
+          <div class="form-section-title">
+            <span>📱 Parameter Bot Telegram</span>
+          </div>
+
+          <div class="form-group">
+            <label class="checkbox-label">
+              <input type="checkbox" id="notify-tele-enabled" />
+              <span>Aktifkan Notifikasi Telegram</span>
+            </label>
+          </div>
+
+          <div class="form-row-2">
+            <div class="form-group">
+              <label>Telegram Bot Token</label>
+              <div class="input-with-action">
+                <input type="password" id="notify-tele-token" class="form-input font-mono" placeholder="123456789:ABCdefGHIjkl..." />
+                <button type="button" class="toggle-pass-btn" data-target="notify-tele-token">👁</button>
+              </div>
+              <span class="field-hint">Token bot Telegram yang diperoleh dari @BotFather.</span>
+            </div>
+
+            <div class="form-group">
+              <label>Telegram Chat ID</label>
+              <input type="text" id="notify-tele-chat-id" class="form-input font-mono" placeholder="Contoh: 123456789 atau -100..." />
+              <span class="field-hint">ID chat atau ID channel tujuan pengiriman pesan.</span>
+            </div>
+          </div>
+
+          <div class="form-section-title mt-6">
+            <span>🔔 Parameter Push Notification (ntfy)</span>
+          </div>
+
+          <div class="form-row-3">
+            <div class="form-group">
+              <label>ntfy Server URL</label>
+              <input type="url" id="notify-ntfy-server" class="form-input font-mono" placeholder="https://ntfy.fmr.web.id" />
+            </div>
+            <div class="form-group">
+              <label>ntfy Topic</label>
+              <input type="text" id="notify-ntfy-topic" class="form-input font-mono" placeholder="agent" />
+            </div>
+            <div class="form-group">
+              <label>ntfy Access Token (Opsional)</label>
+              <input type="password" id="notify-ntfy-token" class="form-input font-mono" placeholder="tk_..." />
+            </div>
+          </div>
+
+          <div class="form-actions-split mt-6">
+            <button type="submit" class="btn btn-primary">Simpan Pengaturan Notifikasi</button>
+            <button type="button" id="test-notify-btn" class="btn btn-secondary">
+              🧪 Kirim Uji Coba (Test Alert)
+            </button>
+          </div>
+        </form>
+
+        <!-- Test Results Feedback Box -->
+        <div id="notify-test-result" class="editorial-card test-result-box hidden">
+          <h4>Hasil Pengujian Notifikasi</h4>
+          <div id="notify-test-content" class="font-mono text-sm"></div>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <!-- Project Edit/Create Modal -->
+  <dialog id="project-modal" class="detail-modal-dialog">
+    <div class="detail-modal-content">
+      <div class="detail-modal-header">
+        <h3 id="project-modal-title">Tambah / Edit Proyek</h3>
+        <button class="detail-modal-close-btn" data-close-modal="project-modal">✕</button>
+      </div>
+      <form id="project-form" class="detail-modal-body">
+        <input type="hidden" id="pm-id" />
+        <div class="form-group">
+          <label>Judul Proyek (ID)</label>
+          <input type="text" id="pm-judul" class="form-input" required />
+        </div>
+        <div class="form-group">
+          <label>Judul Proyek (EN)</label>
+          <input type="text" id="pm-title-en" class="form-input" />
+        </div>
+        <div class="form-row-2">
+          <div class="form-group">
+            <label>Kategori</label>
+            <select id="pm-kategori" class="form-input">
+              <option value="Website">Website</option>
+              <option value="Cisco">Cisco</option>
+              <option value="MikroTik">MikroTik</option>
+              <option value="AI">AI</option>
+              <option value="Linux">Linux</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Urutan (Sort Order)</label>
+            <input type="number" id="pm-sort" class="form-input" value="10" />
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Deskripsi (ID)</label>
+          <textarea id="pm-deskripsi" rows="3" class="form-input" required></textarea>
+        </div>
+        <div class="form-group">
+          <label>Deskripsi (EN)</label>
+          <textarea id="pm-desc-en" rows="3" class="form-input"></textarea>
+        </div>
+        <div class="form-group">
+          <label>Link Gambar (URL R2 / CDN)</label>
+          <input type="url" id="pm-gambar" class="form-input" required />
+        </div>
+        <div class="form-group">
+          <label>Link Dokumentasi / Live</label>
+          <input type="url" id="pm-link" class="form-input" />
+        </div>
+        <div class="form-group">
+          <label class="checkbox-label">
+            <input type="checkbox" id="pm-featured" />
+            <span>Tampilkan di Carousel Unggulan Beranda (Top 3)</span>
+          </label>
+        </div>
+        <div class="modal-footer-btns">
+          <button type="button" class="btn btn-secondary" data-close-modal="project-modal">Batal</button>
+          <button type="submit" class="btn btn-primary">Simpan Proyek</button>
+        </div>
+      </form>
+    </div>
+  </dialog>
+
+  <!-- Certificate Edit/Create Modal -->
+  <dialog id="cert-modal" class="detail-modal-dialog">
+    <div class="detail-modal-content">
+      <div class="detail-modal-header">
+        <h3 id="cert-modal-title">Tambah / Edit Sertifikat</h3>
+        <button class="detail-modal-close-btn" data-close-modal="cert-modal">✕</button>
+      </div>
+      <form id="cert-form" class="detail-modal-body">
+        <input type="hidden" id="cm-id" />
+        <div class="form-group">
+          <label>Nama Sertifikat</label>
+          <input type="text" id="cm-nama" class="form-input" required />
+        </div>
+        <div class="form-row-2">
+          <div class="form-group">
+            <label>Penerbit Sertifikat</label>
+            <input type="text" id="cm-penerbit" class="form-input" required />
+          </div>
+          <div class="form-group">
+            <label>Tahun Terbit</label>
+            <input type="text" id="cm-tahun" class="form-input" placeholder="2026" required />
+          </div>
+        </div>
+        <div class="form-row-2">
+          <div class="form-group">
+            <label>Tipe Orientasi</label>
+            <select id="cm-tipe" class="form-input">
+              <option value="horizontal">Horizontal (Landscape)</option>
+              <option value="vertical">Vertical (Portrait)</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Urutan (Sort Order)</label>
+            <input type="number" id="cm-sort" class="form-input" value="10" />
+          </div>
+        </div>
+        <div class="form-group">
+          <label>URL Gambar Depan (CDN)</label>
+          <input type="url" id="cm-depan" class="form-input" required />
+        </div>
+        <div class="form-group">
+          <label>URL Gambar Belakang / Transkrip (Opsional)</label>
+          <input type="url" id="cm-belakang" class="form-input" />
+        </div>
+        <div class="form-group">
+          <label class="checkbox-label">
+            <input type="checkbox" id="cm-transkrip" />
+            <span>Aktifkan Tombol Transkrip (Halaman Belakang)</span>
+          </label>
+        </div>
+        <div class="form-group">
+          <label class="checkbox-label">
+            <input type="checkbox" id="cm-featured" />
+            <span>Tampilkan di Carousel Unggulan Beranda (Top 3)</span>
+          </label>
+        </div>
+        <div class="modal-footer-btns">
+          <button type="button" class="btn btn-secondary" data-close-modal="cert-modal">Batal</button>
+          <button type="submit" class="btn btn-primary">Simpan Sertifikat</button>
+        </div>
+      </form>
+    </div>
+  </dialog>
+
+  <style>
+    .admin-body {
+      background-color: var(--bg-surface);
+      min-height: 100vh;
+      color: var(--color-foreground);
+    }
+
+    .admin-app-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 24px clamp(16px, 3vw, 32px);
+    }
+
+    .loading-state {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 60vh;
+      gap: 16px;
+      color: var(--color-muted);
+    }
+
+    .spinner {
+      width: 36px;
+      height: 36px;
+      border: 3px solid var(--color-border);
+      border-top-color: var(--color-accent);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin { 100% { transform: rotate(360deg); } }
+
+    /* Login Screen */
+    .login-wrapper {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 75vh;
+    }
+
+    .login-card {
+      max-width: 440px;
+      width: 100%;
+      padding: clamp(28px, 5vw, 40px);
+      text-align: center;
+    }
+
+    .login-brand {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      margin-bottom: 20px;
+    }
+
+    .brand-text {
+      font-size: 1.25rem;
+      font-weight: 800;
+    }
+
+    .brand-accent {
+      color: var(--color-accent);
+    }
+
+    .cms-tag {
+      font-size: 0.75rem;
+      letter-spacing: 0.08em;
+      color: var(--color-subtle);
+    }
+
+    .login-desc {
+      font-size: 0.9375rem;
+      color: var(--color-muted);
+      line-height: 1.6;
+      margin-bottom: 24px;
+    }
+
+    .btn-block {
+      width: 100%;
+      padding: 12px 20px;
+    }
+
+    .login-footer {
+      margin-top: 24px;
+    }
+
+    .back-link {
+      font-size: 0.85rem;
+      color: var(--color-subtle);
+    }
+
+    /* Dashboard */
+    .admin-topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-bottom: 20px;
+      border-bottom: 1px solid var(--color-border);
+      margin-bottom: 24px;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+
+    .badge-role {
+      font-size: 0.75rem;
+      background: var(--color-accent-soft);
+      color: var(--color-accent);
+      padding: 3px 8px;
+      border-radius: 6px;
+      margin-left: 10px;
+    }
+
+    .topbar-actions {
+      display: flex;
+      gap: 10px;
+    }
+
+    .admin-tabs {
+      display: flex;
+      gap: 8px;
+      border-bottom: 1px solid var(--color-border);
+      margin-bottom: 28px;
+      overflow-x: auto;
+    }
+
+    .admin-tab-btn {
+      padding: 10px 18px;
+      background: transparent;
+      border: none;
+      border-bottom: 2px solid transparent;
+      color: var(--color-muted);
+      font-size: 0.9375rem;
+      font-weight: 600;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.15s ease;
+    }
+
+    .admin-tab-btn:hover {
+      color: var(--color-foreground);
+    }
+
+    .admin-tab-btn.active {
+      color: var(--color-accent);
+      border-bottom-color: var(--color-accent);
+    }
+
+    .tab-pane {
+      display: none;
+    }
+
+    .tab-pane.active {
+      display: block;
+    }
+
+    .tab-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+
+    .tab-subtitle {
+      font-size: 0.9rem;
+      color: var(--color-muted);
+      margin-top: 4px;
+    }
+
+    /* Table */
+    .admin-table-wrapper {
+      background: var(--bg-card);
+      border: 1px solid var(--color-border);
+      border-radius: 12px;
+      overflow-x: auto;
+    }
+
+    .admin-table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+      font-size: 0.875rem;
+    }
+
+    .admin-table th {
+      padding: 12px 16px;
+      background: var(--bg-surface);
+      border-bottom: 1px solid var(--color-border);
+      font-weight: 600;
+      color: var(--color-subtle);
+    }
+
+    .admin-table td {
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--color-border);
+      vertical-align: middle;
+    }
+
+    .table-thumb {
+      width: 60px;
+      height: 38px;
+      object-fit: cover;
+      border-radius: 4px;
+      border: 1px solid var(--color-border);
+    }
+
+    .action-cell-btns {
+      display: flex;
+      gap: 6px;
+    }
+
+    /* Form Styles */
+    .admin-form {
+      padding: clamp(20px, 4vw, 32px);
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      max-width: 800px;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .form-group label {
+      font-size: 0.8125rem;
+      font-weight: 600;
+      color: var(--color-foreground);
+    }
+
+    .form-input {
+      width: 100%;
+      padding: 9px 12px;
+      border-radius: 8px;
+      border: 1px solid var(--color-border);
+      background: var(--bg-card);
+      color: var(--color-foreground);
+      font-size: 0.875rem;
+      outline: none;
+      transition: border-color 0.15s ease;
+    }
+
+    .form-input:focus {
+      border-color: var(--color-ring);
+    }
+
+    .form-row-2 {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 16px;
+    }
+
+    @media (min-width: 640px) {
+      .form-row-2 {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    .form-row-3 {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 16px;
+    }
+
+    @media (min-width: 720px) {
+      .form-row-3 {
+        grid-template-columns: repeat(3, 1fr);
+      }
+    }
+
+    .checkbox-label {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.875rem;
+      cursor: pointer;
+    }
+
+    .form-section-title {
+      font-size: 0.95rem;
+      font-weight: 700;
+      padding-bottom: 6px;
+      border-bottom: 1px solid var(--color-border);
+    }
+
+    .field-hint {
+      font-size: 0.75rem;
+      color: var(--color-subtle);
+    }
+
+    .input-with-action {
+      display: flex;
+      gap: 6px;
+    }
+
+    .toggle-pass-btn {
+      padding: 0 12px;
+      background: var(--bg-surface);
+      border: 1px solid var(--color-border);
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    .form-actions-split {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .modal-footer-btns {
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+      margin-top: 16px;
+    }
+
+    .test-result-box {
+      margin-top: 20px;
+      padding: 16px;
+      max-width: 800px;
+    }
+
+    .admin-alert-banner {
+      padding: 10px 16px;
+      border-radius: 8px;
+      font-size: 0.875rem;
+      font-weight: 500;
+      margin-bottom: 20px;
+    }
+
+    .admin-alert-banner.success {
+      background: #DCFCE7;
+      color: #15803D;
+      border: 1px solid #BBF7D0;
+    }
+
+    .admin-alert-banner.error {
+      background: #FEE2E2;
+      color: #B91C1C;
+      border: 1px solid #FECACA;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+  </style>
+
+  <script is:inline>
+    (function initAdminApp() {
+      const loadingScreen = document.getElementById('loading-screen');
+      const loginScreen = document.getElementById('login-screen');
+      const dashboardScreen = document.getElementById('dashboard-screen');
+      const alertBanner = document.getElementById('admin-alert');
+      const loginErrorBanner = document.getElementById('login-error-banner');
+      const loginErrorMsg = document.getElementById('login-error-msg');
+
+      function showAlert(msg, type = 'success') {
+        if (!alertBanner) return;
+        alertBanner.className = `admin-alert-banner ${type}`;
+        alertBanner.textContent = msg;
+        alertBanner.classList.remove('hidden');
+        setTimeout(() => alertBanner.classList.add('hidden'), 4000);
+      }
+
+      // Check URL search params for error
+      const urlParams = new URLSearchParams(window.location.search);
+      if (urlParams.get('error')) {
+        loginErrorBanner?.classList.remove('hidden');
+        if (loginErrorMsg) loginErrorMsg.textContent = `Login gagal: ${urlParams.get('error')}`;
+      }
+
+      // 1. Authenticate Session Check
+      async function checkAuth() {
+        try {
+          const res = await fetch('/api/auth/me');
+          if (res.ok) {
+            const data = await res.json();
+            if (data.authenticated) {
+              loadingScreen?.classList.add('hidden');
+              loginScreen?.classList.add('hidden');
+              dashboardScreen?.classList.remove('hidden');
+              loadAllData();
+              return;
+            }
+          }
+        } catch (_) {}
+
+        loadingScreen?.classList.add('hidden');
+        loginScreen?.classList.remove('hidden');
+        dashboardScreen?.classList.add('hidden');
+      }
+
+      // Logout handler
+      document.getElementById('logout-btn')?.addEventListener('click', () => {
+        window.location.href = '/api/auth/logout';
+      });
+
+      // Tabs switcher
+      const tabBtns = Array.from(document.querySelectorAll('.admin-tab-btn'));
+      const tabPanes = Array.from(document.querySelectorAll('.tab-pane'));
+
+      tabBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+          tabBtns.forEach(b => b.classList.remove('active'));
+          tabPanes.forEach(p => p.classList.add('hidden'));
+          btn.classList.add('active');
+          const target = btn.getAttribute('data-tab');
+          document.getElementById(target)?.classList.remove('hidden');
+        });
+      });
+
+      // Password visibility toggler
+      document.querySelectorAll('.toggle-pass-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const targetId = btn.getAttribute('data-target');
+          const input = document.getElementById(targetId);
+          if (input) {
+            input.type = input.type === 'password' ? 'text' : 'password';
+          }
+        });
+      });
+
+      // Dialog closer buttons
+      document.querySelectorAll('[data-close-modal]').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const modalId = btn.getAttribute('data-close-modal');
+          document.getElementById(modalId)?.close();
+        });
+      });
+
+      // 2. DATA LOADERS
+      let projectsList = [];
+      let certsList = [];
+
+      async function loadProjects() {
+        const tbody = document.getElementById('projects-table-body');
+        try {
+          const res = await fetch('/api/admin/projects');
+          projectsList = await res.json();
+          tbody.innerHTML = projectsList.map(p => `
+            <tr>
+              <td class="font-mono">${p.sort_order}</td>
+              <td><img src="${p.link_gambar}" alt="" class="table-thumb" /></td>
+              <td><strong>${p.judul}</strong></td>
+              <td><span class="badge-tag">${p.kategori}</span></td>
+              <td>${p.is_featured ? '★ Ya' : '-'}</td>
+              <td>
+                <div class="action-cell-btns">
+                  <button class="btn btn-secondary btn-sm edit-proj-btn" data-id="${p.id}">Edit</button>
+                  <button class="btn btn-secondary btn-sm del-proj-btn" data-id="${p.id}" style="color:#e11d48;">Hapus</button>
+                </div>
+              </td>
+            </tr>
+          `).join('');
+
+          attachProjectActionHandlers();
+        } catch (e) {
+          tbody.innerHTML = `<tr><td colspan="6" class="text-center">Gagal memuat proyek: ${e.message}</td></tr>`;
+        }
+      }
+
+      async function loadCertificates() {
+        const tbody = document.getElementById('certs-table-body');
+        try {
+          const res = await fetch('/api/admin/certificates');
+          certsList = await res.json();
+          tbody.innerHTML = certsList.map(c => `
+            <tr>
+              <td class="font-mono">${c.sort_order}</td>
+              <td><img src="${c.url_gambar_depan}" alt="" class="table-thumb" /></td>
+              <td><strong>${c.nama_sertifikat}</strong></td>
+              <td>${c.penerbit}</td>
+              <td class="font-mono">${c.tahun}</td>
+              <td>${c.tombol_transkrip === 'ada' ? '✓ Ada' : '-'}</td>
+              <td>${c.is_featured ? '★ Ya' : '-'}</td>
+              <td>
+                <div class="action-cell-btns">
+                  <button class="btn btn-secondary btn-sm edit-cert-btn" data-id="${c.id}">Edit</button>
+                  <button class="btn btn-secondary btn-sm del-cert-btn" data-id="${c.id}" style="color:#e11d48;">Hapus</button>
+                </div>
+              </td>
+            </tr>
+          `).join('');
+
+          attachCertActionHandlers();
+        } catch (e) {
+          tbody.innerHTML = `<tr><td colspan="8" class="text-center">Gagal memuat sertifikat: ${e.message}</td></tr>`;
+        }
+      }
+
+      async function loadConfig() {
+        try {
+          const res = await fetch('/api/admin/config');
+          const cfg = await res.json();
+
+          // Profile fields
+          document.getElementById('cfg-name').value = cfg.name || '';
+          document.getElementById('cfg-short-name').value = cfg.short_name || '';
+          document.getElementById('cfg-title-id').value = cfg.title_id || '';
+          document.getElementById('cfg-title-en').value = cfg.title_en || '';
+          document.getElementById('cfg-bio-id').value = cfg.bio_id || '';
+          document.getElementById('cfg-bio-en').value = cfg.bio_en || '';
+          document.getElementById('cfg-email').value = cfg.email || '';
+          document.getElementById('cfg-github').value = cfg.github_url || '';
+          document.getElementById('cfg-linkedin').value = cfg.linkedin_url || '';
+
+          // Notification fields
+          document.getElementById('notify-tele-enabled').checked = Boolean(cfg.tele_enabled);
+          document.getElementById('notify-tele-token').value = cfg.tele_bot_token || '';
+          document.getElementById('notify-tele-chat-id').value = cfg.tele_chat_id || '';
+          document.getElementById('notify-ntfy-server').value = cfg.ntfy_server || 'https://ntfy.fmr.web.id';
+          document.getElementById('notify-ntfy-topic').value = cfg.ntfy_topic || 'agent';
+          document.getElementById('notify-ntfy-token').value = cfg.ntfy_token || '';
+        } catch (e) {
+          showAlert(`Gagal memuat konfigurasi: ${e.message}`, 'error');
+        }
+      }
+
+      function loadAllData() {
+        loadProjects();
+        loadCertificates();
+        loadConfig();
+      }
+
+      // 3. PROJECT CRUD HANDLERS
+      const projectModal = document.getElementById('project-modal');
+      const projectForm = document.getElementById('project-form');
+
+      document.getElementById('add-project-btn')?.addEventListener('click', () => {
+        projectForm.reset();
+        document.getElementById('pm-id').value = '';
+        document.getElementById('project-modal-title').textContent = 'Tambah Proyek Baru';
+        projectModal.showModal();
+      });
+
+      function attachProjectActionHandlers() {
+        document.querySelectorAll('.edit-proj-btn').forEach(btn => {
+          btn.addEventListener('click', () => {
+            const id = btn.getAttribute('data-id');
+            const p = projectsList.find(item => String(item.id) === String(id));
+            if (!p) return;
+
+            document.getElementById('pm-id').value = p.id;
+            document.getElementById('pm-judul').value = p.judul || '';
+            document.getElementById('pm-title-en').value = p.english_title || '';
+            document.getElementById('pm-kategori').value = p.kategori || 'Website';
+            document.getElementById('pm-sort').value = p.sort_order || 0;
+            document.getElementById('pm-deskripsi').value = p.deskripsi || '';
+            document.getElementById('pm-desc-en').value = p.english_desc || '';
+            document.getElementById('pm-gambar').value = p.link_gambar || '';
+            document.getElementById('pm-link').value = p.link_dokumentasi || '';
+            document.getElementById('pm-featured').checked = Boolean(p.is_featured);
+
+            document.getElementById('project-modal-title').textContent = `Edit Proyek (${p.judul})`;
+            projectModal.showModal();
+          });
+        });
+
+        document.querySelectorAll('.del-proj-btn').forEach(btn => {
+          btn.addEventListener('click', async () => {
+            const id = btn.getAttribute('data-id');
+            if (!confirm(`Hapus proyek ID ${id}?`)) return;
+
+            try {
+              const res = await fetch(`/api/admin/projects?id=${id}`, { method: 'DELETE' });
+              if (res.ok) {
+                showAlert('Proyek berhasil dihapus');
+                loadProjects();
+              } else {
+                const err = await res.json();
+                showAlert(`Gagal menghapus: ${err.error}`, 'error');
+              }
+            } catch (e) {
+              showAlert(e.message, 'error');
+            }
+          });
+        });
+      }
+
+      projectForm?.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const id = document.getElementById('pm-id').value;
+        const method = id ? 'PUT' : 'POST';
+        const payload = {
+          id: id || undefined,
+          judul: document.getElementById('pm-judul').value,
+          english_title: document.getElementById('pm-title-en').value,
+          kategori: document.getElementById('pm-kategori').value,
+          sort_order: parseInt(document.getElementById('pm-sort').value, 10),
+          deskripsi: document.getElementById('pm-deskripsi').value,
+          english_desc: document.getElementById('pm-desc-en').value,
+          link_gambar: document.getElementById('pm-gambar').value,
+          link_dokumentasi: document.getElementById('pm-link').value,
+          is_featured: document.getElementById('pm-featured').checked
+        };
+
+        try {
+          const res = await fetch('/api/admin/projects', {
+            method,
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+          });
+          if (res.ok) {
+            projectModal.close();
+            showAlert('Proyek berhasil disimpan!');
+            loadProjects();
+          } else {
+            const err = await res.json();
+            showAlert(`Gagal menyimpan: ${err.error}`, 'error');
+          }
+        } catch (e) {
+          showAlert(e.message, 'error');
+        }
+      });
+
+      // 4. CERTIFICATE CRUD HANDLERS
+      const certModal = document.getElementById('cert-modal');
+      const certForm = document.getElementById('cert-form');
+
+      document.getElementById('add-cert-btn')?.addEventListener('click', () => {
+        certForm.reset();
+        document.getElementById('cm-id').value = '';
+        document.getElementById('cert-modal-title').textContent = 'Tambah Sertifikat Baru';
+        certModal.showModal();
+      });
+
+      function attachCertActionHandlers() {
+        document.querySelectorAll('.edit-cert-btn').forEach(btn => {
+          btn.addEventListener('click', () => {
+            const id = btn.getAttribute('data-id');
+            const c = certsList.find(item => String(item.id) === String(id));
+            if (!c) return;
+
+            document.getElementById('cm-id').value = c.id;
+            document.getElementById('cm-nama').value = c.nama_sertifikat || '';
+            document.getElementById('cm-penerbit').value = c.penerbit || '';
+            document.getElementById('cm-tahun').value = c.tahun || '';
+            document.getElementById('cm-tipe').value = c.tipe || 'horizontal';
+            document.getElementById('cm-sort').value = c.sort_order || 0;
+            document.getElementById('cm-depan').value = c.url_gambar_depan || '';
+            document.getElementById('cm-belakang').value = c.url_gambar_belakang || '';
+            document.getElementById('cm-transkrip').checked = c.tombol_transkrip === 'ada';
+            document.getElementById('cm-featured').checked = Boolean(c.is_featured);
+
+            document.getElementById('cert-modal-title').textContent = `Edit Sertifikat (${c.nama_sertifikat})`;
+            certModal.showModal();
+          });
+        });
+
+        document.querySelectorAll('.del-cert-btn').forEach(btn => {
+          btn.addEventListener('click', async () => {
+            const id = btn.getAttribute('data-id');
+            if (!confirm(`Hapus sertifikat ID ${id}?`)) return;
+
+            try {
+              const res = await fetch(`/api/admin/certificates?id=${id}`, { method: 'DELETE' });
+              if (res.ok) {
+                showAlert('Sertifikat berhasil dihapus');
+                loadCertificates();
+              } else {
+                const err = await res.json();
+                showAlert(`Gagal menghapus: ${err.error}`, 'error');
+              }
+            } catch (e) {
+              showAlert(e.message, 'error');
+            }
+          });
+        });
+      }
+
+      certForm?.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const id = document.getElementById('cm-id').value;
+        const method = id ? 'PUT' : 'POST';
+        const payload = {
+          id: id || undefined,
+          nama_sertifikat: document.getElementById('cm-nama').value,
+          penerbit: document.getElementById('cm-penerbit').value,
+          tahun: document.getElementById('cm-tahun').value,
+          tipe: document.getElementById('cm-tipe').value,
+          sort_order: parseInt(document.getElementById('cm-sort').value, 10),
+          url_gambar_depan: document.getElementById('cm-depan').value,
+          url_gambar_belakang: document.getElementById('cm-belakang').value,
+          tombol_transkrip: document.getElementById('cm-transkrip').checked ? 'ada' : '',
+          is_featured: document.getElementById('cm-featured').checked
+        };
+
+        try {
+          const res = await fetch('/api/admin/certificates', {
+            method,
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+          });
+          if (res.ok) {
+            certModal.close();
+            showAlert('Sertifikat berhasil disimpan!');
+            loadCertificates();
+          } else {
+            const err = await res.json();
+            showAlert(`Gagal menyimpan: ${err.error}`, 'error');
+          }
+        } catch (e) {
+          showAlert(e.message, 'error');
+        }
+      });
+
+      // 5. PROFILE FORM HANDLER
+      document.getElementById('profile-form')?.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const payload = {
+          name: document.getElementById('cfg-name').value,
+          short_name: document.getElementById('cfg-short-name').value,
+          title_id: document.getElementById('cfg-title-id').value,
+          title_en: document.getElementById('cfg-title-en').value,
+          bio_id: document.getElementById('cfg-bio-id').value,
+          bio_en: document.getElementById('cfg-bio-en').value,
+          email: document.getElementById('cfg-email').value,
+          github_url: document.getElementById('cfg-github').value,
+          linkedin_url: document.getElementById('cfg-linkedin').value
+        };
+
+        try {
+          const res = await fetch('/api/admin/config', {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+          });
+          if (res.ok) {
+            showAlert('Profil berhasil diperbarui!');
+          } else {
+            const err = await res.json();
+            showAlert(`Gagal: ${err.error}`, 'error');
+          }
+        } catch (e) {
+          showAlert(e.message, 'error');
+        }
+      });
+
+      // 6. NOTIFICATION SETTINGS FORM & TEST BUTTON
+      document.getElementById('notify-form')?.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const payload = {
+          tele_enabled: document.getElementById('notify-tele-enabled').checked,
+          tele_bot_token: document.getElementById('notify-tele-token').value,
+          tele_chat_id: document.getElementById('notify-tele-chat-id').value,
+          ntfy_server: document.getElementById('notify-ntfy-server').value,
+          ntfy_topic: document.getElementById('notify-ntfy-topic').value,
+          ntfy_token: document.getElementById('notify-ntfy-token').value
+        };
+
+        try {
+          const res = await fetch('/api/admin/config', {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+          });
+          if (res.ok) {
+            showAlert('Pengaturan notifikasi berhasil disimpan ke database!');
+          } else {
+            const err = await res.json();
+            showAlert(`Gagal menyimpan notifikasi: ${err.error}`, 'error');
+          }
+        } catch (e) {
+          showAlert(e.message, 'error');
+        }
+      });
+
+      // Test Notification Button ("Kirim Uji Coba")
+      const testBtn = document.getElementById('test-notify-btn');
+      const testResultBox = document.getElementById('notify-test-result');
+      const testResultContent = document.getElementById('notify-test-content');
+
+      testBtn?.addEventListener('click', async () => {
+        testBtn.disabled = true;
+        testBtn.textContent = 'Mengirim Uji Coba...';
+        testResultBox?.classList.remove('hidden');
+        if (testResultContent) testResultContent.textContent = 'Mengirim pesan uji coba ke Telegram dan ntfy...';
+
+        try {
+          const res = await fetch('/api/admin/notify-test', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              message: 'Ini adalah pesan uji coba koneksi dari CMS Portofolio Fatahilah.'
+            })
+          });
+
+          const data = await res.json();
+          testResultContent.innerHTML = `
+            <div><strong>Status Keseluruhan:</strong> ${data.success ? '<span style="color:#15803D;">✓ Terkirim</span>' : '<span style="color:#B91C1C;">✕ Gagal</span>'}</div>
+            <div style="margin-top:8px;"><strong>Telegram:</strong> ${data.details?.telegram?.success ? '✓ Berhasil' : '✕ Gagal'} (${data.details?.telegram?.info})</div>
+            <div><strong>ntfy:</strong> ${data.details?.ntfy?.success ? '✓ Berhasil' : '✕ Gagal'} (${data.details?.ntfy?.info})</div>
+          `;
+          showAlert(data.success ? 'Uji coba terkirim!' : 'Uji coba gagal. Periksa token/parameter.', data.success ? 'success' : 'error');
+        } catch (e) {
+          testResultContent.textContent = `Kesalahan: ${e.message}`;
+          showAlert(e.message, 'error');
+        } finally {
+          testBtn.disabled = false;
+          testBtn.textContent = '🧪 Kirim Uji Coba (Test Alert)';
+        }
+      });
+
+      // Run auth check on startup
+      checkAuth();
+    })();
+  </script>
+</body>
+</html>

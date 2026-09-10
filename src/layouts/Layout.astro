@@ -1,8 +1,10 @@
 ---
+// src/layouts/Layout.astro
+// Modern Editorial Layout with A11y, Anti-Slop tokens, and Universal Detail Modal
 import '../styles/global.css';
 import Navbar from '../components/Navbar.astro';
 import Footer from '../components/Footer.astro';
-import FloatingLang from '../components/FloatingLang.astro';
+import DetailModal from '../components/DetailModal.astro';
 
 export interface Props {
   title: string;
@@ -11,7 +13,7 @@ export interface Props {
 
 const { 
   title, 
-  description = "Portofolio Fatahilah Miftahul Rahman - Juara 1 LKS IT Network System Administration & AI Prompt Engineering Specialist. Membangun infrastruktur server stabil dan otomatisasi alur kerja AI."
+  description = "Portofolio Fatahilah Miftahul Rahman - Juara 1 LKS IT Network System Administration Purworejo 2026. Spesialis infrastruktur jaringan enterprise, server Linux, dan pengembang web modern."
 } = Astro.props;
 ---
 
@@ -33,14 +35,16 @@ const {
   <meta property="og:url" content={Astro.url} />
   <meta property="og:title" content={`${title} | Fatahilah Miftahul Rahman`} />
   <meta property="og:description" content={description} />
+  <meta property="og:image" content="https://cdn.fatahmr.my.id/portfolio/assets/profile.webp" />
 
   <!-- Twitter -->
   <meta property="twitter:card" content="summary_large_image" />
   <meta property="twitter:url" content={Astro.url} />
   <meta property="twitter:title" content={`${title} | Fatahilah Miftahul Rahman`} />
   <meta property="twitter:description" content={description} />
+  <meta property="twitter:image" content="https://cdn.fatahmr.my.id/portfolio/assets/profile.webp" />
 
-  <!-- Schema.org JSON-LD (AI Entity & Knowledge Graph Optimization) -->
+  <!-- Schema.org JSON-LD -->
   <script type="application/ld+json" set:html={JSON.stringify({
     "@context": "https://schema.org",
     "@type": "Person",
@@ -53,7 +57,8 @@ const {
       "name": "SMK Patriot Pituruh"
     },
     "award": [
-      "Juara 1 Lomba Kompetensi Siswa (LKS) IT Network System Administration Kabupaten Purworejo 2026"
+      "Juara 1 Lomba Kompetensi Siswa (LKS) IT Network System Administration Kabupaten Purworejo 2026",
+      "Peserta LKS SMK Tingkat Provinsi Jawa Tengah ke-XXXIV 2026"
     ],
     "knowsAbout": [
       "IT Network System Administration",
@@ -61,22 +66,21 @@ const {
       "MikroTik RouterOS & Hotspot Gateway",
       "Linux Server Administration (Debian 12)",
       "Windows Server 2022 & ADDS",
-      "AI Prompt Engineering & Automation",
-      "Web Development (Astro, HTML, Vanilla CSS)"
+      "Web Development (Astro 5, Next.js, React, Tailwind CSS)",
+      "Cloudflare Pages, D1, R2 & Serverless Functions"
     ],
     "sameAs": [
       "https://github.com/fatahilah-mr",
-      "https://www.linkedin.com/in/fatahilah-mr"
+      "https://www.linkedin.com/in/fatahilah-miftahul-rahman"
     ]
   })} />
 
-  <!-- Performance Optimization: Preconnect & Load Fonts in parallel (DTK-PERF-001) -->
+  <!-- Google Fonts Preload: JetBrains Mono -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link rel="preload" href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300..800;1,9..40,300..800&family=DM+Serif+Display:ital@0;1&family=JetBrains+Mono:wght@400;500;600;700&display=swap" as="style" />
-  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300..800;1,9..40,300..800&family=DM+Serif+Display:ital@0;1&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet" />
 
-  <!-- Anti-FOUC Theme & Language Initialization Script -->
+  <!-- Anti-FOUC Theme & Language Init Script -->
   <script is:inline>
     (function() {
       try {
@@ -86,30 +90,30 @@ const {
         const lang = localStorage.getItem('lang') || 'id';
         document.documentElement.setAttribute('lang', lang);
       } catch (e) {
-        console.warn('LocalStorage error during theme init:', e);
+        console.warn('Theme init warning:', e);
       }
     })();
   </script>
 </head>
 <body>
-  <!-- Accessible Skip Link (DTK-A11Y-001) -->
+  <!-- Accessible Skip Link -->
   <a href="#main-content" class="skip-to-content sr-only focus:not-sr-only">
     Skip to main content / Langsung ke konten utama
   </a>
 
-  <!-- ARIA Live Region for Dynamic Announcements (DTK-A11Y-002) -->
+  <!-- ARIA Live Announcer -->
   <div id="a11y-announcer" class="sr-only" aria-live="polite" aria-atomic="true"></div>
 
-  <!-- Navigation -->
+  <!-- Main Navigation -->
   <Navbar />
 
-  <!-- Main Content Slot with Programmatic Focus Target -->
+  <!-- Main Content -->
   <main id="main-content" tabindex="-1" class="main-wrapper">
     <slot />
   </main>
 
-  <!-- Floating Language Switcher -->
-  <FloatingLang />
+  <!-- Universal Detail Modal Pop-up -->
+  <DetailModal />
 
   <!-- Footer -->
   <Footer />
@@ -122,11 +126,10 @@ const {
       z-index: 9999;
       background-color: var(--color-primary);
       color: #FFFFFF;
-      padding: 12px 24px;
-      border-radius: 8px;
+      padding: 10px 20px;
+      border-radius: 6px;
       font-weight: 700;
       box-shadow: var(--shadow-lg);
-      outline: 3px solid #FFFFFF !important;
     }
 
     .main-wrapper {

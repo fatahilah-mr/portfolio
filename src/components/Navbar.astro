@@ -1,156 +1,229 @@
 ---
+// src/components/Navbar.astro
+// Modern Editorial Navbar: 3 Main Items (Beranda + dropdown 7 sections, Proyek, Sertifikat) + ID|EN + Theme
 ---
 
-<header class="navbar-header">
-  <div class="scroll-progress-bar" id="scroll-progress"></div>
-  <div class="container navbar-container">
+<header class="site-header" id="site-header">
+  <div class="container header-container">
     <!-- Brand Logo -->
-    <a href="/" class="navbar-brand" aria-label="Beranda Fatahilah Portfolio">
-      <span class="brand-text">FATAHILAH<span class="brand-domain font-mono">.MR</span></span>
+    <a href="/" class="brand-logo" aria-label="Beranda Fatahilah Portfolio">
+      <span class="brand-name">FATAHILAH<span class="brand-accent">.MR</span></span>
     </a>
 
-    <!-- Desktop Navigation Links -->
-    <nav class="desktop-nav" aria-label="Main Navigation">
-      <ul class="nav-list">
-        <li><a href="/" class="nav-link" data-i18n="nav.home">Beranda</a></li>
-        <li><a href="/about" class="nav-link" data-i18n="nav.about">Tentang</a></li>
-        <li><a href="/experience" class="nav-link" data-i18n="nav.experience">Pengalaman</a></li>
-        <li><a href="/skills" class="nav-link" data-i18n="nav.skills">Keahlian</a></li>
-        <li><a href="/projects" class="nav-link" data-i18n="nav.projects">Proyek</a></li>
-        <li><a href="/certificates" class="nav-link" data-i18n="nav.certificates">Sertifikat</a></li>
-        <li><a href="/contact" class="nav-link" data-i18n="nav.contact">Kontak</a></li>
+    <!-- Desktop Navigation (3 Items) -->
+    <nav class="desktop-nav" aria-label="Navigasi Utama">
+      <ul class="nav-menu">
+        <!-- Item 1: Beranda with Section Dropdown -->
+        <li class="nav-item has-dropdown">
+          <a href="/#hero" class="nav-link" id="nav-home">
+            <span class="lang-id">Beranda</span>
+            <span class="lang-en hidden">Home</span>
+            <svg class="dropdown-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="m6 9 6 6 6-6"/>
+            </svg>
+          </a>
+          <!-- Dropdown Menu for 7 Sections -->
+          <div class="dropdown-menu">
+            <a href="/#hero" class="dropdown-link">
+              <span class="lang-id">1. Ringkasan (Hero)</span>
+              <span class="lang-en hidden">1. Summary (Hero)</span>
+            </a>
+            <a href="/#about" class="dropdown-link">
+              <span class="lang-id">2. Tentang Saya</span>
+              <span class="lang-en hidden">2. About Me</span>
+            </a>
+            <a href="/#skills" class="dropdown-link">
+              <span class="lang-id">3. Keahlian Teknis</span>
+              <span class="lang-en hidden">3. Technical Skills</span>
+            </a>
+            <a href="/#experience" class="dropdown-link">
+              <span class="lang-id">4. Pengalaman & Prestasi</span>
+              <span class="lang-en hidden">4. Experience & Awards</span>
+            </a>
+            <a href="/#projects" class="dropdown-link">
+              <span class="lang-id">5. Proyek Unggulan</span>
+              <span class="lang-en hidden">5. Featured Projects</span>
+            </a>
+            <a href="/#certificates" class="dropdown-link">
+              <span class="lang-id">6. Sertifikat Pilihan</span>
+              <span class="lang-en hidden">6. Top Certificates</span>
+            </a>
+            <a href="/#contact" class="dropdown-link">
+              <span class="lang-id">7. Kontak & Diskusi</span>
+              <span class="lang-en hidden">7. Contact</span>
+            </a>
+          </div>
+        </li>
+
+        <!-- Item 2: Proyek -->
+        <li class="nav-item">
+          <a href="/projects" class="nav-link" id="nav-projects">
+            <span class="lang-id">Proyek</span>
+            <span class="lang-en hidden">Projects</span>
+          </a>
+        </li>
+
+        <!-- Item 3: Sertifikat -->
+        <li class="nav-item">
+          <a href="/certificates" class="nav-link" id="nav-certs">
+            <span class="lang-id">Sertifikat</span>
+            <span class="lang-en hidden">Certificates</span>
+          </a>
+        </li>
       </ul>
     </nav>
 
-    <!-- Header Actions (Theme Toggle & Mobile Menu Btn) -->
-    <div class="navbar-actions">
+    <!-- Header Actions (ID/EN Switcher, Theme Toggle, Mobile Button) -->
+    <div class="header-actions">
+      <!-- Language Toggle (ID | EN) -->
       <button 
-        id="theme-toggle" 
-        class="theme-btn" 
-        aria-label="Toggle Dark / Light Mode"
-        aria-pressed="false"
+        id="lang-toggle-btn" 
+        class="lang-btn" 
+        aria-label="Ganti Bahasa (Switch Language)"
+        title="Ganti Bahasa ID / EN"
+      >
+        <span class="lang-code active" id="lang-code-id">ID</span>
+        <span class="lang-divider">|</span>
+        <span class="lang-code" id="lang-code-en">EN</span>
+      </button>
+
+      <!-- Theme Switcher -->
+      <button 
+        id="theme-toggle-btn" 
+        class="action-btn" 
+        aria-label="Mode Gelap / Terang"
         title="Mode Gelap / Terang"
       >
-        <!-- Sun Icon (shown in dark mode to switch light) -->
-        <svg class="icon-sun" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <svg class="icon-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <circle cx="12" cy="12" r="4"></circle>
-          <path d="M12 2v2"></path>
-          <path d="M12 20v2"></path>
-          <path d="m4.93 4.93 1.41 1.41"></path>
-          <path d="m17.66 17.66 1.41 1.41"></path>
-          <path d="M2 12h2"></path>
-          <path d="M20 12h2"></path>
-          <path d="m6.34 17.66-1.41 1.41"></path>
-          <path d="m19.07 4.93-1.41 1.41"></path>
+          <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"></path>
         </svg>
-        <!-- Moon Icon (shown in light mode to switch dark) -->
-        <svg class="icon-moon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <svg class="icon-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"></path>
         </svg>
       </button>
 
+      <!-- Mobile Hamburger Button -->
       <button 
-        id="menu-toggle" 
-        class="menu-btn desktop-hidden" 
-        aria-label="Buka Menu Mobile" 
+        id="mobile-menu-btn" 
+        class="action-btn mobile-only" 
+        aria-label="Buka Menu" 
         aria-expanded="false" 
-        aria-controls="mobile-menu"
+        aria-controls="mobile-nav-drawer"
       >
-        <svg class="icon-menu" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <svg class="icon-menu" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <line x1="4" x2="20" y1="12" y2="12"></line>
           <line x1="4" x2="20" y1="6" y2="6"></line>
           <line x1="4" x2="20" y1="18" y2="18"></line>
         </svg>
-        <svg class="icon-close hidden" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-          <path d="M18 6 6 18"></path>
-          <path d="m6 6 12 12"></path>
+        <svg class="icon-close hidden" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="18" x2="6" y1="6" y2="18"></line>
+          <line x1="6" x2="18" y1="6" y2="18"></line>
         </svg>
       </button>
     </div>
   </div>
 
-  <!-- Mobile Menu Drawer -->
-  <div id="mobile-menu" class="mobile-menu hidden" aria-hidden="true">
-    <nav aria-label="Mobile Navigation">
-      <ul class="mobile-nav-list">
-        <li><a href="/" class="mobile-nav-link" data-i18n="nav.home">Beranda</a></li>
-        <li><a href="/about" class="mobile-nav-link" data-i18n="nav.about">Tentang</a></li>
-        <li><a href="/experience" class="mobile-nav-link" data-i18n="nav.experience">Pengalaman</a></li>
-        <li><a href="/skills" class="mobile-nav-link" data-i18n="nav.skills">Keahlian</a></li>
-        <li><a href="/projects" class="mobile-nav-link" data-i18n="nav.projects">Proyek</a></li>
-        <li><a href="/certificates" class="mobile-nav-link" data-i18n="nav.certificates">Sertifikat</a></li>
-        <li><a href="/contact" class="mobile-nav-link" data-i18n="nav.contact">Kontak</a></li>
-      </ul>
-    </nav>
+  <!-- Mobile Drawer Menu -->
+  <div id="mobile-nav-drawer" class="mobile-drawer hidden">
+    <div class="mobile-drawer-inner container">
+      <!-- Section Accordion for Beranda -->
+      <div class="mobile-accordion">
+        <button class="mobile-accordion-btn" id="mobile-beranda-accordion">
+          <span class="lang-id">Beranda (7 Bagian)</span>
+          <span class="lang-en hidden">Home (7 Sections)</span>
+          <svg class="accordion-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="m6 9 6 6 6-6"/>
+          </svg>
+        </button>
+        <div class="mobile-accordion-content" id="mobile-beranda-sublinks">
+          <a href="/#hero" class="mobile-sublink">1. Hero</a>
+          <a href="/#about" class="mobile-sublink">2. Tentang Saya</a>
+          <a href="/#skills" class="mobile-sublink">3. Keahlian Teknis</a>
+          <a href="/#experience" class="mobile-sublink">4. Pengalaman</a>
+          <a href="/#projects" class="mobile-sublink">5. Proyek Unggulan</a>
+          <a href="/#certificates" class="mobile-sublink">6. Sertifikat Pilihan</a>
+          <a href="/#contact" class="mobile-sublink">7. Kontak</a>
+        </div>
+      </div>
+
+      <a href="/projects" class="mobile-mainlink">
+        <span class="lang-id">Katalog Proyek Lengkap</span>
+        <span class="lang-en hidden">Full Projects Catalog</span>
+      </a>
+
+      <a href="/certificates" class="mobile-mainlink">
+        <span class="lang-id">Katalog Sertifikat Lengkap</span>
+        <span class="lang-en hidden">Full Certificates Catalog</span>
+      </a>
+    </div>
   </div>
 </header>
 
 <style>
-  .scroll-progress-bar {
-    position: absolute;
-    top: 0;
-    left: 0;
-    height: 2px;
-    background: linear-gradient(90deg, var(--color-primary), var(--color-cyan));
-    width: var(--scroll-width, 0%);
-    z-index: 1001;
-    transition: width 0.1s ease-out;
-    box-shadow: 0 0 10px var(--color-primary-glow);
-  }
-
-  .navbar-header {
+  .site-header {
     position: sticky;
     top: 0;
     z-index: 1000;
     background: var(--bg-glass);
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
-    border-bottom: none;
-    transition: background-color 0.3s ease;
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--color-border);
+    transition: background-color 0.2s ease, border-color 0.2s ease;
   }
 
-  .navbar-container {
+  .header-container {
     display: flex;
     align-items: center;
     justify-content: space-between;
     height: 64px;
   }
 
-  .navbar-brand {
+  .brand-logo {
     display: flex;
     align-items: center;
-    gap: 10px;
-    font-weight: 700;
-    font-size: 1.25rem;
-    color: var(--color-foreground);
     text-decoration: none;
-    transition: opacity 0.2s ease;
+    font-weight: 800;
+    font-size: 1.15rem;
+    letter-spacing: -0.02em;
+    color: var(--color-foreground);
   }
 
-  .navbar-brand:hover {
-    opacity: 0.85;
-  }
-
-  .brand-domain {
-    color: var(--color-primary);
+  .brand-accent {
+    color: var(--color-accent);
   }
 
   /* Desktop Nav */
-  .nav-list {
+  .desktop-nav {
+    display: none;
+  }
+
+  @media (min-width: 840px) {
+    .desktop-nav {
+      display: block;
+    }
+  }
+
+  .nav-menu {
     display: flex;
     align-items: center;
-    gap: clamp(16px, 2.2vw, 32px);
+    gap: 32px;
     list-style: none;
   }
 
+  .nav-item {
+    position: relative;
+  }
+
   .nav-link {
-    font-family: 'DM Sans', sans-serif;
-    font-weight: 500;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
     font-size: 0.9375rem;
+    font-weight: 500;
     color: var(--color-muted);
-    text-decoration: none;
-    transition: color 0.2s ease;
-    padding: 6px 2px;
+    padding: 8px 4px;
+    transition: color 0.15s ease;
   }
 
   .nav-link:hover,
@@ -158,207 +231,275 @@
     color: var(--color-foreground);
   }
 
-  /* Actions */
-  .navbar-actions {
-    display: flex;
-    align-items: center;
-    gap: 12px;
+  .dropdown-chevron {
+    transition: transform 0.2s ease;
   }
 
-  .theme-btn,
-  .menu-btn {
+  /* Dropdown Menu */
+  .dropdown-menu {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 230px;
+    background: var(--bg-card);
+    border: 1px solid var(--color-border);
+    border-radius: 10px;
+    box-shadow: var(--shadow-lg);
+    padding: 8px;
+    display: none;
+    flex-direction: column;
+    gap: 2px;
+    z-index: 1050;
+  }
+
+  .has-dropdown:hover .dropdown-menu,
+  .has-dropdown:focus-within .dropdown-menu {
+    display: flex;
+  }
+
+  .has-dropdown:hover .dropdown-chevron {
+    transform: rotate(180deg);
+  }
+
+  .dropdown-link {
+    display: block;
+    padding: 8px 12px;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--color-muted);
+    border-radius: 6px;
+    transition: all 0.15s ease;
+  }
+
+  .dropdown-link:hover {
+    color: var(--color-foreground);
+    background-color: var(--bg-surface);
+  }
+
+  /* Header Actions */
+  .header-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  /* Language Switcher */
+  .lang-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 5px 10px;
+    border-radius: 8px;
+    background: var(--bg-surface);
+    border: 1px solid var(--color-border);
+    color: var(--color-muted);
+    font-size: 0.8125rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.15s ease;
+  }
+
+  .lang-btn:hover {
+    border-color: var(--color-border-hover);
+    color: var(--color-foreground);
+  }
+
+  .lang-code.active {
+    color: var(--color-accent);
+  }
+
+  .lang-divider {
+    opacity: 0.4;
+    font-size: 0.75rem;
+  }
+
+  /* Action Buttons */
+  .action-btn {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    width: 40px;
-    height: 40px;
-    border-radius: 10px;
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
     background: transparent;
-    border: none;
+    border: 1px solid var(--color-border);
     color: var(--color-muted);
     cursor: pointer;
-    transition: color 0.2s ease, transform 0.2s ease;
+    transition: all 0.15s ease;
   }
 
-  .theme-btn:hover,
-  .menu-btn:hover {
-    color: var(--color-primary);
-    transform: scale(1.05);
-  }
-
-  .theme-btn:active,
-  .menu-btn:active {
-    transform: scale(0.92);
-    opacity: 0.8;
+  .action-btn:hover {
+    color: var(--color-foreground);
+    background: var(--bg-surface);
+    border-color: var(--color-border-hover);
   }
 
   /* Theme icon swapping */
-  :global([data-theme="dark"]) .icon-sun { display: none; }
-  :global([data-theme="dark"]) .icon-moon { display: block; }
-  :global([data-theme="light"]) .icon-moon { display: none; }
-  :global([data-theme="light"]) .icon-sun { display: block; }
+  :global([data-theme="dark"]) .icon-sun { display: block; }
+  :global([data-theme="dark"]) .icon-moon { display: none; }
+  :global([data-theme="light"]) .icon-sun { display: none; }
+  :global([data-theme="light"]) .icon-moon { display: block; }
+
+  .mobile-only {
+    display: inline-flex;
+  }
+
+  @media (min-width: 840px) {
+    .mobile-only {
+      display: none !important;
+    }
+  }
+
+  /* Mobile Drawer */
+  .mobile-drawer {
+    border-top: 1px solid var(--color-border);
+    background: var(--bg-card);
+    padding: 16px 0 24px 0;
+  }
+
+  .mobile-drawer-inner {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .mobile-mainlink {
+    display: block;
+    padding: 10px 14px;
+    font-weight: 600;
+    font-size: 1rem;
+    color: var(--color-foreground);
+    border-radius: 8px;
+    background: var(--bg-surface);
+  }
+
+  .mobile-accordion {
+    border: 1px solid var(--color-border);
+    border-radius: 8px;
+    overflow: hidden;
+  }
+
+  .mobile-accordion-btn {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 14px;
+    background: var(--bg-surface);
+    border: none;
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--color-foreground);
+    cursor: pointer;
+  }
+
+  .mobile-accordion-content {
+    display: flex;
+    flex-direction: column;
+    padding: 8px 14px;
+    gap: 6px;
+    background: var(--bg-card);
+  }
+
+  .mobile-accordion-content.hidden {
+    display: none;
+  }
+
+  .mobile-sublink {
+    padding: 6px 8px;
+    font-size: 0.9rem;
+    color: var(--color-muted);
+    border-radius: 4px;
+  }
+
+  .mobile-sublink:hover {
+    color: var(--color-accent);
+    background: var(--bg-surface);
+  }
 
   .hidden {
     display: none !important;
   }
-
-  /* Mobile menu styles */
-  .mobile-menu {
-    position: absolute;
-    top: 72px;
-    left: 0;
-    width: 100%;
-    background: var(--bg-surface);
-    border-bottom: 1px solid var(--color-border);
-    padding: 24px 0;
-    box-shadow: var(--shadow-lg);
-  }
-
-  .mobile-nav-list {
-    list-style: none;
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-    padding: 0 24px;
-  }
-
-  .mobile-nav-link {
-    display: block;
-    padding: 12px 16px;
-    font-size: 1.05rem;
-    font-weight: 500;
-    color: var(--color-muted);
-    border-radius: 8px;
-    transition: all 0.2s ease;
-  }
-
-  .mobile-nav-link:hover,
-  .mobile-nav-link[aria-current="page"] {
-    background: var(--bg-card);
-    color: var(--color-foreground);
-    border-left: 3px solid var(--color-primary);
-  }
-
-  @media (max-width: 900px) {
-    .desktop-nav {
-      display: none;
-    }
-  }
-
-  @media (min-width: 901px) {
-    .navbar-container {
-      display: grid;
-      grid-template-columns: 1fr auto 1fr;
-    }
-    .navbar-brand {
-      justify-self: start;
-    }
-    .desktop-nav {
-      justify-self: center;
-    }
-    .navbar-actions {
-      justify-self: end;
-    }
-    .desktop-hidden {
-      display: none !important;
-    }
-  }
 </style>
 
 <script is:inline>
-  // Highlight current page
-  function highlightCurrentPage() {
-    const currentPath = window.location.pathname;
-    const links = document.querySelectorAll('.nav-link, .mobile-nav-link');
-    links.forEach(link => {
-      const href = link.getAttribute('href');
-      if (href === currentPath || (href !== '/' && currentPath.startsWith(href))) {
-        link.setAttribute('aria-current', 'page');
-      } else {
-        link.removeAttribute('aria-current');
-      }
+  // Language switcher setup
+  function setupLangToggle() {
+    const btn = document.getElementById('lang-toggle-btn');
+    const idCode = document.getElementById('lang-code-id');
+    const enCode = document.getElementById('lang-code-en');
+
+    function updateLanguageView(lang) {
+      const isEn = lang === 'en';
+      document.querySelectorAll('.lang-id').forEach(el => el.classList.toggle('hidden', isEn));
+      document.querySelectorAll('.lang-en').forEach(el => el.classList.toggle('hidden', !isEn));
+      idCode?.classList.toggle('active', !isEn);
+      enCode?.classList.toggle('active', isEn);
+      document.documentElement.setAttribute('lang', lang);
+      localStorage.setItem('lang', lang);
+    }
+
+    const savedLang = localStorage.getItem('lang') || 'id';
+    updateLanguageView(savedLang);
+
+    btn?.addEventListener('click', () => {
+      const current = localStorage.getItem('lang') || 'id';
+      const next = current === 'id' ? 'en' : 'id';
+      updateLanguageView(next);
     });
   }
 
-  // Theme switcher logic
+  // Theme switcher setup
   function setupThemeToggle() {
-    const themeBtn = document.getElementById('theme-toggle');
-    if (!themeBtn) return;
-
-    themeBtn.addEventListener('click', () => {
-      const currentTheme = document.documentElement.getAttribute('data-theme') || 'light';
-      const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
-      
-      document.documentElement.setAttribute('data-theme', newTheme);
-      localStorage.setItem('theme', newTheme);
-      themeBtn.setAttribute('aria-pressed', newTheme === 'light' ? 'true' : 'false');
+    const btn = document.getElementById('theme-toggle-btn');
+    btn?.addEventListener('click', () => {
+      const current = document.documentElement.getAttribute('data-theme') || 'light';
+      const next = current === 'dark' ? 'light' : 'dark';
+      document.documentElement.setAttribute('data-theme', next);
+      localStorage.setItem('theme', next);
     });
   }
 
-  // Mobile menu logic with Focus Management (desktop-a11y-specialist)
-  function setupMobileMenu() {
-    const menuBtn = document.getElementById('menu-toggle');
-    const mobileMenu = document.getElementById('mobile-menu');
+  // Mobile drawer and accordion setup
+  function setupMobileDrawer() {
+    const menuBtn = document.getElementById('mobile-menu-btn');
+    const drawer = document.getElementById('mobile-nav-drawer');
     const iconMenu = menuBtn?.querySelector('.icon-menu');
     const iconClose = menuBtn?.querySelector('.icon-close');
 
-    if (!menuBtn || !mobileMenu) return;
-
-    menuBtn.addEventListener('click', () => {
+    menuBtn?.addEventListener('click', () => {
       const isExpanded = menuBtn.getAttribute('aria-expanded') === 'true';
-      const newState = !isExpanded;
+      menuBtn.setAttribute('aria-expanded', String(!isExpanded));
+      drawer?.classList.toggle('hidden', isExpanded);
+      iconMenu?.classList.toggle('hidden', !isExpanded);
+      iconClose?.classList.toggle('hidden', isExpanded);
+    });
 
-      menuBtn.setAttribute('aria-expanded', String(newState));
-      if (newState) {
-        mobileMenu.classList.remove('hidden');
-        mobileMenu.setAttribute('aria-hidden', 'false');
-        iconMenu?.classList.add('hidden');
-        iconClose?.classList.remove('hidden');
-        // Focus first link in mobile menu
-        const firstLink = mobileMenu.querySelector('a');
-        if (firstLink) firstLink.focus();
-      } else {
-        mobileMenu.classList.add('hidden');
-        mobileMenu.setAttribute('aria-hidden', 'true');
+    const accordionBtn = document.getElementById('mobile-beranda-accordion');
+    const sublinks = document.getElementById('mobile-beranda-sublinks');
+    const chevron = accordionBtn?.querySelector('.accordion-chevron');
+
+    accordionBtn?.addEventListener('click', () => {
+      const isHidden = sublinks?.classList.toggle('hidden');
+      if (chevron) {
+        chevron.style.transform = isHidden ? 'rotate(0deg)' : 'rotate(180deg)';
+      }
+    });
+
+    // Close drawer when any sublink is clicked
+    drawer?.querySelectorAll('a').forEach(link => {
+      link.addEventListener('click', () => {
+        drawer.classList.add('hidden');
+        menuBtn?.setAttribute('aria-expanded', 'false');
         iconMenu?.classList.remove('hidden');
         iconClose?.classList.add('hidden');
-        menuBtn.focus();
-      }
-    });
-
-    // Close mobile menu on Escape key
-    document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape' && menuBtn.getAttribute('aria-expanded') === 'true') {
-        menuBtn.click();
-      }
+      });
     });
   }
 
-  // Scroll Progress Logic
-  function setupScrollProgress() {
-    const progressBar = document.getElementById('scroll-progress');
-    if (!progressBar) return;
-
-    const updateScroll = () => {
-      // Calculate how far down the user has scrolled
-      const scrollTotal = document.documentElement.scrollHeight - document.documentElement.clientHeight;
-      if (scrollTotal > 0) {
-        const scrollProgress = (window.scrollY / scrollTotal) * 100;
-        progressBar.style.setProperty('--scroll-width', `${scrollProgress}%`);
-      }
-    };
-
-    // Attach passive scroll listener for better performance
-    window.addEventListener('scroll', updateScroll, { passive: true });
-    // Run once on load just in case the page is not at the top
-    updateScroll();
-  }
-
-  // Initialize on page load and navigation
   document.addEventListener('DOMContentLoaded', () => {
-    highlightCurrentPage();
+    setupLangToggle();
     setupThemeToggle();
-    setupMobileMenu();
-    setupScrollProgress();
+    setupMobileDrawer();
   });
 </script>

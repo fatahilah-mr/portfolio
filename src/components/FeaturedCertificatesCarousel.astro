@@ -1,0 +1,319 @@
+---
+// src/components/FeaturedCertificatesCarousel.astro
+// 3D Centered Carousel with Top 3 Landscape Certificates (A4 Landscape 1.414:1), animated micro-indicator, and transcript modal trigger
+import certsData from '../data/certificates.json';
+
+// Top 3 featured landscape certificates: LKS Kab Purworejo (ID: 1), LKS Provinsi Jateng (ID: 2), PKL IMC Computer (ID: 4)
+const featuredCerts = [
+  certsData.find(c => c.id === '1'),
+  certsData.find(c => c.id === '2'),
+  certsData.find(c => c.id === '4')
+].filter(Boolean);
+---
+
+<section id="certificates" class="section-padding featured-certs-section">
+  <div class="container">
+    <div class="section-header">
+      <span class="section-tag">
+        <span class="lang-id">Sertifikat Pilihan</span>
+        <span class="lang-en hidden">Top Certificates</span>
+      </span>
+      <h2 class="section-title">
+        <span class="lang-id">Kredensial & Pengakuan Kompetensi</span>
+        <span class="lang-en hidden">Credentials & Verified Accreditations</span>
+      </h2>
+      <p class="section-subtitle">
+        <span class="lang-id">
+          Dokumentasi sertifikasi resmi kejuaraan vokasi, pelatihan industri, dan sertifikasi keahlian teknis.
+        </span>
+        <span class="lang-en hidden">
+          Official accreditation from provincial vocational championships, industrial internships, and specialized IT training.
+        </span>
+      </p>
+    </div>
+
+    <!-- 3D Centered Carousel Stage -->
+    <div class="carousel-stage" id="cert-carousel-stage">
+      <div class="carousel-viewport" id="cert-carousel-viewport" role="region" aria-label="Galeri Sertifikat Pilihan">
+        {featuredCerts.map((cert, idx) => {
+          let posClass = 'hidden-card';
+          if (idx === 0) posClass = 'active';
+          else if (idx === 1) posClass = 'next';
+          else if (idx === 2) posClass = 'prev';
+
+          return (
+            <div 
+              class={`carousel-card ${posClass}`} 
+              data-index={idx}
+              data-cert={JSON.stringify(cert)}
+              role="button"
+              tabindex="0"
+              aria-label={`Lihat sertifikat ${cert.nama_sertifikat}`}
+            >
+              <!-- Aspect Ratio ISO A4 Landscape (1.414:1) -->
+              <div class="aspect-a4-landscape">
+                <img 
+                  src={cert.url_gambar_depan} 
+                  alt={cert.nama_sertifikat} 
+                  loading="lazy" 
+                  decoding="async" 
+                  width="1414" 
+                  height="1000"
+                />
+              </div>
+
+              <!-- Animated Micro-Indicator (on active card) -->
+              {idx === 0 && (
+                <div class="carousel-hint-indicator" id="cert-click-hint">
+                  <span class="lang-id">👆 Klik di sini untuk detail</span>
+                  <span class="lang-en hidden">👆 Click here for details</span>
+                </div>
+              )}
+
+              <!-- Card Info Footer -->
+              <div class="carousel-card-footer">
+                <div class="footer-meta">
+                  <div class="cert-meta-row">
+                    <span class="footer-issuer">{cert.penerbit}</span>
+                    <span class="footer-year font-mono">{cert.tahun}</span>
+                  </div>
+                  <h3 class="footer-title">{cert.nama_sertifikat}</h3>
+                </div>
+                {cert.tombol_transkrip === 'ada' && (
+                  <span class="transcript-badge">
+                    <span class="lang-id">+Transkrip</span>
+                    <span class="lang-en hidden">+Transcript</span>
+                  </span>
+                )}
+              </div>
+            </div>
+          );
+        })}
+      </div>
+
+      <!-- Carousel Navigation Controls -->
+      <div class="carousel-controls">
+        <button id="cert-prev-btn" class="carousel-arrow-btn" aria-label="Sertifikat Sebelumnya">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="m15 18-6-6 6-6"/>
+          </svg>
+        </button>
+
+        <div class="carousel-dots" id="cert-dots">
+          {featuredCerts.map((_, i) => (
+            <button class={`carousel-dot ${i === 0 ? 'active' : ''}`} data-dot-index={i} aria-label={`Slide ${i + 1}`}></button>
+          ))}
+        </div>
+
+        <button id="cert-next-btn" class="carousel-arrow-btn" aria-label="Sertifikat Berikutnya">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="m9 18 6-6-6-6"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- Catalog CTA -->
+    <div class="carousel-view-all">
+      <a href="/certificates" class="btn btn-secondary">
+        <span class="lang-id">Lihat Semua Sertifikat Lengkap (20+)</span>
+        <span class="lang-en hidden">View All Certificates (20+)</span>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="m9 18 6-6-6-6"/>
+        </svg>
+      </a>
+    </div>
+  </div>
+</section>
+
+<style>
+  .featured-certs-section {
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .carousel-card-footer {
+    padding: 16px 20px;
+    background: var(--bg-card);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-top: 1px solid var(--color-border);
+  }
+
+  .footer-meta {
+    max-width: 80%;
+  }
+
+  .cert-meta-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 2px;
+  }
+
+  .footer-issuer {
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--color-accent);
+  }
+
+  .footer-year {
+    font-size: 0.75rem;
+    color: var(--color-subtle);
+  }
+
+  .footer-title {
+    margin: 0;
+    font-size: 1rem;
+    font-weight: 700;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .transcript-badge {
+    font-size: 0.7rem;
+    font-weight: 700;
+    padding: 3px 8px;
+    border-radius: 6px;
+    background: var(--bg-surface);
+    color: var(--color-foreground);
+    border: 1px solid var(--color-border);
+    white-space: nowrap;
+  }
+
+  .carousel-view-all {
+    text-align: center;
+    margin-top: 28px;
+  }
+</style>
+
+<script is:inline>
+  (function initCertCarousel() {
+    const stage = document.getElementById('cert-carousel-stage');
+    if (!stage) return;
+
+    const cards = Array.from(stage.querySelectorAll('.carousel-card'));
+    const dots = Array.from(stage.querySelectorAll('.carousel-dot'));
+    const prevBtn = document.getElementById('cert-prev-btn');
+    const nextBtn = document.getElementById('cert-next-btn');
+    const hint = document.getElementById('cert-click-hint');
+
+    let currentIndex = 0;
+    let autoPlayTimer = null;
+    let hasInteracted = false;
+
+    function fadeOutHint() {
+      if (!hasInteracted && hint) {
+        hint.classList.add('faded');
+        hasInteracted = true;
+      }
+    }
+
+    function updateCarousel(newIndex) {
+      currentIndex = (newIndex + cards.length) % cards.length;
+
+      cards.forEach((card, idx) => {
+        card.classList.remove('active', 'prev', 'next', 'hidden-card');
+        const diff = (idx - currentIndex + cards.length) % cards.length;
+
+        if (diff === 0) {
+          card.classList.add('active');
+        } else if (diff === 1) {
+          card.classList.add('next');
+        } else if (diff === cards.length - 1) {
+          card.classList.add('prev');
+        } else {
+          card.classList.add('hidden-card');
+        }
+      });
+
+      dots.forEach((dot, idx) => {
+        dot.classList.toggle('active', idx === currentIndex);
+      });
+    }
+
+    function startAutoPlay() {
+      stopAutoPlay();
+      autoPlayTimer = setInterval(() => {
+        updateCarousel(currentIndex + 1);
+      }, 5500);
+    }
+
+    function stopAutoPlay() {
+      if (autoPlayTimer) {
+        clearInterval(autoPlayTimer);
+        autoPlayTimer = null;
+      }
+    }
+
+    prevBtn?.addEventListener('click', () => {
+      fadeOutHint();
+      updateCarousel(currentIndex - 1);
+      startAutoPlay();
+    });
+
+    nextBtn?.addEventListener('click', () => {
+      fadeOutHint();
+      updateCarousel(currentIndex + 1);
+      startAutoPlay();
+    });
+
+    dots.forEach((dot, i) => {
+      dot.addEventListener('click', () => {
+        fadeOutHint();
+        updateCarousel(i);
+        startAutoPlay();
+      });
+    });
+
+    stage.addEventListener('mouseenter', stopAutoPlay);
+    stage.addEventListener('mouseleave', startAutoPlay);
+
+    cards.forEach((card, idx) => {
+      card.addEventListener('click', () => {
+        fadeOutHint();
+        if (idx === currentIndex) {
+          const certData = JSON.parse(card.getAttribute('data-cert') || '{}');
+          if (window.openCertModal) {
+            window.openCertModal(certData);
+          }
+        } else {
+          updateCarousel(idx);
+          startAutoPlay();
+        }
+      });
+
+      card.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          card.click();
+        }
+      });
+    });
+
+    let touchStartX = 0;
+    let touchEndX = 0;
+    stage.addEventListener('touchstart', (e) => {
+      touchStartX = e.changedTouches[0].screenX;
+      stopAutoPlay();
+    }, { passive: true });
+
+    stage.addEventListener('touchend', (e) => {
+      touchEndX = e.changedTouches[0].screenX;
+      if (touchStartX - touchEndX > 50) {
+        fadeOutHint();
+        updateCarousel(currentIndex + 1);
+      } else if (touchEndX - touchStartX > 50) {
+        fadeOutHint();
+        updateCarousel(currentIndex - 1);
+      }
+      startAutoPlay();
+    }, { passive: true });
+
+    updateCarousel(0);
+    startAutoPlay();
+  })();
+</script>
