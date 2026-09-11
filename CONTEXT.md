@@ -668,6 +668,17 @@ const projectsCollection = defineCollection({
     - `verified_mobile_cert_card_2.png`: Card 2 renders single-line issuer with right-aligned `2026`.
     - `verified_mobile_cert_card_3.png`: Card 3 renders single-line issuer with `+Transcript` and right-aligned `2025`.
 
+### Session Entry: `2026-09-11` (Phase 44: Remove +Transcript Button from Carousel Cards for Clean Minimal UI)
+- **Objective:**
+  - Remove the distracting `+Transcript` button from certificate cards in `FeaturedCertificatesCarousel.astro` per user request.
+- **Rationale & Implementation:**
+  - The detail modal (`UniversalDetailModal`) already handles front/back transcript switching dynamically ("Sertifikat Depan" / "Transkrip Nilai (Belakang)").
+  - Removing the badge completely frees up horizontal space for `IZZAN MEDIATEK COMPUTINDO` on mobile, allowing full uncropped issuer text and unifying the visual structure of all 3 carousel cards (Left: Issuer, Right: Year, Bottom: Full-width Title).
+  - Purged all unused `.transcript-badge` and `.cert-meta-tags` markup and CSS rules.
+- **Verification:**
+  - Astro static build succeeded in 8.80s.
+  - Verified mobile rendering (`verified_card_3_no_transcript.png`): Card 3 renders `IZZAN MEDIATEK COMPUTINDO` in full without truncation alongside `2025` right-aligned.
+
 ---
 
 ## 📋 12. Backlog & Next Actions

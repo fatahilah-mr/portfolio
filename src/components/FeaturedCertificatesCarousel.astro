@@ -96,15 +96,7 @@ const featuredCerts = [
                 <div class="footer-meta">
                   <div class="cert-meta-row">
                     <span class="footer-issuer">{cert.penerbit}</span>
-                    <div class="cert-meta-tags">
-                      {cert.tombol_transkrip === 'ada' && (
-                        <span class="transcript-badge">
-                          <span class="lang-id">+Transkrip</span>
-                          <span class="lang-en">+Transcript</span>
-                        </span>
-                      )}
-                      <span class="footer-year font-mono">{cert.tahun}</span>
-                    </div>
+                    <span class="footer-year font-mono">{cert.tahun}</span>
                   </div>
                   <h3 class="footer-title">{cert.nama_sertifikat}</h3>
                 </div>
@@ -191,33 +183,12 @@ const featuredCerts = [
     min-width: 0;
   }
 
-  .cert-meta-tags {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    flex-shrink: 0;
-  }
-
   .footer-year {
     font-size: 0.75rem;
     color: var(--color-subtle);
     white-space: nowrap;
     line-height: 1;
-  }
-
-  .transcript-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 4px;
-    font-size: 0.68rem;
-    font-weight: 600;
-    padding: 2px 7px;
-    border-radius: 4px;
-    background: var(--bg-surface);
-    color: var(--color-foreground);
-    border: 1px solid var(--color-border);
-    white-space: nowrap;
-    line-height: 1.2;
+    flex-shrink: 0;
   }
 
   .footer-title {
@@ -258,12 +229,6 @@ const featuredCerts = [
 
     .footer-year {
       font-size: 0.7rem;
-    }
-
-    .transcript-badge {
-      font-size: 0.625rem;
-      padding: 1.5px 5px;
-      border-radius: 3px;
     }
 
     .footer-title {
