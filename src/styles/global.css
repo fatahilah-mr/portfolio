@@ -234,12 +234,16 @@ textarea:focus-visible,
   font-weight: 600;
   border-radius: 8px;
   cursor: pointer;
-  transition: all 0.15s ease;
+  transition: transform 0.12s cubic-bezier(0.2, 0, 0, 1), background-color 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease, opacity 0.15s ease;
   white-space: nowrap;
   border: 1px solid transparent;
   max-width: 100%;
   box-sizing: border-box;
   text-decoration: none;
+}
+
+.btn:active {
+  transform: scale(0.98) translate3d(0, 1px, 0);
 }
 
 @media (max-width: 640px) {
@@ -667,5 +671,40 @@ html[lang="id"] .lang-en,
 
 html[lang="en"] .lang-id {
   display: none !important;
+}
+
+/* ==========================================================================
+   EDITORIAL SCROLL REVEAL (Vercel & Apple Minimalist, 60fps)
+   ========================================================================== */
+.reveal-on-scroll {
+  opacity: 0;
+  transform: translate3d(0, 16px, 0);
+  transition: opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1), transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: opacity, transform;
+}
+
+.reveal-on-scroll.is-revealed {
+  opacity: 1;
+  transform: translate3d(0, 0, 0);
+  will-change: auto;
+}
+
+/* Staggered sibling reveal delays */
+.reveal-delay-1 { transition-delay: 60ms; }
+.reveal-delay-2 { transition-delay: 120ms; }
+.reveal-delay-3 { transition-delay: 180ms; }
+.reveal-delay-4 { transition-delay: 240ms; }
+
+/* Accessibility: Prefers-Reduced-Motion */
+@media (prefers-reduced-motion: reduce) {
+  .reveal-on-scroll {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+    will-change: auto !important;
+  }
+  .btn:active {
+    transform: none !important;
+  }
 }
 

@@ -779,6 +779,28 @@ const projectsCollection = defineCollection({
 
 ---
 
+### Phase 48: Lightweight Editorial Micro-Animations (Scroll Entrance Reveal & Button Micro-Touch Feedback) (2026-09-11)
+- **Objective:**
+  - In response to user request (`/grill-me` + `/plan`), introduce high-performance, 60fps editorial micro-animations that elevate client/recruiter impressions without compromising page load speed or introducing bloated libraries.
+  - Deliverable scope aligned via interactive interview:
+    1. **Scroll Entrance Reveals (One-Time Staggered Fade-Up):** Cards and content in About (`AboutSection.astro`), Technical Skills (`SkillsSection.astro`), and Experience Timeline (`ExperienceSection.astro`) smoothly glide up (`translate3d(0, 16px, 0)` $\rightarrow$ `0`) and fade in (`opacity: 0` $\rightarrow$ `1`) with staggered delays (`60ms`, `120ms`, `180ms`, `240ms`).
+    2. **One-Time Trigger Engine:** Elements are observed via `IntersectionObserver` (`rootMargin: '0px 0px -40px 0px'`, `threshold: 0.08`) and unobserved immediately upon revealing. This avoids CPU/GPU background drain and guarantees zero flickering during up/down scrolling.
+    3. **Tactile Button Micro-Touch Feedback:** All buttons (`.btn`) receive a responsive micro-press state (`scale(0.98)` and `translate3d(0, 1px, 0)`) on `:active` with smooth cubic-bezier easing.
+    4. **Progressive Enhancement & Anti-Slop Fallback:** Added `<noscript>` fallback ensuring 100% full content visibility for non-JS visitors/crawlers, and strict adherence to `@media (prefers-reduced-motion: reduce)`.
+    5. **Excluded per User Direction:** No pulse dot on LKS Gold Medalist badge, no distracting card hover tilts, and no scroll progress bar.
+- **Architectural & Code Changes:**
+  - `src/styles/global.css`: Added `.reveal-on-scroll`, `.is-revealed`, staggered classes (`.reveal-delay-1` through `.reveal-delay-4`), `.btn:active` micro-touch, and `@media (prefers-reduced-motion: reduce)`.
+  - `src/components/AboutSection.astro`: Attached `.reveal-on-scroll` to section header, narrative card, and 3 pillar cards with staggered delays.
+  - `src/components/SkillsSection.astro`: Attached `.reveal-on-scroll` to section header and all 4 domain skill group cards with staggered delays.
+  - `src/components/ExperienceSection.astro`: Attached `.reveal-on-scroll` to section header and all 4 timeline items with staggered delays.
+  - `src/layouts/Layout.astro`: Added inline `initScrollReveal()` IntersectionObserver engine before `</body>` and `<noscript>` full visibility fallback in `<head>`.
+- **Verification & Testing:**
+  - SSG Compilation: `npm run build` compiled all 15 static routes cleanly in 9.44s with 0 errors.
+  - Real browser CDP verification: Evaluated elements dynamically in headless Chrome at scroll positions 1000px and 2500px, confirming `.is-revealed` applied sequentially with staggered opacities.
+  - Visual inspection: Captured `verified_cdp_scroll.png` confirming smooth rendering of revealed cards.
+
+---
+
 ## 📋 12. Backlog & Next Actions
 
 - [x] Create clean working branch `dev` and purge old `rebuild` branch
@@ -798,4 +820,5 @@ const projectsCollection = defineCollection({
 - [x] Verify build (`npm run build`) and live endpoints via comprehensive health checks
 - [x] Invert default language routing to Indonesian at `/` and English at `/en/` with region auto-detect
 - [x] Refine CV button copy to "Unduh CV" and optimize 3D carousels for 60fps smooth scrolling
+- [x] Implement lightweight editorial micro-animations (scroll reveal & button micro-touch)
 - [ ] Merge `dev` to `public` when user approves final release to `https://fatahmr.my.id`

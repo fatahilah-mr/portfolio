@@ -167,6 +167,16 @@ const formattedTitle = title.includes('Fatahilah Miftahul Rahman') ? title : `${
       }
     })();
   </script>
+
+  <!-- Progressive Enhancement: Full visibility fallback for No-JS & Web Crawlers -->
+  <noscript>
+    <style>
+      .reveal-on-scroll {
+        opacity: 1 !important;
+        transform: none !important;
+      }
+    </style>
+  </noscript>
 </head>
 <body>
   <!-- Accessible Skip Link -->
@@ -212,5 +222,41 @@ const formattedTitle = title.includes('Fatahilah Miftahul Rahman') ? title : `${
       outline: none;
     }
   </style>
+
+  <!-- Lightweight Editorial Scroll Reveal Engine (60fps, 0-KB Deps, Anti-Slop) -->
+  <script is:inline>
+    (function initScrollReveal() {
+      function runReveal() {
+        const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        const revealElements = document.querySelectorAll('.reveal-on-scroll:not(.is-revealed)');
+        if (revealElements.length === 0) return;
+
+        if (prefersReducedMotion || !('IntersectionObserver' in window)) {
+          revealElements.forEach(el => el.classList.add('is-revealed'));
+          return;
+        }
+
+        const observer = new IntersectionObserver((entries, obs) => {
+          entries.forEach(entry => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add('is-revealed');
+              obs.unobserve(entry.target); // One-time reveal: immediately disconnect
+            }
+          });
+        }, {
+          rootMargin: '0px 0px -40px 0px',
+          threshold: 0.08
+        });
+
+        revealElements.forEach(el => observer.observe(el));
+      }
+
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', runReveal);
+      } else {
+        runReveal();
+      }
+    })();
+  </script>
 </body>
 </html>
