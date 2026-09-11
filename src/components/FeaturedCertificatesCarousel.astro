@@ -96,16 +96,18 @@ const featuredCerts = [
                 <div class="footer-meta">
                   <div class="cert-meta-row">
                     <span class="footer-issuer">{cert.penerbit}</span>
-                    <span class="footer-year font-mono">{cert.tahun}</span>
+                    <div class="cert-meta-tags">
+                      {cert.tombol_transkrip === 'ada' && (
+                        <span class="transcript-badge">
+                          <span class="lang-id">+Transkrip</span>
+                          <span class="lang-en">+Transcript</span>
+                        </span>
+                      )}
+                      <span class="footer-year font-mono">{cert.tahun}</span>
+                    </div>
                   </div>
                   <h3 class="footer-title">{cert.nama_sertifikat}</h3>
                 </div>
-                {cert.tombol_transkrip === 'ada' && (
-                  <span class="transcript-badge">
-                    <span class="lang-id">+Transkrip</span>
-                    <span class="lang-en">+Transcript</span>
-                  </span>
-                )}
               </div>
             </div>
           );
@@ -153,16 +155,16 @@ const featuredCerts = [
   }
 
   .carousel-card-footer {
-    padding: 16px 20px;
+    padding: 14px 18px;
     background: var(--bg-card);
     display: flex;
-    align-items: center;
-    justify-content: space-between;
+    flex-direction: column;
+    justify-content: center;
     border-top: 1px solid var(--color-border);
   }
 
   .footer-meta {
-    max-width: 80%;
+    width: 100%;
     min-width: 0;
     overflow: hidden;
   }
@@ -170,30 +172,65 @@ const featuredCerts = [
   .cert-meta-row {
     display: flex;
     align-items: center;
+    justify-content: space-between;
     gap: 8px;
-    margin-bottom: 2px;
+    margin-bottom: 4px;
+    width: 100%;
   }
 
   .footer-issuer {
     font-size: 0.75rem;
     font-weight: 700;
     text-transform: uppercase;
-    letter-spacing: 0.05em;
+    letter-spacing: 0.04em;
     color: var(--color-accent);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    flex: 1;
+    min-width: 0;
+  }
+
+  .cert-meta-tags {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-shrink: 0;
   }
 
   .footer-year {
     font-size: 0.75rem;
     color: var(--color-subtle);
+    white-space: nowrap;
+    line-height: 1;
+  }
+
+  .transcript-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 0.68rem;
+    font-weight: 600;
+    padding: 2px 7px;
+    border-radius: 4px;
+    background: var(--bg-surface);
+    color: var(--color-foreground);
+    border: 1px solid var(--color-border);
+    white-space: nowrap;
+    line-height: 1.2;
   }
 
   .footer-title {
     margin: 0;
-    font-size: 1rem;
+    font-size: 0.95rem;
     font-weight: 700;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    color: var(--color-foreground);
+    width: 100%;
+    display: block;
+    line-height: 1.35;
   }
 
   .footer-title span {
@@ -204,15 +241,34 @@ const featuredCerts = [
     max-width: 100%;
   }
 
-  .transcript-badge {
-    font-size: 0.7rem;
-    font-weight: 700;
-    padding: 3px 8px;
-    border-radius: 6px;
-    background: var(--bg-surface);
-    color: var(--color-foreground);
-    border: 1px solid var(--color-border);
-    white-space: nowrap;
+  @media (max-width: 480px) {
+    .carousel-card-footer {
+      padding: 10px 14px;
+    }
+
+    .cert-meta-row {
+      margin-bottom: 2px;
+      gap: 6px;
+    }
+
+    .footer-issuer {
+      font-size: 0.7rem;
+      letter-spacing: 0.03em;
+    }
+
+    .footer-year {
+      font-size: 0.7rem;
+    }
+
+    .transcript-badge {
+      font-size: 0.625rem;
+      padding: 1.5px 5px;
+      border-radius: 3px;
+    }
+
+    .footer-title {
+      font-size: 0.875rem;
+    }
   }
 
   .carousel-view-all {

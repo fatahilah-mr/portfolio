@@ -648,6 +648,26 @@ const projectsCollection = defineCollection({
 - **Verification:**
   - Full Astro production build (`npm run build`) succeeded in 9.09s with 0 errors.
 
+### Session Entry: `2026-09-11` (Phase 43: Fix Certificate Carousel Card Footer Layout & Meta Alignment)
+- **Objective:**
+  - Fix broken meta layout on mobile cards in `FeaturedCertificatesCarousel.astro` identified by user in 3 screenshots (`media_1789139253228.jpg`, `media_1789139253340.jpg`, `media_1789139253416.jpg`).
+- **Root Cause Analysis:**
+  1. *Floating Year & Multi-Line Stacked Issuer*: `.cert-meta-row` used `display: flex; align-items: center; gap: 8px;` without `justify-content: space-between` or single-line truncation. On mobile (card ~280px), long issuer text wrapped into 3 separate lines. Due to `align-items: center`, the 1-line `footer-year` (`2026`) was vertically centered against the 3 lines, placing it right on Line 2 beside the second word.
+  2. *Misplaced `+Transcript` Badge & Width Crushing*: `<span class="transcript-badge">` was placed as a top-level flex child of `.carousel-card-footer` only on Card 3. This squeezed `.footer-meta` into ~140px, causing `IZZAN MEDIATEK COMPUTINDO` to wrap into 3 words and placing `+Transcript` vertically centered on Line 2 beside `2025`.
+- **Implementation:**
+  - In `src/components/FeaturedCertificatesCarousel.astro`:
+    - Refactored `.carousel-card-footer` into a clean column container with `width: 100%`.
+    - Restructured `.cert-meta-row` as `display: flex; align-items: center; justify-content: space-between; gap: 8px; width: 100%;`.
+    - Styled `.footer-issuer` with `flex: 1; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;` to keep it strictly on a single clean line.
+    - Grouped `.transcript-badge` and `.footer-year` in `.cert-meta-tags` (`display: flex; align-items: center; gap: 6px; flex-shrink: 0;`), pinning the year consistently to the far-right edge across ALL cards.
+    - Allowed `.footer-title` full 100% width, eliminating premature truncation.
+- **Verification:**
+  - Compiled Astro static build (`npm run build` in 8.85s).
+  - Executed automated mobile browser inspection (390px viewport, iPhone 14) for all 3 cards:
+    - `verified_mobile_cert_card_1.png`: Card 1 renders single-line issuer with right-aligned `2026`.
+    - `verified_mobile_cert_card_2.png`: Card 2 renders single-line issuer with right-aligned `2026`.
+    - `verified_mobile_cert_card_3.png`: Card 3 renders single-line issuer with `+Transcript` and right-aligned `2025`.
+
 ---
 
 ## 📋 12. Backlog & Next Actions
