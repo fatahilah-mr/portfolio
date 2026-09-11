@@ -77,7 +77,7 @@ const filterCategories = [
           >
             <!-- Uniform A4 ratio thumbnail frame (1.414:1) with subtle containment padding -->
             <div 
-              class="aspect-a4 cert-thumbnail-wrap" 
+              class="aspect-a4-landscape cert-thumbnail-wrap" 
               role="button" 
               tabindex="0" 
               aria-label={`Open certificate for ${cert.nama_sertifikat}`}
@@ -244,12 +244,33 @@ const filterCategories = [
     display: flex;
     flex-direction: column;
     overflow: hidden;
+    height: 100%;
   }
 
   .cert-thumbnail-wrap {
     cursor: pointer;
     position: relative;
+    width: 100%;
+    aspect-ratio: 1.414 / 1;
     background: var(--bg-surface);
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .cert-thumbnail-wrap img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    display: block;
+    transform: translateZ(0);
+    backface-visibility: hidden;
+    transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .cert-thumbnail-wrap:hover img {
+    transform: scale(1.025);
   }
 
   .thumbnail-hover-overlay {
@@ -478,9 +499,10 @@ const filterCategories = [
             const curData = JSON.parse(card.getAttribute('data-cert') || '{}');
             const dbData = certMap.get(String(curData.id));
             if (dbData) {
-              if (dbData.link_gambar && dbData.link_gambar !== curData.link_gambar) {
+              const newSrc = dbData.url_gambar_depan || dbData.link_gambar;
+              if (newSrc && newSrc !== (curData.url_gambar_depan || curData.link_gambar)) {
                 const img = card.querySelector('img');
-                if (img) img.src = dbData.link_gambar;
+                if (img) img.src = newSrc;
               }
               card.setAttribute('data-cert', JSON.stringify({ ...curData, ...dbData }));
             }

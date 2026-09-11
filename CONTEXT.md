@@ -933,6 +933,38 @@ const projectsCollection = defineCollection({
 
 ---
 
+### Session Entry: `2026-09-12` (Phase 55: Certificate Catalog Layout & Responsive Aspect Ratio Polish)
+- **Objective:**
+  - Resolve visual anomalies on `/certificates` and `/en/certificates` reported by the user on both mobile and desktop:
+    1. Certificates were appearing in a giant, cramped vertical format on mobile screens with only a fraction of the certificate visible.
+    2. Over 70% of certificate document width (names, titles, signatures, seals) was clipped and cut off horizontally by the card bounds.
+    3. Desktop view was similarly affected, rendering massive, zoomed-in cards with cropped documents.
+- **Root Cause Analysis:**
+  - *Missing CSS Reset for Images:* The global stylesheet (`src/styles/global.css`) lacked the standard responsive media rule `img, picture, video, canvas, svg { display: block; max-width: 100%; }`.
+  - *Undefined Class Name Desynchronization:* `src/pages/certificates.astro` and `src/pages/en/certificates.astro` referenced `class="aspect-a4 cert-thumbnail-wrap"`, but `global.css` only defined `.aspect-a4-landscape`. As a result, `.aspect-a4` was completely undefined in CSS, giving the thumbnail container no aspect ratio or overflow clipping.
+  - *Intrinsic Image Size Blowout:* Scanned certificate images with natural dimensions of 2526x1785px (or HTML attributes `width="1200" height="848"`) rendered at full 1200px/2526px width. The `.editorial-card` container had `overflow: hidden`, causing the browser to clip off 800+ horizontal pixels of the certificates.
+- **Architectural & Code Changes:**
+  - `src/styles/global.css`:
+    - Added universal responsive media reset `img, picture, video, canvas, svg { display: block; max-width: 100%; }`.
+    - Extended `.aspect-a4-landscape` to also cover `.aspect-a4` with `aspect-ratio: 1.414 / 1; background-color: var(--bg-surface); overflow: hidden;` and `img { width: 100%; height: 100%; object-fit: contain; display: block; transform: translateZ(0); backface-visibility: hidden; transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1); }`.
+    - Constrained `.detail-modal-dialog` width to `width: calc(100% - 32px)` on mobile screens to preserve breathing room.
+  - `src/components/DetailModal.astro`:
+    - Added `@media (max-width: 640px)` rule constraining `.modal-media-wrapper` and `.modal-main-image` to `max-height: 360px` so modal controls remain accessible on mobile viewports.
+  - `src/pages/certificates.astro` & `src/pages/en/certificates.astro`:
+    - Standardized thumbnail wrapper to `class="aspect-a4-landscape cert-thumbnail-wrap"`.
+    - Added scoped CSS for `.cert-catalog-card` (`height: 100%`) and `.cert-thumbnail-wrap` (`aspect-ratio: 1.414 / 1; width: 100%; background: var(--bg-surface); overflow: hidden; display: flex; align-items: center; justify-content: center;`).
+    - Added smooth hover micro-zoom `scale(1.025)` on `.cert-thumbnail-wrap img`.
+    - Synchronized live D1 rehydration logic to check `dbData.url_gambar_depan || dbData.link_gambar`.
+  - `src/data/certificates.json`:
+    - Updated `sertifikat-peserta-lks-provinsi.webp` to direct CDN URL `https://cdn.fatah.web.id/portfolio/assets/certificates/sertifikat-peserta-lks-provinsi.webp` to eliminate a 301 redirect hop.
+- **Verification & Testing:**
+  - Static Compilation: `npm run build` compiled 15 pages in 8.71s with 0 errors.
+  - Automated Local Preview Verification: Ran headless Chrome CDP tests with Python local HTTP server:
+    - Desktop (1280x900): Verified cards render in a balanced 3-column grid with exact `1.415` aspect ratio thumbnails; all landscape and portrait certificates are 100% visible from edge to edge with zero text cut-off (`verified_certificates_desktop.png`, `verified_certificates_desktop_scrolled_loaded.png`, `verified_en_certificates_desktop.png`).
+    - Mobile (390x844): Verified cards render in a clean 1-column mobile catalog matching `/projects` aesthetic; certificates fit cleanly inside card bounds with unclipped typography (`verified_certificates_mobile.png`, `verified_en_certificates_mobile.png`).
+
+---
+
 ## 📋 12. Backlog & Next Actions
 
 - [x] Create clean working branch `dev` and purge old `rebuild` branch
@@ -954,5 +986,6 @@ const projectsCollection = defineCollection({
 - [x] Refine CV button copy to "Unduh CV" and optimize 3D carousels for 60fps smooth scrolling
 - [x] Implement lightweight editorial micro-animations (scroll reveal & button micro-touch)
 - [x] Ground all experience & PKL timeline data against authentic records from branch `public`
+- [x] Fix certificate catalog aspect ratio cropping and mobile/desktop layout harmonization
 - [ ] Merge `dev` to `public` when user approves final release to `https://fatahmr.my.id`
 
