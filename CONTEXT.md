@@ -219,8 +219,9 @@ const projectsCollection = defineCollection({
 | `2026-09-11` | Antigravity AI | Phase 37 — Navbar Active Section Indicator with Bilingual Synchronized Pill | `src/components/Navbar.astro` | Staging verified, deployed to `preview.fmr.web.id` |
 | `2026-09-11` | Antigravity AI | Phase 38 — Fix Beranda Sublink Highlighted on Catalog Pages | `src/components/Navbar.astro` | Staging verified, deployed to `preview.fmr.web.id` |
 | `2026-09-11` | Antigravity AI | Phase 39 — Fix "Tentang Saya" Section Activation via Deterministic Focal-Line Scrollspy | `src/components/Navbar.astro` | Staging verified, deployed to `preview.fmr.web.id` |
-| `2026-09-11` | Antigravity AI | Phase 40 — Replace Contact, About & Experience Emojis with Professional SVG Marks | `src/components/ContactSection.astro`, `AboutSection.astro`, `ExperienceSection.astro` | Staging verified, deployed to `preview.fmr.web.id` |
 | `2026-09-11` | Antigravity AI | Phase 41 — Update PERISAI AYOM TEMON Documentation Link | `src/data/projects.json`, `Database Projects Fatahilah.csv`, `scripts/seed.sql`, D1 | Verified & deployed to `preview.fmr.web.id` |
+| `2026-09-12` | Antigravity AI | Phase 49 — Strict Grounding of Experience & PKL Timeline Data | `src/components/ExperienceSection.astro`, `AboutSection.astro` | Staging verified, deployed to `preview.fmr.web.id` |
+| `2026-09-12` | Antigravity AI | Phase 50 — LKS Regency & Provincial Narrative Enrichment (Debian 12/13, Telkom Univ, WorldSkills 698 Pts) | `src/components/ExperienceSection.astro` | Staging verified, deployed to `preview.fmr.web.id` |
 
 ### Session Entry: `2026-09-10` (Phase 26: Implementation of Curved Looping Doodle Arrow Callout)
 - **Objective:** Replace static inside-card pill badge with an animated curved looping doodle arrow callout pointing directly at the center card, fulfilling the user's manual sketch in `media_1789045789913.jpg` and `media_1789045790002.jpg`.
@@ -824,6 +825,32 @@ const projectsCollection = defineCollection({
   - Static Build: `npm run build` compiled 15 pages in 7.90s with 0 errors.
   - Runtime CDP Inspection: Verified all 5 items, dates, and bullet counts in headless Chrome across both ID (`/#experience`) and EN (`/en/#experience`).
   - Screenshots captured: `verified_experience_id.png` and `verified_experience_en.png`.
+
+---
+
+### Session Entry: `2026-09-12` (Phase 50: LKS Regency & Provincial Narrative Enrichment)
+- **Objective:**
+  - In response to user directive (Option 1), enrich the LKS competition narrative in the portfolio's Experience section (`src/components/ExperienceSection.astro`) with complete, grounded, and verified details from the user's authentic LinkedIn post.
+  - Highlight the key technical differentiation: **Debian 12** at the Regency level vs **Debian 13** at the Provincial level.
+  - Incorporate the official competition venues (SMK Nurusalaf Kemiri for Purworejo Regency & Universitas Telkom Purwokerto for Central Java Dikmen XXXIV), the WorldSkills CIS Software Scale evaluation, and the official score of **698 points** (just 2 points shy of the *Medallion for Excellence*).
+- **Factual Grounding & Details Incorporated:**
+  - *Period:* `April 2026`
+  - *Role:*
+    - ID: `Juara 1 LKS Purworejo & Kontingen Jawa Tengah XXXIV`
+    - EN: `1st Place LKS Purworejo & Central Java XXXIV Finalist`
+  - *Organization / Venue:*
+    - ID: `SMK Nurusalaf Kemiri & Universitas Telkom Purwokerto`
+    - EN: `SMK Nurusalaf Kemiri & Telkom University Purwokerto`
+  - *Bilingual Narrative:*
+    - ID: Meraih Juara 1 (Medali Emas) seleksi LKS NSA Kabupaten Purworejo di SMK Nurusalaf Kemiri (Debian 12) -> mewakili daerah ke ajang LKS Dikmen XXXIV Provinsi Jawa Tengah di Universitas Telkom Purwokerto bersaing dengan 32 peserta terbaik se-Jateng (Debian 13) -> dinilai langsung dengan standar internasional *CIS Software WorldSkills Scale* oleh panel juri juara dunia (Korsel & Lyon 2024), membukukan skor 698 poin (terpaut 2 poin dari *Medallion for Excellence*).
+    - EN: Secured 1st Place (Gold Medal) at the Purworejo Regency LKS NSA selection at SMK Nurusalaf Kemiri (Debian 12) -> advanced to 34th Central Java Provincial LKS at Telkom University Purwokerto against 32 top regional contenders (Debian 13) -> evaluated under international *WorldSkills CIS Software Scale* by world-champion jury panel (South Korea & Lyon 2024), earning official score of 698 points (2 points from *Medallion for Excellence*).
+  - *Tags:* `Debian 12 (Kabupaten)`, `Debian 13 (Provinsi)`, `WorldSkills CIS (698 Poin)`, `Cisco IOS`, `MikroTik RouterOS`.
+- **Architectural & Code Changes:**
+  - `src/components/ExperienceSection.astro`: Updated Item 1 header, bilingual narrative text, and tags.
+- **Verification & Testing:**
+  - Static Build: `npm run build` compiled 15 pages in 9.94s with 0 errors.
+  - Chrome CDP Automated Verification: Verified DOM node text for both ID and EN, confirmed proper scrolling, and captured visual screenshots (`verified_lks_id.png` and `verified_lks_en.png`).
+  - Staging Deployment: Pushed to `dev` and confirmed live on `https://preview.fmr.web.id`.
 
 ---
 
