@@ -916,6 +916,23 @@ const projectsCollection = defineCollection({
 
 ---
 
+### Session Entry: `2026-09-12` (Phase 54: Official Email Migration to ProtonMail)
+- **Objective:**
+  - Update all references to the official contact email from `fatahilah.f10@gmail.com` to `fatahilah@protonmail.com` to prevent spam and align with user privacy preferences.
+- **Architectural & Code Changes:**
+  - `src/components/ContactSection.astro`: Updated displayed email, `mailto:` link, `data-email` attribute, and clipboard copy script fallback to `fatahilah@protonmail.com`.
+  - `src/data/config.json`: Updated `email` property to `fatahilah@protonmail.com`.
+  - `scripts/export_json.cjs`: Updated `config.email` to `fatahilah@protonmail.com`.
+  - `migrations/0001_portfolio_schema.sql`: Updated default email column schema to `fatahilah@protonmail.com`.
+  - `README.md`: Updated contact email badge and `mailto:` link to ProtonMail.
+  - Cloudflare D1 `port_site_config`: Updated live record in D1 via protected admin API (`PUT /api/admin/config`).
+- **Verification & Testing:**
+  - Static Compilation: `npm run build` compiled 15 pages with 0 errors.
+  - Local & Live API Check: Verified `curl https://preview.fmr.web.id/api/config` returns `fatahilah@protonmail.com`.
+  - Visual CDP Verification: Confirmed contact card renders `fatahilah@protonmail.com` and clipboard copy triggers correctly.
+
+---
+
 ## 📋 12. Backlog & Next Actions
 
 - [x] Create clean working branch `dev` and purge old `rebuild` branch

@@ -38,17 +38,17 @@
             <span class="lang-id">Email Resmi</span>
             <span class="lang-en">Official Email</span>
           </span>
-          <h3 class="contact-value font-mono">fatahilah.f10@gmail.com</h3>
+          <h3 class="contact-value font-mono">fatahilah@protonmail.com</h3>
           <p class="contact-desc">
             <span class="lang-id">Saluran tercepat untuk penawaran kerja, kolaborasi teknis, dan surat resmi.</span>
             <span class="lang-en">Direct channel for job offers, technical inquiries, and formal proposals.</span>
           </p>
           <div class="contact-actions">
-            <a href="mailto:fatahilah.f10@gmail.com" class="btn btn-primary btn-sm">
+            <a href="mailto:fatahilah@protonmail.com" class="btn btn-primary btn-sm">
               <span class="lang-id">Kirim Email</span>
               <span class="lang-en">Send Email</span>
             </a>
-            <button id="copy-email-btn" class="btn btn-secondary btn-sm" data-email="fatahilah.f10@gmail.com">
+            <button id="copy-email-btn" class="btn btn-secondary btn-sm" data-email="fatahilah@protonmail.com">
               <span class="copy-text-default">
                 <span class="lang-id">Salin Email</span>
                 <span class="lang-en">Copy Email</span>
@@ -223,7 +223,7 @@
     if (!copyBtn) return;
 
     copyBtn.addEventListener('click', async () => {
-      const email = copyBtn.getAttribute('data-email') || 'fatahilah.f10@gmail.com';
+      const email = copyBtn.getAttribute('data-email') || 'fatahilah@protonmail.com';
       try {
         await navigator.clipboard.writeText(email);
         const defSpan = copyBtn.querySelector('.copy-text-default');

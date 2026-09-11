@@ -23,7 +23,7 @@ CREATE TABLE IF NOT EXISTS port_site_config (
     title_en TEXT NOT NULL DEFAULT '1st Place Winner LKS IT Network System Administration Purworejo 2026',
     bio_id TEXT NOT NULL DEFAULT 'Siswa SMK bidang IT Network System Administration dan pengembang web modern. Terbiasa mengelola infrastruktur jaringan enterprise, server Linux, serta otomatisasi cerdas.',
     bio_en TEXT NOT NULL DEFAULT 'Vocational high school student in IT Network System Administration and modern web development. Experienced with enterprise network infrastructure, Linux servers, and AI workflows.',
-    email TEXT NOT NULL DEFAULT 'fatahilah.f10@gmail.com',
+    email TEXT NOT NULL DEFAULT 'fatahilah@protonmail.com',
     github_url TEXT NOT NULL DEFAULT 'https://github.com/fatahilah-mr',
     linkedin_url TEXT NOT NULL DEFAULT 'https://www.linkedin.com/in/fatahilah-miftahul-rahman',
     cv_url TEXT NOT NULL DEFAULT '/assets/CV_Fatahilah_Miftahul_Rahman.pdf',

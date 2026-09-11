@@ -89,7 +89,7 @@ Interested in discussing a project, collaboration, or just want to say hi? Feel 
   <a href="https://linkedin.com/in/fatahilah-miftahul-rahman">
     <img src="https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white" alt="LinkedIn" />
   </a>
-  <a href="mailto:fatahilah.f10@gmail.com">
-    <img src="https://img.shields.io/badge/Email-D14836?style=for-the-badge&logo=gmail&logoColor=white" alt="Email" />
+  <a href="mailto:fatahilah@protonmail.com">
+    <img src="https://img.shields.io/badge/Email-ProtonMail-6D4AFF?style=for-the-badge&logo=protonmail&logoColor=white" alt="Email" />
   </a>
 </div>
