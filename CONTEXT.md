@@ -222,6 +222,7 @@ const projectsCollection = defineCollection({
 | `2026-09-11` | Antigravity AI | Phase 41 — Update PERISAI AYOM TEMON Documentation Link | `src/data/projects.json`, `Database Projects Fatahilah.csv`, `scripts/seed.sql`, D1 | Verified & deployed to `preview.fmr.web.id` |
 | `2026-09-12` | Antigravity AI | Phase 49 — Strict Grounding of Experience & PKL Timeline Data | `src/components/ExperienceSection.astro`, `AboutSection.astro` | Staging verified, deployed to `preview.fmr.web.id` |
 | `2026-09-12` | Antigravity AI | Phase 50 — LKS Regency & Provincial Narrative Enrichment (Debian 12/13, Telkom Univ, WorldSkills 698 Pts) | `src/components/ExperienceSection.astro` | Staging verified, deployed to `preview.fmr.web.id` |
+| `2026-09-12` | Antigravity AI | Phase 51 — LKS Technical Modules & Skills Alignment (Multi-VM, Cisco PT, AD DS, RAID) | `src/components/ExperienceSection.astro`, `SkillsSection.astro` | Staging verified, deployed to `preview.fmr.web.id` |
 
 ### Session Entry: `2026-09-10` (Phase 26: Implementation of Curved Looping Doodle Arrow Callout)
 - **Objective:** Replace static inside-card pill badge with an animated curved looping doodle arrow callout pointing directly at the center card, fulfilling the user's manual sketch in `media_1789045789913.jpg` and `media_1789045790002.jpg`.
@@ -849,8 +850,31 @@ const projectsCollection = defineCollection({
   - `src/components/ExperienceSection.astro`: Updated Item 1 header, bilingual narrative text, and tags.
 - **Verification & Testing:**
   - Static Build: `npm run build` compiled 15 pages in 9.94s with 0 errors.
-  - Chrome CDP Automated Verification: Verified DOM node text for both ID and EN, confirmed proper scrolling, and captured visual screenshots (`verified_lks_id.png` and `verified_lks_en.png`).
+  - Screenshots captured: `verified_lks_id.png` and `verified_lks_en.png`.
   - Staging Deployment: Pushed to `dev` and confirmed live on `https://preview.fmr.web.id`.
+
+---
+
+### Session Entry: `2026-09-12` (Phase 51: LKS Technical Modules & Skills Alignment)
+- **Objective:**
+  - Incorporate granular, authentic task execution details from user interview and official competition documentation (`LKS/lks kab 2026/soal FIx Client server.pdf` & `Soal_LKS_Kab_2025_Rev_3_030125.pka`).
+  - Capture the exact multi-session competition architecture:
+    1. **Sesi 1 — Hybrid Multi-VM Linux Debian 12 & Windows Server 2022 Datacenter:**
+       - *Linux:* BIND9 DNS internal server (forward/reverse zone `smkbisa.id`), High Availability Web cluster via Keepalived VRRP Virtual IP (`10.20.10.82/29`) and HAProxy round-robin load balancer to 2 backend Nginx nodes (port 8080), nftables NAT forwarding.
+       - *Windows Server 2022:* Active Directory Domain Services (forest `smk.id`, OU hierarchy Direksi/Manager/Karyawan, user provisioning), Enterprise Root CA (AD CS), software RAID storage volume (NTFS drive R:\), File Server quotas (100MB/50MB) and file screening (.bat/.ps1), web server IIS with SSL, DHCP Server, and RRAS NAT routing.
+    2. **Sesi 2 — Cisco Network Infrastructure (Packet Tracer):**
+       - Complete switch management, VLAN segmentation, inter-VLAN routing, trunking, and router security.
+       - Scored 96% automated completion on the updated 2026 PKA activity engine, with 100% manual validation by the jury panel confirming zero configuration flaws.
+    3. **Provincial Level — LKS Dikmen XXXIV Jawa Tengah (Debian 13 at Universitas Telkom Purwokerto):**
+       - Competed against 32 top regional contenders under the international *WorldSkills CIS Software Scale* evaluated by world-champion judges (South Korea & Lyon 2024), earning an official score of **698 points** (documented in `18_IT_Network_System_Administration_WorldSkills_Scale_results.pdf`).
+  - Align technical skills in `SkillsSection.astro` Domain 2 (Server Administration) to reflect these exact competencies: `HAProxy & Keepalived VRRP`, `Software RAID & Disk Quotas`, `IIS & Nginx Web Services`, and `Debian 12 & 13 GNU/Linux`.
+- **Architectural & Code Changes:**
+  - `src/components/ExperienceSection.astro`: Enriched Item 1 with structured bilingual `timeline-bullets` detailing Sesi 1 Linux, Sesi 1 Windows, and Sesi 2 Cisco PT, and updated tech tags.
+  - `src/components/SkillsSection.astro`: Updated Domain 2 skill group description and tags to include HAProxy, Software RAID, and IIS.
+- **Verification & Testing:**
+  - Static Compilation: `npm run build` compiled 15 static routes in 9.62s with 0 errors.
+  - Chromium CDP Automation: Validated text and captured screenshots (`verified_lks_id.png` and `verified_lks_en.png`).
+  - Edge Verification: Pushed to `dev` and verified live on `https://preview.fmr.web.id`.
 
 ---
 
