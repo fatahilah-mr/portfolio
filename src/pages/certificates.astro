@@ -423,13 +423,37 @@ const filterCategories = [
         return certName.includes('lks') || issuer.includes('lks') || issuer.includes('dinas pendidikan');
       }
       if (filter === 'pkl') {
-        return certName.includes('pkl') || certData.tombol_transkrip === 'ada' || issuer.includes('blk') || issuer.includes('imc');
+        return certName.includes('pkl') || certName.includes('magang') || certName.includes('praktik kerja') || issuer.includes('blk') || issuer.includes('imc') || issuer.includes('tenaga kerja') || issuer.includes('fazza');
       }
       if (filter === 'network') {
-        return certName.includes('linux') || certName.includes('cisco') || certName.includes('mikrotik') || certName.includes('jaringan') || certName.includes('packet tracer') || certName.includes('cyber');
+        return (
+          certName.includes('network') ||
+          certName.includes('jaringan') ||
+          certName.includes('linux') ||
+          certName.includes('cisco') ||
+          certName.includes('mikrotik') ||
+          certName.includes('packet tracer') ||
+          certName.includes('cyber') ||
+          certName.includes('virtual machine') ||
+          certName.includes('cloud') ||
+          certName.includes('server') ||
+          issuer.includes('id-networkers') ||
+          issuer.includes('cisco') ||
+          issuer.includes('aguna')
+        );
       }
       if (filter === 'ai') {
-        return certName.includes('ai') || certName.includes('python') || certName.includes('machine learning') || certName.includes('prompt');
+        return (
+          /\bai\b/i.test(certName) ||
+          certName.includes('generatif ai') ||
+          certName.includes('artificial intelligence') ||
+          certName.includes('machine learning') ||
+          certName.includes('python') ||
+          certName.includes('prompt') ||
+          issuer.includes('sololearn') ||
+          issuer.includes('codepolitan') ||
+          issuer.includes('hacktiv8')
+        );
       }
       return true;
     }

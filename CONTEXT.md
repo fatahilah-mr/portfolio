@@ -965,6 +965,37 @@ const projectsCollection = defineCollection({
 
 ---
 
+### Session Entry: `2026-09-12` (Phase 56: Comprehensive Cross-Section Fact Audit, Skill Alignment & Filter Polish)
+- **Objective:**
+  - Conduct an exhaustive fact-checking and technical fidelity audit across all sections outside Experience (`Hero`, `About`, `Skills`, `Projects`, `Certificates`, `Contact`, `Footer`, `Layout`, and database D1) in accordance with the Golden Rule and user's authentic achievements.
+- **Audit Findings & Corrections Implemented:**
+  1. **`src/data/projects.json` & Cloudflare D1 `port_projects`:**
+     - *Project 4 ("Portofolio Interaktif & Galeri Lab IT"):* Legacy copy still stated "Google Sheets sebagai Headless CMS gratis". Corrected across both `projects.json` and live Cloudflare D1 via authenticated API (`PUT /api/admin/projects`) to reflect Cloudflare D1 SQLite Database, serverless functions, and protected admin panel.
+     - *Project 10 ("Analisis CV & Kesesuaian Pekerjaan"):* PDF viewer URL updated from redirected `cdn.fatahmr.my.id` to direct CDN `cdn.fatah.web.id` in both static JSON and live D1.
+  2. **`src/components/AboutSection.astro`:**
+     - Replaced generic "Ubuntu Server" and "ADDS" in Pillar 2 with authentic competition stack: `Debian 12 & 13 GNU/Linux, HAProxy load balancer, Keepalived VRRP, Windows Server 2022 (AD DS & Software RAID), BIND9 DNS, Nginx, dan Proxmox VE`.
+  3. **`src/components/SkillsSection.astro`:**
+     - Domain 1 (Networking & Switching) was missing FTTH / Fiber Optic splicing skills from Fazza Computer PKL. Added `FTTH & Fiber Optic Splicing` to `skill-tags-list` and updated description to `Cisco, MikroTik, Fiber Optic, Packet Tracer, Winbox`.
+  4. **`src/pages/certificates.astro` & `src/pages/en/certificates.astro`:**
+     - Fixed `checkFilterMatch` logic:
+       - Removed `tombol_transkrip === 'ada'` from the `pkl` filter which falsely pulled in Certificate #14 (Codepolitan Generatif AI). Replaced with strict issuer and title checks (`pkl`, `magang`, `praktik kerja`, `blk`, `imc`, `tenaga kerja`, `fazza`).
+       - Fixed `network` filter to properly match Certificate #6 ("Network Fundamental") and #7 ("Virtual Machine Fundamental") from Aguna Course.
+       - Hardened `ai` filter with word boundaries (`/\bai\b/i`) and explicit technical keywords to eliminate accidental substring false positives.
+     - Updated English certificate catalog controls: `aria-label="Filter Certificate Categories"`, `placeholder="Search certificates or issuers..."`, and `aria-label="Search certificates"`.
+  5. **`src/pages/projects.astro` & `src/pages/en/projects.astro`:**
+     - Replaced hardcoded array with bilingual category objects (`labelId` and `labelEn`), ensuring the English catalog displays "All" instead of "Semua".
+     - Updated search bar placeholder and aria-label in `en/projects.astro` to English (`Search projects or technologies...`).
+  6. **`src/layouts/Layout.astro` & `public/llms.txt`:**
+     - Replaced remaining legacy `cdn.fatahmr.my.id` image and document links with direct CDN `cdn.fatah.web.id`.
+     - Updated Schema.org `knowsAbout` to include `Debian 12 & 13`, `Windows Server 2022 & AD DS`, and `FTTH & Fiber Optic Splicing`.
+     - Updated `public/llms.txt` to remove obsolete public WhatsApp mention (retaining Email, LinkedIn, GitHub).
+- **Verification & Testing:**
+  - Filter logic automated verification: Tested all 20 certificates against all 5 filters (`all: 20`, `lks: 2`, `pkl: 2`, `network: 12`, `ai: 5`). Zero false positives or missing items.
+  - Project categories verified: `all: 10`, `Website: 7`, `Cisco: 1`, `MikroTik: 1`, `AI: 1`.
+  - Static Compilation: `npm run build` compiled 15 pages in 9.16s with 0 errors.
+
+---
+
 ## 📋 12. Backlog & Next Actions
 
 - [x] Create clean working branch `dev` and purge old `rebuild` branch
@@ -987,5 +1018,6 @@ const projectsCollection = defineCollection({
 - [x] Implement lightweight editorial micro-animations (scroll reveal & button micro-touch)
 - [x] Ground all experience & PKL timeline data against authentic records from branch `public`
 - [x] Fix certificate catalog aspect ratio cropping and mobile/desktop layout harmonization
+- [x] Comprehensive cross-section fact audit, skill alignment & filter polish
 - [ ] Merge `dev` to `public` when user approves final release to `https://fatahmr.my.id`
 

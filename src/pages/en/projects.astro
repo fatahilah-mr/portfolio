@@ -4,7 +4,13 @@
 import Layout from '../../layouts/Layout.astro';
 import initialProjects from '../../data/projects.json';
 
-const categories = ['Semua', 'Website', 'Cisco', 'MikroTik', 'AI'];
+const categories = [
+  { id: 'all', labelId: 'Semua', labelEn: 'All' },
+  { id: 'Website', labelId: 'Website', labelEn: 'Website' },
+  { id: 'Cisco', labelId: 'Cisco', labelEn: 'Cisco' },
+  { id: 'MikroTik', labelId: 'MikroTik', labelEn: 'MikroTik' },
+  { id: 'AI', labelId: 'AI', labelEn: 'AI' }
+];
 ---
 
 <Layout 
@@ -32,15 +38,16 @@ const categories = ['Semua', 'Website', 'Cisco', 'MikroTik', 'AI'];
       <!-- Controls: Category Filter & Search Bar -->
       <div class="catalog-controls">
         <!-- Category Filter Buttons -->
-        <div class="filter-pills" role="tablist" aria-label="Filter Kategori Proyek">
+        <div class="filter-pills" role="tablist" aria-label="Filter Project Categories">
           {categories.map((cat, idx) => (
             <button 
               class={`filter-pill ${idx === 0 ? 'active' : ''}`} 
-              data-category={cat === 'Semua' ? 'all' : cat}
+              data-category={cat.id}
               role="tab"
               aria-selected={idx === 0 ? 'true' : 'false'}
             >
-              {cat}
+              <span class="lang-id">{cat.labelId}</span>
+              <span class="lang-en">{cat.labelEn}</span>
             </button>
           ))}
         </div>
@@ -54,8 +61,8 @@ const categories = ['Semua', 'Website', 'Cisco', 'MikroTik', 'AI'];
           <input 
             type="text" 
             id="project-search-input" 
-            placeholder="Cari proyek atau teknologi..." 
-            aria-label="Cari proyek"
+            placeholder="Search projects or technologies..." 
+            aria-label="Search projects"
             class="search-input"
           />
         </div>
