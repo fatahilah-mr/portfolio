@@ -223,6 +223,7 @@ const projectsCollection = defineCollection({
 | `2026-09-12` | Antigravity AI | Phase 49 — Strict Grounding of Experience & PKL Timeline Data | `src/components/ExperienceSection.astro`, `AboutSection.astro` | Staging verified, deployed to `preview.fmr.web.id` |
 | `2026-09-12` | Antigravity AI | Phase 50 — LKS Regency & Provincial Narrative Enrichment (Debian 12/13, Telkom Univ, WorldSkills 698 Pts) | `src/components/ExperienceSection.astro` | Staging verified, deployed to `preview.fmr.web.id` |
 | `2026-09-12` | Antigravity AI | Phase 51 — LKS Technical Modules & Skills Alignment (Multi-VM, Cisco PT, AD DS, RAID) | `src/components/ExperienceSection.astro`, `SkillsSection.astro` | Staging verified, deployed to `preview.fmr.web.id` |
+| `2026-09-12` | Antigravity AI | Phase 52 — Explicit LKS Regency vs Provincial Bullet Labeling & Disambiguation | `src/components/ExperienceSection.astro` | Staging verified, deployed to `preview.fmr.web.id` |
 
 ### Session Entry: `2026-09-10` (Phase 26: Implementation of Curved Looping Doodle Arrow Callout)
 - **Objective:** Replace static inside-card pill badge with an animated curved looping doodle arrow callout pointing directly at the center card, fulfilling the user's manual sketch in `media_1789045789913.jpg` and `media_1789045790002.jpg`.
@@ -875,6 +876,22 @@ const projectsCollection = defineCollection({
   - Static Compilation: `npm run build` compiled 15 static routes in 9.62s with 0 errors.
   - Chromium CDP Automation: Validated text and captured screenshots (`verified_lks_id.png` and `verified_lks_en.png`).
   - Edge Verification: Pushed to `dev` and verified live on `https://preview.fmr.web.id`.
+
+---
+
+### Session Entry: `2026-09-12` (Phase 52: Explicit LKS Regency vs Provincial Bullet Disambiguation)
+- **Objective:**
+  - Prevent reader ambiguity by explicitly prefixing each competition module bullet with its specific contest level: **LKS Kabupaten Purworejo** (Sesi 1 Linux, Sesi 1 Windows, Sesi 2 Cisco) vs **LKS Provinsi Jawa Tengah XXXIV** (Tahap Finalis).
+  - Eliminate any risk of visitors assuming Sesi 1 or Sesi 2 were part of the provincial competition.
+- **Architectural & Code Changes:**
+  - `src/components/ExperienceSection.astro`:
+    - Updated Bullet 1: `LKS Kabupaten Purworejo (Sesi 1 — Linux Debian 12)` / `Purworejo Regency LKS (Session 1 — Linux Debian 12)`
+    - Updated Bullet 2: `LKS Kabupaten Purworejo (Sesi 1 — Windows Server 2022)` / `Purworejo Regency LKS (Session 1 — Windows Server 2022)`
+    - Updated Bullet 3: `LKS Kabupaten Purworejo (Sesi 2 — Cisco Network Infrastructure)` / `Purworejo Regency LKS (Session 2 — Cisco Network Infrastructure)`
+    - Added Bullet 4: `LKS Provinsi Jawa Tengah XXXIV (Tahap Finalis)` / `Central Java XXXIV Provincial LKS (Finalist Stage)`
+- **Verification & Testing:**
+  - Static Compilation: `npm run build` compiled 15 pages in 11.17s with 0 errors.
+  - Edge Deployment: Pushed to `dev` and confirmed live on `https://preview.fmr.web.id`.
 
 ---
 
