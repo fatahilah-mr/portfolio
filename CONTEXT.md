@@ -895,6 +895,27 @@ const projectsCollection = defineCollection({
 
 ---
 
+### Session Entry: `2026-09-12` (Phase 53: Mobile Navigation Drawer Floating Overlay & Zero Layout Shift)
+- **Objective:**
+  - Resolve mobile layout shift where opening the mobile navigation drawer previously pushed down `<main>` and the active section (e.g. `#experience`) in document flow.
+  - Convert `#mobile-nav-drawer` into a true floating overlay anchored to the sticky header with zero vertical displacement (Delta Y = 0px).
+- **Architectural & Code Changes:**
+  - `src/components/Navbar.astro`:
+    - Updated `.mobile-drawer` CSS to `position: absolute; top: 100%; left: 0; right: 0; width: 100%; max-height: calc(100dvh - 64px); overflow-y: auto; -webkit-overflow-scrolling: touch; overscroll-behavior: contain; z-index: 1050;` with smooth entrance fade-down animation.
+    - Added `#mobile-nav-backdrop` (`.mobile-backdrop`) with `position: fixed; top: 64px; left: 0; right: 0; bottom: 0; background: rgba(0, 0, 0, 0.45); backdrop-filter: blur(4px); z-index: 990;`.
+    - Added light-dismiss behavior: tapping backdrop or pressing Escape key immediately dismisses drawer.
+    - Ensured `.site-header` height remains strictly 64px at all times in document flow regardless of drawer open/closed state.
+    - Synchronized mobile sublinks labels with desktop ("4. Pengalaman & Prestasi" / "4. Experience & Awards" and "7. Kontak & Diskusi" / "7. Contact & Discussion").
+- **Verification & Testing:**
+  - Chrome DevTools Protocol (CDP) on mobile viewport (390x844):
+    - Initial header height: 65px (64px + 1px border), experience section top: 80px (scrollY: 4707).
+    - Open header height: 65px (0px change), experience section top: 80px (Delta Y = 0px).
+    - Verified drawer overlay floats directly below sticky header while experience section remains stationary behind backdrop scrim.
+    - Verified backdrop tap and sublink clicks cleanly close drawer and smoothly navigate.
+  - Static Compilation: `npm run build` compiled 15 pages with 0 errors.
+
+---
+
 ## 📋 12. Backlog & Next Actions
 
 - [x] Create clean working branch `dev` and purge old `rebuild` branch

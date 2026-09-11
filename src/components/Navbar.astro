@@ -236,8 +236,8 @@ const getSectionHref = (id: string) => isHome ? `#${id}` : (homeUrl === '/' ? `/
             <span class="lang-en">3. Technical Skills</span>
           </a>
           <a href={getSectionHref('experience')} class="mobile-sublink" data-section="experience">
-            <span class="lang-id">4. Pengalaman</span>
-            <span class="lang-en">4. Experience</span>
+            <span class="lang-id">4. Pengalaman & Prestasi</span>
+            <span class="lang-en">4. Experience & Awards</span>
           </a>
           <a href={getSectionHref('projects')} class="mobile-sublink" data-section="projects">
             <span class="lang-id">5. Proyek Unggulan</span>
@@ -248,8 +248,8 @@ const getSectionHref = (id: string) => isHome ? `#${id}` : (homeUrl === '/' ? `/
             <span class="lang-en">6. Top Certificates</span>
           </a>
           <a href={getSectionHref('contact')} class="mobile-sublink" data-section="contact">
-            <span class="lang-id">7. Kontak</span>
-            <span class="lang-en">7. Contact</span>
+            <span class="lang-id">7. Kontak & Diskusi</span>
+            <span class="lang-en">7. Contact & Discussion</span>
           </a>
         </div>
       </div>
@@ -274,6 +274,9 @@ const getSectionHref = (id: string) => isHome ? `#${id}` : (homeUrl === '/' ? `/
     </div>
   </div>
 </header>
+
+<!-- Mobile Navigation Backdrop Overlay (positioned fixed in viewport, light-dismiss scrim) -->
+<div id="mobile-nav-backdrop" class="mobile-backdrop hidden" aria-hidden="true"></div>
 
 <style>
   .site-header {
@@ -573,13 +576,86 @@ const getSectionHref = (id: string) => isHome ? `#${id}` : (homeUrl === '/' ? `/
     .mobile-only {
       display: none !important;
     }
+    .mobile-drawer,
+    .mobile-backdrop {
+      display: none !important;
+    }
   }
 
-  /* Mobile Drawer */
+  /* Mobile Backdrop (Fixed full-viewport scrim under 64px header) */
+  .mobile-backdrop {
+    position: fixed;
+    top: 64px;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: 100vw;
+    height: calc(100vh - 64px);
+    height: calc(100dvh - 64px);
+    background: rgba(0, 0, 0, 0.45);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    z-index: 990;
+    transition: opacity 0.2s ease;
+  }
+
+  .mobile-backdrop.hidden {
+    display: none !important;
+  }
+
+  /* Mobile Drawer (Absolute overlay anchored to sticky header) */
   .mobile-drawer {
-    border-top: 1px solid var(--color-border);
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    width: 100%;
+    max-height: calc(100vh - 64px);
+    max-height: calc(100dvh - 64px);
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior: contain;
     background: var(--bg-card);
+    border-bottom: 1px solid var(--color-border);
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.25), 0 8px 10px -6px rgba(0, 0, 0, 0.15);
     padding: 16px 0 24px 0;
+    z-index: 1050;
+  }
+
+  @keyframes drawerFadeDown {
+    from {
+      opacity: 0;
+      transform: translateY(-6px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes backdropFadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  .mobile-drawer:not(.hidden) {
+    animation: drawerFadeDown 0.18s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+
+  .mobile-backdrop:not(.hidden) {
+    animation: backdropFadeIn 0.18s ease forwards;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .mobile-drawer:not(.hidden),
+    .mobile-backdrop:not(.hidden) {
+      animation: none !important;
+      transition: none !important;
+    }
   }
 
   .mobile-drawer-inner {
@@ -735,19 +811,50 @@ const getSectionHref = (id: string) => isHome ? `#${id}` : (homeUrl === '/' ? `/
     });
   }
 
-  // Mobile drawer and accordion setup
+  // Mobile drawer, backdrop overlay, and accordion setup
   function setupMobileDrawer() {
     const menuBtn = document.getElementById('mobile-menu-btn');
     const drawer = document.getElementById('mobile-nav-drawer');
+    const backdrop = document.getElementById('mobile-nav-backdrop');
     const iconMenu = menuBtn?.querySelector('.icon-menu');
     const iconClose = menuBtn?.querySelector('.icon-close');
 
+    function closeDrawer() {
+      drawer?.classList.add('hidden');
+      backdrop?.classList.add('hidden');
+      menuBtn?.setAttribute('aria-expanded', 'false');
+      iconMenu?.classList.remove('hidden');
+      iconClose?.classList.add('hidden');
+    }
+
+    function openDrawer() {
+      drawer?.classList.remove('hidden');
+      backdrop?.classList.remove('hidden');
+      menuBtn?.setAttribute('aria-expanded', 'true');
+      iconMenu?.classList.add('hidden');
+      iconClose?.classList.remove('hidden');
+    }
+
     menuBtn?.addEventListener('click', () => {
       const isExpanded = menuBtn.getAttribute('aria-expanded') === 'true';
-      menuBtn.setAttribute('aria-expanded', String(!isExpanded));
-      drawer?.classList.toggle('hidden', isExpanded);
-      iconMenu?.classList.toggle('hidden', !isExpanded);
-      iconClose?.classList.toggle('hidden', isExpanded);
+      if (isExpanded) {
+        closeDrawer();
+      } else {
+        openDrawer();
+      }
+    });
+
+    // Tap backdrop scrim to dismiss drawer
+    backdrop?.addEventListener('click', () => {
+      closeDrawer();
+    });
+
+    // Dismiss on Escape key
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && menuBtn?.getAttribute('aria-expanded') === 'true') {
+        closeDrawer();
+        menuBtn?.focus();
+      }
     });
 
     const accordionBtn = document.getElementById('mobile-beranda-accordion');
@@ -758,15 +865,19 @@ const getSectionHref = (id: string) => isHome ? `#${id}` : (homeUrl === '/' ? `/
       accordionBtn.setAttribute('aria-expanded', String(!isHidden));
     });
 
-    // Close drawer when any sublink is clicked
+    // Close drawer when any link inside is clicked
     drawer?.querySelectorAll('a').forEach(link => {
       link.addEventListener('click', () => {
-        drawer.classList.add('hidden');
-        menuBtn?.setAttribute('aria-expanded', 'false');
-        iconMenu?.classList.remove('hidden');
-        iconClose?.classList.add('hidden');
+        closeDrawer();
       });
     });
+
+    // Automatically close drawer if resized above mobile breakpoint
+    window.addEventListener('resize', () => {
+      if (window.innerWidth >= 840 && menuBtn?.getAttribute('aria-expanded') === 'true') {
+        closeDrawer();
+      }
+    }, { passive: true });
   }
 
   // Desktop dropdown setup
