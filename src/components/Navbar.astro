@@ -9,47 +9,47 @@ const { lang } = Astro.props;
 
 // Determine current language from prop or URL
 const pathname = Astro.url.pathname.replace(/\/$/, '') || '/';
-const isIndonesian = lang === 'id' || pathname === '/id' || pathname.endsWith('/id');
+const isEnglish = lang === 'en' || pathname === '/en' || pathname.startsWith('/en/');
+const isIndonesian = !isEnglish;
 const currentLang = isIndonesian ? 'id' : 'en';
 
-// Calculate target URL for English version
-// /id -> /
-// /projects/id -> /projects
-// /certificates/id -> /certificates
-let targetEnUrl = '/';
-if (pathname === '/id') {
-  targetEnUrl = '/';
+// Calculate target URL for Indonesian version (Root /)
+let targetIdUrl = '/';
+if (pathname === '/en' || pathname === '/id') {
+  targetIdUrl = '/';
+} else if (pathname.startsWith('/en/')) {
+  targetIdUrl = pathname.replace(/^\/en/, '') || '/';
 } else if (pathname.endsWith('/id')) {
-  targetEnUrl = pathname.slice(0, -3) || '/';
+  targetIdUrl = pathname.slice(0, -3) || '/';
 } else {
-  targetEnUrl = pathname;
+  targetIdUrl = pathname;
 }
 
-// Calculate target URL for Indonesian version
-// / -> /id
-// /projects -> /projects/id
-// /certificates -> /certificates/id
-let targetIdUrl = '/id';
-if (pathname === '/') {
-  targetIdUrl = '/id';
+// Calculate target URL for English version (/en)
+let targetEnUrl = '/en';
+if (pathname === '/' || pathname === '/id') {
+  targetEnUrl = '/en';
+} else if (pathname.startsWith('/en')) {
+  targetEnUrl = pathname;
 } else if (pathname.endsWith('/id')) {
-  targetIdUrl = pathname;
+  const base = pathname.slice(0, -3) || '/';
+  targetEnUrl = base === '/' ? '/en' : `/en${base}`;
 } else {
-  targetIdUrl = `${pathname}/id`;
+  targetEnUrl = `/en${pathname}`;
 }
 
 // Base navigation URLs based on current language
-const homeUrl = isIndonesian ? '/id' : '/';
-const projectsUrl = isIndonesian ? '/projects/id' : '/projects';
-const certsUrl = isIndonesian ? '/certificates/id' : '/certificates';
+const homeUrl = isIndonesian ? '/' : '/en';
+const projectsUrl = isIndonesian ? '/projects' : '/en/projects';
+const certsUrl = isIndonesian ? '/certificates' : '/en/certificates';
 
 // Active page detection
-const isProjects = pathname === '/projects' || pathname === '/projects/id';
-const isCerts = pathname === '/certificates' || pathname === '/certificates/id';
-const isHome = !isProjects && !isCerts;
+const isProjects = pathname === '/projects' || pathname === '/projects/id' || pathname === '/en/projects';
+const isCerts = pathname === '/certificates' || pathname === '/certificates/id' || pathname === '/en/certificates';
+const isHome = !isProjects && !isCerts && pathname !== '/admin';
 
 // Anchor href helper: direct hash on home page to avoid page reloads, full path on external pages
-const getSectionHref = (id: string) => isHome ? `#${id}` : `${homeUrl}#${id}`;
+const getSectionHref = (id: string) => isHome ? `#${id}` : (homeUrl === '/' ? `/#${id}` : `${homeUrl}#${id}`);
 ---
 
 <header class="site-header" id="site-header">
@@ -778,9 +778,9 @@ const getSectionHref = (id: string) => isHome ? `#${id}` : `${homeUrl}#${id}`;
 
     toggleBtn.addEventListener('click', (e) => {
       const pathname = window.location.pathname.replace(/\/$/, '') || '/';
-      const isProjects = pathname === '/projects' || pathname === '/projects/id';
-      const isCerts = pathname === '/certificates' || pathname === '/certificates/id';
-      const isHome = !isProjects && !isCerts;
+      const isProjects = pathname === '/projects' || pathname === '/projects/id' || pathname === '/en/projects';
+      const isCerts = pathname === '/certificates' || pathname === '/certificates/id' || pathname === '/en/certificates';
+      const isHome = !isProjects && !isCerts && pathname !== '/admin';
 
       if (!isHome) {
         // When not on home page, clicking Beranda navigates directly to home
@@ -823,9 +823,9 @@ const getSectionHref = (id: string) => isHome ? `#${id}` : `${homeUrl}#${id}`;
   // Scrollspy & Active Section Indicator for Home Page
   function setupScrollspy() {
     const pathname = window.location.pathname.replace(/\/$/, '') || '/';
-    const isProjects = pathname === '/projects' || pathname === '/projects/id';
-    const isCerts = pathname === '/certificates' || pathname === '/certificates/id';
-    const isHome = !isProjects && !isCerts;
+    const isProjects = pathname === '/projects' || pathname === '/projects/id' || pathname === '/en/projects';
+    const isCerts = pathname === '/certificates' || pathname === '/certificates/id' || pathname === '/en/certificates';
+    const isHome = !isProjects && !isCerts && pathname !== '/admin';
 
     const activeBadge = document.getElementById('active-section-badge');
     const activeText = document.getElementById('active-section-text');
@@ -1011,11 +1011,26 @@ const getSectionHref = (id: string) => isHome ? `#${id}` : `${homeUrl}#${id}`;
     }
   }
 
+  function setupLanguageSwitcher() {
+    function setPreference(l) {
+      try {
+        localStorage.setItem('preferred_lang', l);
+        document.cookie = 'preferred_lang=' + l + '; path=/; max-age=31536000; SameSite=Lax';
+      } catch (e) {
+        console.warn('Language persist error:', e);
+      }
+    }
+
+    document.getElementById('lang-code-id')?.addEventListener('click', () => setPreference('id'));
+    document.getElementById('lang-code-en')?.addEventListener('click', () => setPreference('en'));
+  }
+
   function initNavbar() {
     setupThemeToggle();
     setupMobileDrawer();
     setupDesktopDropdown();
     setupScrollspy();
+    setupLanguageSwitcher();
   }
 
   if (document.readyState === 'loading') {

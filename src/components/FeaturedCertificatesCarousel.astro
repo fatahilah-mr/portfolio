@@ -7,8 +7,8 @@ interface Props {
   lang?: 'en' | 'id';
 }
 
-const { lang = 'en' } = Astro.props;
-const catalogUrl = lang === 'id' ? '/certificates/id' : '/certificates';
+const { lang = 'id' } = Astro.props;
+const catalogUrl = lang === 'en' ? '/en/certificates' : '/certificates';
 
 // Top 3 featured landscape certificates: LKS Kab Purworejo (ID: 1), LKS Provinsi Jateng (ID: 2), PKL IMC Computer (ID: 4)
 const featuredCerts = [

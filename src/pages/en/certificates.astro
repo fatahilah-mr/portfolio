@@ -1,8 +1,8 @@
 ---
-// src/pages/certificates.astro
-// Complete Certificate Catalog (Indonesian Default Version)
-import Layout from '../layouts/Layout.astro';
-import initialCerts from '../data/certificates.json';
+// src/pages/en/certificates.astro
+// Complete Certificate Catalog (English Version)
+import Layout from '../../layouts/Layout.astro';
+import initialCerts from '../../data/certificates.json';
 
 const filterCategories = [
   { id: 'all', labelId: 'Semua', labelEn: 'All' },
@@ -14,9 +14,9 @@ const filterCategories = [
 ---
 
 <Layout 
-  title="Katalog Sertifikat & Kredensial | Fatahilah Miftahul Rahman" 
-  description="Dokumentasi resmi 20+ sertifikat kompetensi kejuaraan LKS, transkrip nilai Praktik Kerja Lapangan (PKL), dan sertifikasi teknologi IT Fatahilah Miftahul Rahman."
-  lang="id"
+  title="Certificates & Accreditations | Fatahilah Miftahul Rahman" 
+  description="Official documentation of 20+ vocational competition awards, industrial internship certifications, and technical IT accreditations."
+  lang="en"
 >
   <section class="section-padding certs-page-section">
     <div class="container">
@@ -80,7 +80,7 @@ const filterCategories = [
               class="aspect-a4 cert-thumbnail-wrap" 
               role="button" 
               tabindex="0" 
-              aria-label={`Lihat sertifikat ${cert.nama_sertifikat}`}
+              aria-label={`Open certificate for ${cert.nama_sertifikat}`}
             >
               <img 
                 src={cert.url_gambar_depan || cert.link_gambar} 

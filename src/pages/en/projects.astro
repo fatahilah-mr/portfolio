@@ -1,16 +1,16 @@
 ---
-// src/pages/projects.astro
-// Complete Project Catalog (Indonesian Default Version)
-import Layout from '../layouts/Layout.astro';
-import initialProjects from '../data/projects.json';
+// src/pages/en/projects.astro
+// Complete Project Catalog (English Version)
+import Layout from '../../layouts/Layout.astro';
+import initialProjects from '../../data/projects.json';
 
 const categories = ['Semua', 'Website', 'Cisco', 'MikroTik', 'AI'];
 ---
 
 <Layout 
-  title="Katalog Proyek & Lab | Fatahilah Miftahul Rahman" 
-  description="Katalog lengkap proyek teknologi terapan, platform web produksi, simulasi laboratorium jaringan Cisco & MikroTik, serta integrasi AI Fatahilah Miftahul Rahman."
-  lang="id"
+  title="Projects & Applied Labs | Fatahilah Miftahul Rahman" 
+  description="Complete catalog of production web applications, multi-floor Cisco network topologies, MikroTik gateways, and AI integrations."
+  lang="en"
 >
   <section class="section-padding projects-page-section">
     <div class="container">
@@ -70,7 +70,7 @@ const categories = ['Semua', 'Website', 'Cisco', 'MikroTik', 'AI'];
             data-project={JSON.stringify(proj)}
           >
             <!-- 1440x900 aspect ratio thumbnail -->
-            <div class="aspect-16-10 card-thumbnail-wrap" role="button" tabindex="0" aria-label={`Buka detail ${proj.judul}`}>
+            <div class="aspect-16-10 card-thumbnail-wrap" role="button" tabindex="0" aria-label={`Open details for ${proj.judul}`}>
               <img 
                 src={proj.link_gambar} 
                 alt={proj.judul} 

@@ -5,8 +5,8 @@ interface Props {
   lang?: 'en' | 'id';
 }
 
-const { lang = 'en' } = Astro.props;
-const homeUrl = lang === 'id' ? '/id' : '/';
+const { lang = 'id' } = Astro.props;
+const homeUrl = lang === 'en' ? '/en' : '/';
 ---
 
 <footer class="portfolio-footer">

@@ -7,8 +7,8 @@ interface Props {
   lang?: 'en' | 'id';
 }
 
-const { lang = 'en' } = Astro.props;
-const catalogUrl = lang === 'id' ? '/projects/id' : '/projects';
+const { lang = 'id' } = Astro.props;
+const catalogUrl = lang === 'en' ? '/en/projects' : '/projects';
 
 // Top 3 featured projects: PERISAI Temon (ID: 2), PERISAI AYOM (ID: 3), FATAH Gateway (ID: 5)
 const featuredProjects = [

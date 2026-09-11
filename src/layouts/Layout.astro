@@ -14,9 +14,36 @@ export interface Props {
 
 const { 
   title, 
-  description = "Fatahilah Miftahul Rahman Portfolio - 1st Place Winner LKS IT Network System Administration 2026. Specialist in enterprise network infrastructure, Linux servers, and modern web engineering.",
-  lang = 'en'
+  description = "Portofolio resmi Fatahilah Miftahul Rahman - Juara 1 LKS IT Network System Administration Purworejo 2026. Menampilkan keahlian infrastruktur jaringan enterprise, administrasi server Linux, proyek web produksi publik, dan kredensial terverifikasi.",
+  lang = 'id'
 } = Astro.props;
+
+// Determine target URLs for hreflang & SEO
+const pathname = Astro.url.pathname.replace(/\/$/, '') || '/';
+let targetIdUrl = '/';
+if (pathname === '/en' || pathname === '/id') {
+  targetIdUrl = '/';
+} else if (pathname.startsWith('/en/')) {
+  targetIdUrl = pathname.replace(/^\/en/, '') || '/';
+} else if (pathname.endsWith('/id')) {
+  targetIdUrl = pathname.slice(0, -3) || '/';
+} else {
+  targetIdUrl = pathname;
+}
+
+let targetEnUrl = '/en';
+if (pathname === '/' || pathname === '/id') {
+  targetEnUrl = '/en';
+} else if (pathname.startsWith('/en')) {
+  targetEnUrl = pathname;
+} else if (pathname.endsWith('/id')) {
+  const base = pathname.slice(0, -3) || '/';
+  targetEnUrl = base === '/' ? '/en' : `/en${base}`;
+} else {
+  targetEnUrl = `/en${pathname}`;
+}
+
+const formattedTitle = title.includes('Fatahilah Miftahul Rahman') ? title : `${title} | Fatahilah Miftahul Rahman`;
 ---
 
 <!DOCTYPE html>
@@ -27,22 +54,27 @@ const {
   <meta name="description" content={description} />
   <meta name="author" content="Fatahilah Miftahul Rahman" />
   <link rel="icon" type="image/svg+xml" href="/assets/favicon/favicon.svg" />
-  <title>{title} | Fatahilah Miftahul Rahman</title>
+  <title>{formattedTitle}</title>
 
   <!-- Canonical URL -->
   <link rel="canonical" href={new URL(Astro.url.pathname, Astro.site)} />
 
+  <!-- Alternate Multilingual URLs for SEO (Google Best Practice) -->
+  <link rel="alternate" hreflang="id" href={new URL(targetIdUrl, Astro.site)} />
+  <link rel="alternate" hreflang="en" href={new URL(targetEnUrl, Astro.site)} />
+  <link rel="alternate" hreflang="x-default" href={new URL('/', Astro.site)} />
+
   <!-- Open Graph / Facebook -->
   <meta property="og:type" content="website" />
   <meta property="og:url" content={Astro.url} />
-  <meta property="og:title" content={`${title} | Fatahilah Miftahul Rahman`} />
+  <meta property="og:title" content={formattedTitle} />
   <meta property="og:description" content={description} />
   <meta property="og:image" content="https://cdn.fatahmr.my.id/portfolio/assets/profile.webp" />
 
   <!-- Twitter -->
   <meta property="twitter:card" content="summary_large_image" />
   <meta property="twitter:url" content={Astro.url} />
-  <meta property="twitter:title" content={`${title} | Fatahilah Miftahul Rahman`} />
+  <meta property="twitter:title" content={formattedTitle} />
   <meta property="twitter:description" content={description} />
   <meta property="twitter:image" content="https://cdn.fatahmr.my.id/portfolio/assets/profile.webp" />
 
@@ -90,6 +122,48 @@ const {
         document.documentElement.setAttribute('data-theme', theme);
       } catch (e) {
         console.warn('Theme init warning:', e);
+      }
+    })();
+  </script>
+
+  <!-- Client-Side Language/Region Auto-Detect (First Visit Outside ID -> /en) -->
+  <script is:inline>
+    (function() {
+      try {
+        const path = window.location.pathname.replace(/\/$/, '') || '/';
+        const pref = localStorage.getItem('preferred_lang');
+
+        // Only trigger auto-detect on the root page ('/')
+        if (path === '/') {
+          if (pref === 'en') {
+            window.location.replace('/en');
+            return;
+          }
+          if (!pref) {
+            // Check browser preferred languages
+            const navLangs = navigator.languages || [navigator.language || navigator.userLanguage || ''];
+            const isIndonesian = Array.from(navLangs).some(function(l) {
+              return l && l.toLowerCase().startsWith('id');
+            });
+            if (!isIndonesian) {
+              // User is from outside Indonesia / has non-ID browser language -> redirect to /en
+              localStorage.setItem('preferred_lang', 'en');
+              document.cookie = 'preferred_lang=en; path=/; max-age=31536000; SameSite=Lax';
+              window.location.replace('/en');
+              return;
+            } else {
+              localStorage.setItem('preferred_lang', 'id');
+              document.cookie = 'preferred_lang=id; path=/; max-age=31536000; SameSite=Lax';
+            }
+          }
+        } else if (path === '/en' || path.startsWith('/en/')) {
+          if (!pref) {
+            localStorage.setItem('preferred_lang', 'en');
+            document.cookie = 'preferred_lang=en; path=/; max-age=31536000; SameSite=Lax';
+          }
+        }
+      } catch (e) {
+        console.warn('Language auto-detect warning:', e);
       }
     })();
   </script>

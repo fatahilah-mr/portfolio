@@ -1,39 +1,20 @@
 ---
 // src/pages/id.astro
-// Indonesian Home Page (Versi Bahasa Indonesia) - Semi-SPA with 7 Core Sections
-import Layout from '../layouts/Layout.astro';
-import Hero from '../components/Hero.astro';
-import AboutSection from '../components/AboutSection.astro';
-import SkillsSection from '../components/SkillsSection.astro';
-import ExperienceSection from '../components/ExperienceSection.astro';
-import FeaturedProjectsCarousel from '../components/FeaturedProjectsCarousel.astro';
-import FeaturedCertificatesCarousel from '../components/FeaturedCertificatesCarousel.astro';
-import ContactSection from '../components/ContactSection.astro';
+// Legacy Indonesian Route -> Permanent 301 Redirect to Root (/)
 ---
 
-<Layout 
-  title="Portofolio Resmi | Fatahilah Miftahul Rahman" 
-  description="Portofolio resmi Fatahilah Miftahul Rahman - Juara 1 LKS IT Network System Administration Purworejo 2026. Menampilkan keahlian infrastruktur jaringan enterprise, administrasi server Linux, proyek web produksi publik, dan kredensial terverifikasi."
-  lang="id"
->
-  <!-- 1. Hero Section -->
-  <Hero lang="id" />
-
-  <!-- 2. About Section -->
-  <AboutSection lang="id" />
-
-  <!-- 3. Skills Section -->
-  <SkillsSection lang="id" />
-
-  <!-- 4. Experience & Awards Section -->
-  <ExperienceSection lang="id" />
-
-  <!-- 5. Featured Projects (3D Centered Carousel) -->
-  <FeaturedProjectsCarousel lang="id" />
-
-  <!-- 6. Featured Certificates (3D Centered Carousel) -->
-  <FeaturedCertificatesCarousel lang="id" />
-
-  <!-- 7. Contact Section -->
-  <ContactSection lang="id" />
-</Layout>
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="refresh" content="0;url=/" />
+  <link rel="canonical" href="https://fatahmr.my.id/" />
+  <title>Mengarahkan ke Beranda | Fatahilah Miftahul Rahman</title>
+  <script is:inline>
+    window.location.replace('/');
+  </script>
+</head>
+<body>
+  <p>Mengarahkan ke <a href="/">Beranda</a>...</p>
+</body>
+</html>
