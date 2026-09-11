@@ -7,7 +7,7 @@ import '../styles/admin.css';
 ---
 
 <!DOCTYPE html>
-<html lang="id" data-theme="dark">
+<html lang="id" data-theme="light">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -38,7 +38,7 @@ import '../styles/admin.css';
           <span class="cms-tag">COMMAND CENTER ADMIN</span>
         </div>
 
-        <div id="login-error-banner" class="hidden" style="margin-bottom: 1.25rem; padding: 0.75rem 1rem; border-radius: 8px; background: rgba(244,63,94,0.15); border: 1px solid rgba(244,63,94,0.3); color: #fb7185; font-size: 0.825rem;">
+        <div id="login-error-banner" class="hidden" style="margin-bottom: 1.25rem; padding: 0.75rem 1rem; border-radius: 8px; background: var(--admin-danger-soft); border: 1px solid var(--admin-danger-border); color: var(--admin-danger); font-size: 0.825rem;">
           <span id="login-error-msg">Akses ditolak atau sesi kedaluwarsa.</span>
         </div>
 
@@ -54,7 +54,10 @@ import '../styles/admin.css';
             Masuk dengan GitHub
           </a>
           <a href="/api/auth/dev-login" class="btn-solid-secondary" style="padding: 0.75rem 1rem;">
-            ⚡ Masuk Instan (Mode Staging / Review)
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
+            </svg>
+            Masuk Instan (Mode Staging / Review)
           </a>
         </div>
 
@@ -297,9 +300,13 @@ import '../styles/admin.css';
             <!-- Box Telegram -->
             <div class="admin-card-surface">
               <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.25rem; padding-bottom: 0.75rem; border-bottom: 1px solid var(--admin-border);">
-                <div style="display: flex; align-items: center; gap: 0.5rem;">
-                  <span style="font-size: 1.2rem;">📱</span>
-                  <strong style="color: #ffffff; font-size: 0.95rem;">Telegram Bot Push</strong>
+                <div style="display: flex; align-items: center; gap: 0.6rem;">
+                  <div class="kpi-icon-wrap blue" style="width: 32px; height: 32px; border-radius: 8px;">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="m22 2-7 20-4-9-9-4Z"/><path d="M22 2 11 13"/>
+                    </svg>
+                  </div>
+                  <strong style="color: var(--admin-text-title); font-size: 0.95rem;">Telegram Bot Push</strong>
                 </div>
                 <label class="switch-control">
                   <input type="checkbox" id="notify-tele-enabled" class="switch-input" />
@@ -333,9 +340,13 @@ import '../styles/admin.css';
             <!-- Box ntfy -->
             <div class="admin-card-surface">
               <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.25rem; padding-bottom: 0.75rem; border-bottom: 1px solid var(--admin-border);">
-                <div style="display: flex; align-items: center; gap: 0.5rem;">
-                  <span style="font-size: 1.2rem;">🔔</span>
-                  <strong style="color: #ffffff; font-size: 0.95rem;">ntfy Android / Web Push</strong>
+                <div style="display: flex; align-items: center; gap: 0.6rem;">
+                  <div class="kpi-icon-wrap amber" style="width: 32px; height: 32px; border-radius: 8px;">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/>
+                    </svg>
+                  </div>
+                  <strong style="color: var(--admin-text-title); font-size: 0.95rem;">ntfy Android / Web Push</strong>
                 </div>
                 <span class="d1-status-badge" style="font-size: 0.65rem;">HTTP REST</span>
               </div>
@@ -391,13 +402,16 @@ import '../styles/admin.css';
 
           <div class="admin-card-surface" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
             <div>
-              <strong style="color: #ffffff; font-size: 0.9rem;">Simpan Konfigurasi</strong>
+              <strong style="color: var(--admin-text-title); font-size: 0.9rem;">Simpan Konfigurasi</strong>
               <p style="color: var(--admin-text-muted); font-size: 0.78rem; margin: 2px 0 0;">Parameter akan disimpan ke tabel ekosistem D1 `port_config`.</p>
             </div>
 
             <div style="display: flex; gap: 0.75rem;">
               <button type="button" id="test-notify-btn" class="btn-solid-secondary">
-                🧪 Kirim Uji Coba Notifikasi
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <polygon points="5 3 19 12 5 21 5 3"/>
+                </svg>
+                Kirim Uji Coba Notifikasi
               </button>
               <button type="submit" class="btn-solid-primary">
                 Simpan Pengaturan
@@ -408,7 +422,7 @@ import '../styles/admin.css';
 
         <!-- Test Results Feedback Box -->
         <div id="notify-test-result" class="admin-card-surface hidden" style="margin-top: 1.25rem;">
-          <h4 style="margin: 0 0 0.5rem; font-size: 0.9rem; color: #ffffff;">Hasil Pengujian Notifikasi Real-Time</h4>
+          <h4 style="margin: 0 0 0.5rem; font-size: 0.9rem; color: var(--admin-text-title);">Hasil Pengujian Notifikasi Real-Time</h4>
           <div id="notify-test-content" style="font-family: var(--admin-font-mono); font-size: 0.8rem; color: var(--admin-text-sub);"></div>
         </div>
       </section>
@@ -482,7 +496,7 @@ import '../styles/admin.css';
           <label class="switch-control">
             <input type="checkbox" id="pm-featured" class="switch-input" />
             <span class="switch-track"><span class="switch-thumb"></span></span>
-            <span class="switch-label-text" style="color: #ffffff; font-weight: 600;">Tampilkan di Carousel Unggulan Beranda (Top 3)</span>
+            <span class="switch-label-text" style="color: var(--admin-text-title); font-weight: 600;">Tampilkan di Carousel Unggulan Beranda (Top 3)</span>
           </label>
         </div>
 
@@ -558,7 +572,7 @@ import '../styles/admin.css';
           <label class="switch-control">
             <input type="checkbox" id="cm-featured" class="switch-input" />
             <span class="switch-track"><span class="switch-thumb"></span></span>
-            <span class="switch-label-text" style="color: #ffffff; font-weight: 600;">Tampilkan di Carousel Unggulan Beranda (Top 3)</span>
+            <span class="switch-label-text" style="color: var(--admin-text-title); font-weight: 600;">Tampilkan di Carousel Unggulan Beranda (Top 3)</span>
           </label>
         </div>
 
@@ -1373,7 +1387,10 @@ import '../styles/admin.css';
 
         if (testBtn) {
           testBtn.disabled = true;
-          testBtn.textContent = '⏳ Mengirim Pesan Uji Coba...';
+          testBtn.innerHTML = `
+            <span class="spinner" style="width: 12px; height: 12px; border-width: 2px; display: inline-block;"></span>
+            Mengirim Pesan Uji Coba...
+          `;
         }
 
         showToast('info', 'Mengirim sinyal uji coba ke Telegram & ntfy...');
@@ -1383,9 +1400,9 @@ import '../styles/admin.css';
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
-              title: '🧪 Uji Coba Notifikasi Admin CMS',
+              title: '[Portfolio | preview.fmr.web.id] Uji Coba Notifikasi Admin CMS',
               message: `Pesan pengujian dikirim dari panel CMS admin portofolio pada ${new Date().toLocaleString('id-ID')}. Koneksi Telegram & ntfy berjalan optimal!`,
-              tags: ['white_check_mark', 'test_tube']
+              tags: ['white_check_mark', 'bell']
             })
           });
 
@@ -1405,7 +1422,7 @@ import '../styles/admin.css';
                   ● ntfy Push: ${ntfy?.success ? 'BERHASIL (HTTP 200)' : `GAGAL / Offline (${ntfy?.info || 'Error'})`}
                 </span>
               </div>
-              <pre style="background: rgba(0,0,0,0.5); padding: 0.75rem; border-radius: 6px; overflow-x: auto; margin: 0; font-size: 0.75rem; color: #94a3b8;">${JSON.stringify(data, null, 2)}</pre>
+              <pre style="background: var(--admin-surface-well); border: 1px solid var(--admin-border); padding: 0.75rem; border-radius: 6px; overflow-x: auto; margin: 0; font-size: 0.75rem; color: var(--admin-text-sub);">${JSON.stringify(data, null, 2)}</pre>
             `;
           }
 
@@ -1423,7 +1440,12 @@ import '../styles/admin.css';
         } finally {
           if (testBtn) {
             testBtn.disabled = false;
-            testBtn.textContent = '🧪 Kirim Uji Coba Notifikasi';
+            testBtn.innerHTML = `
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polygon points="5 3 19 12 5 21 5 3"/>
+              </svg>
+              Kirim Uji Coba Notifikasi
+            `;
           }
         }
       });

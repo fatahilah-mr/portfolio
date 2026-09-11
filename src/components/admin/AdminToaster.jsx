@@ -12,18 +12,17 @@ export default function AdminToaster() {
     <Toaster 
       position="top-right" 
       richColors 
-      theme="dark" 
+      theme="light" 
       closeButton
       duration={3500}
       toastOptions={{
         style: {
           fontFamily: 'inherit',
-          background: 'rgba(18, 20, 28, 0.96)',
-          border: '1px solid rgba(255, 255, 255, 0.12)',
-          backdropFilter: 'blur(16px)',
-          color: '#f8fafc',
-          borderRadius: '12px',
-          boxShadow: '0 12px 36px rgba(0, 0, 0, 0.5)'
+          background: '#ffffff',
+          border: '1px solid #e2e8f0',
+          color: '#0f172a',
+          borderRadius: '10px',
+          boxShadow: '0 10px 25px -5px rgba(0, 0, 0, 0.08), 0 8px 10px -6px rgba(0, 0, 0, 0.04)'
         }
       }}
     />

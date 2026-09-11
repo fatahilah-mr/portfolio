@@ -668,16 +668,33 @@ const projectsCollection = defineCollection({
     - `verified_mobile_cert_card_2.png`: Card 2 renders single-line issuer with right-aligned `2026`.
     - `verified_mobile_cert_card_3.png`: Card 3 renders single-line issuer with `+Transcript` and right-aligned `2025`.
 
-### Session Entry: `2026-09-11` (Phase 44: Remove +Transcript Button from Carousel Cards for Clean Minimal UI)
+### Session Entry: `2026-09-11` (Phase 45: Full Site Audit & Light Clean Minimalist Admin Redesign)
 - **Objective:**
-  - Remove the distracting `+Transcript` button from certificate cards in `FeaturedCertificatesCarousel.astro` per user request.
-- **Rationale & Implementation:**
-  - The detail modal (`UniversalDetailModal`) already handles front/back transcript switching dynamically ("Sertifikat Depan" / "Transkrip Nilai (Belakang)").
-  - Removing the badge completely frees up horizontal space for `IZZAN MEDIATEK COMPUTINDO` on mobile, allowing full uncropped issuer text and unifying the visual structure of all 3 carousel cards (Left: Issuer, Right: Year, Bottom: Full-width Title).
-  - Purged all unused `.transcript-badge` and `.cert-meta-tags` markup and CSS rules.
+  - Perform comprehensive visual and technical audit of all public pages and admin pages.
+  - Redesign CMS Admin Panel (`/admin`) to **Light Clean Minimalist Style (Anti-Slop)** adhering to Apple/Vercel/Linear design standards.
+- **Audit Findings (Browser Subagent):**
+  - All public routes (`/`, `/id`, `/projects`, `/projects/id`, `/certificates`, `/certificates/id`) passed 100% with zero horizontal overflow, deterministic navbar highlighting, verified carousel cards without transcript buttons, and authentic anti-slop copy.
+- **Implementation (Admin Panel Light Minimalist Transformation):**
+  - Redesigned `src/styles/admin.css` & `public/styles/admin.css`:
+    - Canvas: Ultra-clean `#f8fafc` (slate-50) background.
+    - Surfaces: Crisp `#ffffff` cards and navbar with subtle hairline borders (`#e2e8f0`) and soft ambient elevation shadows (`--admin-shadow-card`, `--admin-shadow-modal`).
+    - Typography: High-contrast `#0f172a` (slate-900) titles, `#334155` body, `#64748b` hints.
+    - Buttons: Sleek solid dark `#0f172a` primary button, `#ffffff` bordered secondary button, soft rose `#fff1f2` danger button.
+    - Segmented Tabs: Apple/Linear-style slate-100 tray with pure white active pill and micro-shadow.
+    - Categorical Badges: Soft pastel backgrounds with distinct borders (Web: `#eff6ff`, Cisco: `#f0f9ff`, MikroTik: `#fff1f2`, AI: `#f0fdf4`, Linux: `#fffbeb`).
+    - Form Controls: Clean `#ffffff` inputs with `#cbd5e1` borders and `#0f172a` focus rings.
+    - Modal Dialogs: Frosted backdrop blur (`rgba(15, 23, 42, 0.4)`), `#ffffff` dialog container with contained `max-height: calc(100vh - 4rem)` internal scrolling.
+  - Purged all leftover amateur emojis to clean SVG icons (`Zap` for instant dev-login, `Send` for Telegram Bot Push, `Bell` for ntfy Push, `Play` for notification test button).
+  - Updated `AdminToaster.jsx`: Switched Sonner toast to `theme="light"` with pure white card and slate-900 typography.
+  - Updated `src/pages/admin.astro`: Switched `data-theme="light"` and removed hardcoded white colors.
 - **Verification:**
-  - Astro static build succeeded in 8.80s.
-  - Verified mobile rendering (`verified_card_3_no_transcript.png`): Card 3 renders `IZZAN MEDIATEK COMPUTINDO` in full without truncation alongside `2025` right-aligned.
+  - Astro static build succeeded in 9.02s with 12 pages compiled without error.
+  - Captured verified screenshots:
+    - `admin_light_login_desktop.png`: Pristine light login card with GitHub and Dev-Login buttons.
+    - `admin_light_dashboard_desktop.png`: Clean KPI grid, segmented tabs, and project list.
+    - `admin_light_notifications_desktop.png`: Dual-column notification settings with pastel SVG badges.
+    - `admin_light_dashboard_mobile.png`: Flawless 390px mobile viewport rendering.
+    - `admin_light_modal_desktop.png`: Beautifully structured modal dialog with light inputs.
 
 ---
 
