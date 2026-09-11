@@ -302,6 +302,7 @@ textarea:focus-visible,
   perspective: 1200px;
   padding: 20px 0 40px 0;
   overflow-x: clip;
+  contain: layout style;
 }
 
 .carousel-viewport {
@@ -339,6 +340,10 @@ textarea:focus-visible,
   cursor: pointer;
   transition: transform 0.45s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.45s ease, box-shadow 0.45s ease;
   transform-style: preserve-3d;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  will-change: transform, opacity;
+  contain: layout paint;
 }
 
 .carousel-card.active {
@@ -352,15 +357,13 @@ textarea:focus-visible,
 .carousel-card.prev {
   z-index: 20;
   transform: translateX(-42%) scale(0.86) rotateY(12deg) translateZ(-60px);
-  opacity: 0.7;
-  filter: brightness(0.92);
+  opacity: 0.72;
 }
 
 .carousel-card.next {
   z-index: 20;
   transform: translateX(42%) scale(0.86) rotateY(-12deg) translateZ(-60px);
-  opacity: 0.7;
-  filter: brightness(0.92);
+  opacity: 0.72;
 }
 
 @media (max-width: 640px) {
@@ -412,6 +415,8 @@ textarea:focus-visible,
   height: 100%;
   object-fit: cover;
   display: block;
+  transform: translateZ(0);
+  backface-visibility: hidden;
   transition: transform 0.3s ease;
 }
 
@@ -429,6 +434,8 @@ textarea:focus-visible,
   height: 100%;
   object-fit: contain;
   display: block;
+  transform: translateZ(0);
+  backface-visibility: hidden;
 }
 
 /* ==========================================================================
@@ -438,14 +445,15 @@ textarea:focus-visible,
   position: absolute;
   top: -16px;
   left: 50%;
-  transform: translateX(-50%);
+  transform: translate3d(-50%, 0, 0);
   display: flex;
   flex-direction: column;
   align-items: center;
   z-index: 45;
   pointer-events: none;
-  animation: hintFloatBob 2.4s ease-in-out infinite;
-  transition: opacity 0.45s ease, transform 0.45s ease;
+  animation: hintFloatBob 2.8s ease-in-out infinite;
+  transition: opacity 0.35s ease, transform 0.35s ease;
+  will-change: transform;
 }
 
 @media (max-width: 640px) {
@@ -455,16 +463,14 @@ textarea:focus-visible,
 }
 
 .carousel-hint-callout .callout-badge {
-  background: rgba(255, 255, 255, 0.94);
+  background: var(--bg-card);
   color: var(--color-foreground);
-  border: 1px solid rgba(37, 99, 235, 0.25);
-  box-shadow: 0 4px 16px rgba(37, 99, 235, 0.12), 0 2px 4px rgba(0, 0, 0, 0.04);
+  border: 1px solid rgba(37, 99, 235, 0.28);
+  box-shadow: 0 4px 14px rgba(37, 99, 235, 0.12), 0 2px 4px rgba(0, 0, 0, 0.04);
   padding: 6px 14px;
   border-radius: 9999px;
   font-size: 0.78125rem;
   font-weight: 600;
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
   display: flex;
   align-items: center;
   gap: 6px;
@@ -481,36 +487,37 @@ textarea:focus-visible,
   width: 44px;
   height: 44px;
   color: var(--color-accent); /* Theme Accent: Blueprint Cobalt in Light (#2563EB) / Bright Blue in Dark (#3B82F6) */
-  filter: drop-shadow(0 2px 6px rgba(37, 99, 235, 0.35));
+  filter: drop-shadow(0 2px 4px rgba(37, 99, 235, 0.25));
   margin-top: -4px;
   margin-left: 36px; /* Offsets arrow to swoop gracefully from badge into card */
-  transition: color 0.2s ease, filter 0.2s ease;
+  transition: color 0.2s ease;
 }
 
 [data-theme="dark"] .carousel-hint-callout .callout-badge {
-  background: rgba(24, 24, 27, 0.94);
+  background: var(--bg-card);
   color: var(--color-foreground);
   border: 1px solid rgba(59, 130, 246, 0.35);
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5), 0 0 16px rgba(59, 130, 246, 0.18);
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.45), 0 0 12px rgba(59, 130, 246, 0.15);
 }
 
 [data-theme="dark"] .carousel-hint-callout .hint-arrow {
   color: var(--color-accent);
-  filter: drop-shadow(0 2px 8px rgba(59, 130, 246, 0.5));
+  filter: drop-shadow(0 2px 6px rgba(59, 130, 246, 0.4));
 }
 
 .carousel-hint-callout.faded {
   opacity: 0 !important;
-  transform: translate(-50%, -12px) !important;
+  transform: translate3d(-50%, -12px, 0) !important;
   pointer-events: none !important;
+  animation: none !important;
 }
 
 @keyframes hintFloatBob {
   0%, 100% {
-    transform: translate(-50%, 0);
+    transform: translate3d(-50%, 0, 0);
   }
   50% {
-    transform: translate(-50%, -6px);
+    transform: translate3d(-50%, -6px, 0);
   }
 }
 

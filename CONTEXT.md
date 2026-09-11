@@ -746,6 +746,39 @@ const projectsCollection = defineCollection({
 
 ---
 
+### Phase 47: Anti-Slop CV Button Copy Refinement & 60fps Carousel Hardware Acceleration Optimization (2026-09-11)
+- **Objective:**
+  1. Remove pretentious/AI-slop wording from the hero CV download button ("Unduh CV Resmi" / "Download Official CV" -> authentic, grounded "Unduh CV" / "Download CV").
+  2. Diagnose why scrolling into sections containing 3D Carousels (`#projects` and `#certificates`) experienced noticeable frame drops/stutter, explain the exact rendering bottleneck mechanism, and implement a complete 60fps hardware-composited optimization across styles, timers, and scroll listeners.
+- **Root Cause Diagnosis (Frame Drop / Jutter):**
+  1. *Uncomposited 3D Rendering & CSS `filter: brightness()`*: Side cards in 3D perspective (`rotateY(12deg) translateZ(-60px)`) used `filter: brightness(0.92)`. In Chromium/WebKit, combining CSS filters with 3D transforms breaks fast-path GPU quad composition, forcing off-screen raster surface recreation on every scroll repaint.
+  2. *Continuous `backdrop-filter: blur(12px)` inside Infinite Keyframe Animation*: The floating callout hint (`.carousel-hint-callout`) continuously bobbed vertically (`hintFloatBob 2.4s infinite`) over the 3D stage using `backdrop-filter: blur(12px)`. The GPU was forced to sample and blur background pixels underneath the moving pill at 60Hz. During scroll, changing both scroll offset and bobbing offset triggered constant raster invalidation.
+  3. *Background Autoplay Timers Running Off-Screen and During User Scroll*: Both carousels initialized a 5-second `setInterval` immediately on page load with no `IntersectionObserver`. When users scrolled down, autoplay transitions fired mid-scroll, causing 3D transform transitions and document scroll threads to collide.
+  4. *Scrollspy Layout Thrashing in `Navbar.astro`*: `determineActiveSection()` queried `getBoundingClientRect()` on all 7 sections on scroll. Reading layout geometry while 3D CSS transforms and animations were active forced Chromium to execute synchronous reflows on every animation frame.
+  5. *Missing Hardware Isolation Properties*: Cards lacked `contain: layout paint;`, `will-change: transform, opacity;`, and `backface-visibility: hidden;`.
+- **Engineering Implementations:**
+  1. *Hero CV Button Copy (`src/components/Hero.astro`)*:
+     - Updated line 82: `<span class="lang-id">Unduh CV</span>` (was `Unduh CV Resmi`).
+     - Updated line 83: `<span class="lang-en">Download CV</span>` (was `Download Official CV`).
+  2. *CSS Hardware Acceleration & Repaint Elimination (`src/styles/global.css`)*:
+     - Added `contain: layout style;` to `.carousel-stage`.
+     - Added `contain: layout paint;`, `backface-visibility: hidden;`, and `will-change: transform, opacity;` to `.carousel-card`.
+     - Replaced `filter: brightness(0.92);` on `.carousel-card.prev` and `.next` with compositor-native `opacity: 0.72;` (0 GPU shader passes).
+     - Replaced `backdrop-filter: blur(12px)` on callout badge with clean solid `background: var(--bg-card);`, switched `@keyframes hintFloatBob` to `translate3d(-50%, ..., 0)`, and added `animation: none !important;` upon user interaction (`.faded`).
+     - Added `transform: translateZ(0); backface-visibility: hidden;` to `.aspect-16-10 img` and `.aspect-a4-landscape img`.
+  3. *Lifecycle-Aware Autoplay & Scroll Debounce (`FeaturedProjectsCarousel.astro` & `FeaturedCertificatesCarousel.astro`)*:
+     - Attached `IntersectionObserver` with `threshold: 0.2` so autoplay only runs when visible in the viewport.
+     - Added passive window scroll listener with 1.5s debounce to pause autoplay during active user scrolling.
+  4. *Zero-DOM-Read Scrollspy (`src/components/Navbar.astro`)*:
+     - Pre-cached section absolute offsets (`sectionOffsets`) on page load and window resize.
+     - Evaluated active sections in `determineActiveSection` using pure arithmetic comparison (`focalDocY` vs. cached `s.top` / `s.bottom`), eliminating `getBoundingClientRect()` during scroll completely.
+- **Verification & Testing:**
+  1. *Build Verification*: `npm run build` completed with 0 errors in 8.98s (15 static pages).
+  2. *Rendered Output Check*: Verified in Astro preview server that "Unduh CV" and "Download CV" are rendered with zero occurrences of "resmi" or "official".
+  3. *Visual Inspection*: Captured screenshots (`verified_button_cv.png`, `verified_fullpage_smooth.png`) confirming clean, professional layout and crisp carousel rendering.
+
+---
+
 ## 📋 12. Backlog & Next Actions
 
 - [x] Create clean working branch `dev` and purge old `rebuild` branch
@@ -764,4 +797,5 @@ const projectsCollection = defineCollection({
 - [x] Add staging domain `preview.fmr.web.id` on Cloudflare Pages and verify DNS
 - [x] Verify build (`npm run build`) and live endpoints via comprehensive health checks
 - [x] Invert default language routing to Indonesian at `/` and English at `/en/` with region auto-detect
+- [x] Refine CV button copy to "Unduh CV" and optimize 3D carousels for 60fps smooth scrolling
 - [ ] Merge `dev` to `public` when user approves final release to `https://fatahmr.my.id`

@@ -901,11 +901,31 @@ const getSectionHref = (id: string) => isHome ? `#${id}` : (homeUrl === '/' ? `/
       });
     }
 
+    // Cache section absolute offsets to eliminate layout thrashing (forced reflow) on scroll
+    let sectionOffsets = [];
+    function measureSectionOffsets() {
+      const scrollY = window.scrollY || window.pageYOffset;
+      sectionOffsets = sectionElements.map(el => {
+        const rect = el.getBoundingClientRect();
+        const top = rect.top + scrollY;
+        return {
+          id: el.id,
+          top: top,
+          bottom: top + rect.height
+        };
+      });
+    }
+
+    measureSectionOffsets();
+    window.addEventListener('load', measureSectionOffsets, { passive: true });
+    setTimeout(measureSectionOffsets, 1000); // Re-measure once dynamic assets settle
+
     // Deterministic position-based section detector (focal reading line below sticky navbar)
+    // Pure arithmetic calculation - ZERO DOM reads during scroll
     function determineActiveSection() {
       if (isClickLocked) return;
 
-      const scrollY = window.scrollY;
+      const scrollY = window.scrollY || window.pageYOffset;
 
       // 1. Very top edge
       if (scrollY < 80) {
@@ -920,14 +940,17 @@ const getSectionHref = (id: string) => isHome ? `#${id}` : (homeUrl === '/' ? `/
       }
 
       // 3. Focal reading line: 160px from top (clears 64px header + spacing)
-      const focalY = 160;
+      const focalDocY = scrollY + 160;
       let matchedSection = null;
 
-      for (let i = 0; i < sectionElements.length; i++) {
-        const el = sectionElements[i];
-        const rect = el.getBoundingClientRect();
-        if (rect.top <= focalY && rect.bottom > focalY) {
-          matchedSection = el.id;
+      if (sectionOffsets.length === 0) {
+        measureSectionOffsets();
+      }
+
+      for (let i = 0; i < sectionOffsets.length; i++) {
+        const s = sectionOffsets[i];
+        if (s.top <= focalDocY && s.bottom > focalDocY) {
+          matchedSection = s.id;
           break;
         }
       }
@@ -935,12 +958,11 @@ const getSectionHref = (id: string) => isHome ? `#${id}` : (homeUrl === '/' ? `/
       // Fallback: pick section closest above focal line if between boundaries
       if (!matchedSection) {
         let closestDist = -Infinity;
-        for (let i = 0; i < sectionElements.length; i++) {
-          const el = sectionElements[i];
-          const rect = el.getBoundingClientRect();
-          if (rect.top <= focalY && rect.top > closestDist) {
-            closestDist = rect.top;
-            matchedSection = el.id;
+        for (let i = 0; i < sectionOffsets.length; i++) {
+          const s = sectionOffsets[i];
+          if (s.top <= focalDocY && s.top > closestDist) {
+            closestDist = s.top;
+            matchedSection = s.id;
           }
         }
       }
@@ -963,7 +985,10 @@ const getSectionHref = (id: string) => isHome ? `#${id}` : (homeUrl === '/' ? `/
     }
 
     window.addEventListener('scroll', onScroll, { passive: true });
-    window.addEventListener('resize', onScroll, { passive: true });
+    window.addEventListener('resize', () => {
+      measureSectionOffsets();
+      onScroll();
+    }, { passive: true });
 
     // Handle section click: immediately activate and temporarily lock against smooth scroll interference
     function handleSectionClick(sectionId) {
