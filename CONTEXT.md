@@ -799,6 +799,32 @@ const projectsCollection = defineCollection({
   - Real browser CDP verification: Evaluated elements dynamically in headless Chrome at scroll positions 1000px and 2500px, confirming `.is-revealed` applied sequentially with staggered opacities.
   - Visual inspection: Captured `verified_cdp_scroll.png` confirming smooth rendering of revealed cards.
 
+### Session Entry: `2026-09-12` (Phase 49: Strict Grounding & Correction of Experience & Internship Data)
+- **Objective:**
+  1. Audit and eliminate all hallucinated dates, roles, and descriptions in the Experience section.
+  2. Update "Lead Developer — Platform PERISAI & PERISAI AYOM" period to `Juli 2026` / `July 2026` (explicit user directive: was erroneously marked `2024 — 2026`).
+  3. Ground all internship (PKL) entries against authentic historical records from repository branch `public` (`src/pages/experience.astro`, `src/components/ExperienceShowcase.astro`, and `old-portfolio`).
+- **Audit Findings vs Authentic Branch `public`:**
+  - *Lead Developer PERISAI:* Erroneously showed `2024 — 2026`. Correct period is strictly `Juli 2026` / `July 2026`.
+  - *PKL History:* Was missing `Fazza Computer` entirely, and had generic placeholder tasks for `BLK Kebumen` and `IMC Computer`.
+  - *Authentic Records (3 PKLs):*
+    1. `UPTD Balai Latihan Kerja (BLK) Kebumen` (Nov 2025 — Des 2025): Peserta Praktik Kerja Lapangan (Network & Server) — MikroTik RouterOS, Debian 12, Cisco PT, Nginx Web Server.
+    2. `Fazza Computer` (Sep 2025 — Nov 2025): Peserta Praktik Kerja Lapangan (FTTH & Network) — FTTH Fiber Optic, ONT Configuration, Network Troubleshooting.
+    3. `IMC Computer (Izzan Mediatek Computindo)` (Feb 2025 — Apr 2025): Peserta Praktik Kerja Lapangan (PC & Network) — PC Assembly, Windows OS Installation, Hardware Diagnostics.
+  - *About Section:* Updated student phrasing to official graduate status ("lulusan SMK Patriot Pituruh jurusan TKJ (2026)").
+- **Architectural & Code Changes:**
+  - `src/components/ExperienceSection.astro`:
+    - Updated subtitle to reflect LKS, production systems, and the 3 official PKLs.
+    - Updated Item 2 period to `Juli 2026` (ID) / `July 2026` (EN).
+    - Expanded timeline items from 4 to 5, incorporating all 3 PKLs with authentic bullet points, specialization badges, and tech stack tags.
+    - Added CSS rules for `.timeline-badge`, `.timeline-bullets`, `.timeline-tags`, and `.timeline-tag`.
+  - `src/components/AboutSection.astro`:
+    - Updated profile narrative to specify "lulusan SMK Patriot Pituruh jurusan Teknik Komputer & Jaringan (TKJ) (2026)".
+- **Verification & Testing:**
+  - Static Build: `npm run build` compiled 15 pages in 7.90s with 0 errors.
+  - Runtime CDP Inspection: Verified all 5 items, dates, and bullet counts in headless Chrome across both ID (`/#experience`) and EN (`/en/#experience`).
+  - Screenshots captured: `verified_experience_id.png` and `verified_experience_en.png`.
+
 ---
 
 ## 📋 12. Backlog & Next Actions
@@ -821,4 +847,6 @@ const projectsCollection = defineCollection({
 - [x] Invert default language routing to Indonesian at `/` and English at `/en/` with region auto-detect
 - [x] Refine CV button copy to "Unduh CV" and optimize 3D carousels for 60fps smooth scrolling
 - [x] Implement lightweight editorial micro-animations (scroll reveal & button micro-touch)
+- [x] Ground all experience & PKL timeline data against authentic records from branch `public`
 - [ ] Merge `dev` to `public` when user approves final release to `https://fatahmr.my.id`
+
