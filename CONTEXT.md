@@ -696,6 +696,54 @@ const projectsCollection = defineCollection({
     - `admin_light_dashboard_mobile.png`: Flawless 390px mobile viewport rendering.
     - `admin_light_modal_desktop.png`: Beautifully structured modal dialog with light inputs.
 
+### Session Entry: `2026-09-11` (Phase 46: Swap Default Language to Indonesian at Root & English at /en/ with Region Auto-Detection)
+- **Objective:**
+  - Invert the primary multilingual routing architecture per user request:
+    - Root (`/`) is now Bahasa Indonesia (Home `/`, Projects `/projects`, Certificates `/certificates`).
+    - English is prefixed cleanly under `/en/` (Home `/en/`, Projects `/en/projects`, Certificates `/en/certificates`).
+    - Implement dual-layer auto-detection of region / country: visitors from outside Indonesia accessing the website for the first time are automatically redirected to the English version (`/en`).
+    - Preserve manual language switching choices persistently via `localStorage` and `preferred_lang` cookie so user preference is never overridden.
+    - Provide 301 permanent redirects for legacy `/id` routes (`/id`, `/projects/id`, `/certificates/id`).
+- **Architectural & Design Implementation:**
+  1. *Dual-Layer Auto-Detection (Edge + Client Fallback):*
+     - **Edge Layer (`functions/_middleware.js`):** Cloudflare Pages Functions middleware inspects `request.cf?.country` or `cf-ipcountry`. If a first-time visitor accesses `/` from outside Indonesia (`country !== 'ID'`), an immediate 302 redirect to `/en` is returned with `Set-Cookie: preferred_lang=en`. If accessing from Indonesia, `preferred_lang=id` is stamped. Search engine bots (`Googlebot`, `Bingbot`, etc.) bypass redirects to ensure complete indexation of all multilingual pages.
+     - **Client Layer (`src/layouts/Layout.astro`):** An inline `<script>` in `<head>` runs synchronously before rendering. If no preference is stored and browser language is non-Indonesian (`!lang.startsWith('id')`), it instantly redirects to `/en` via `window.location.replace('/en')` with 0 FOUC.
+  2. *Page File Structure Reorganization:*
+     - Root Indonesian:
+       - `src/pages/index.astro`: Indonesian Home (`lang="id"`).
+       - `src/pages/projects.astro`: Indonesian Projects Catalog (`lang="id"`).
+       - `src/pages/certificates.astro`: Indonesian Certificates Catalog (`lang="id"`).
+     - English Directory (`src/pages/en/`):
+       - `src/pages/en/index.astro`: English Home (`lang="en"`).
+       - `src/pages/en/projects.astro`: English Projects Catalog (`lang="en"`).
+       - `src/pages/en/certificates.astro`: English Certificates Catalog (`lang="en"`).
+     - Legacy Redirects:
+       - `src/pages/id.astro` -> 301 redirect to `/`.
+       - `src/pages/projects/id.astro` -> 301 redirect to `/projects`.
+       - `src/pages/certificates/id.astro` -> 301 redirect to `/certificates`.
+       - `public/_redirects`: Updated with 301 rules for all legacy and shorthand paths.
+  3. *Navbar & Switcher Logic (`src/components/Navbar.astro`):*
+     - Inverted `targetIdUrl` and `targetEnUrl` so `ID` links to `/` and `EN` links to `/en` on the home page, while mapping to `/projects` and `/en/projects` on catalog pages.
+     - Attached event listeners to `#lang-code-id` and `#lang-code-en` to persist user choices in `localStorage` and `document.cookie` before navigation.
+     - Updated section anchor links (`getSectionHref`): direct hash `#id` on home page to avoid page reloads, and `/#id` or `/en#id` when on catalog pages.
+  4. *SEO Hreflang Tags (`src/layouts/Layout.astro`):*
+     - Added `<link rel="alternate" hreflang="id" ...>`, `<link rel="alternate" hreflang="en" ...>`, and `<link rel="alternate" hreflang="x-default" href="https://fatahmr.my.id/" />` following international Google SEO standards.
+- **Verification & Testing:**
+  - Automated unit test suite (`functions/_middleware.js`): 9 out of 9 tests passed (country detection, cookie overrides, bot bypass, 301 redirects).
+  - Production build (`npm run build`): All 15 static routes compiled cleanly in 8.26s without errors.
+  - Headless Chrome CDP test suite: 7 out of 7 browser tests passed (Indonesian default rendering, English `/en` rendering, auto-detection redirect, manual preference override).
+  - Pushed to `origin dev` (`a49c39e`) and verified live deployment `756b4e51` at `https://preview.fmr.web.id/`.
+  - Live HTTP verification:
+    - `https://preview.fmr.web.id/` -> HTTP 200, `lang="id"`, title `"Portofolio Resmi | Fatahilah Miftahul Rahman"`.
+    - `https://preview.fmr.web.id/en/` -> HTTP 200, `lang="en"`, title `"Official Portfolio | Fatahilah Miftahul Rahman"`.
+    - `https://preview.fmr.web.id/projects/` -> HTTP 200, `lang="id"`.
+    - `https://preview.fmr.web.id/en/projects/` -> HTTP 200, `lang="en"`.
+    - `https://preview.fmr.web.id/certificates/` -> HTTP 200, `lang="id"`.
+    - `https://preview.fmr.web.id/en/certificates/` -> HTTP 200, `lang="en"`.
+    - `https://preview.fmr.web.id/id` -> HTTP 301 redirect to `/`.
+    - `https://preview.fmr.web.id/projects/id` -> HTTP 301 redirect to `/projects`.
+    - `https://preview.fmr.web.id/certificates/id` -> HTTP 301 redirect to `/certificates`.
+
 ---
 
 ## 📋 12. Backlog & Next Actions
@@ -715,4 +763,5 @@ const projectsCollection = defineCollection({
 - [x] Build Single-Page CMS Admin Panel (`/admin`) with Dynamic Notification Settings & "Kirim Uji Coba"
 - [x] Add staging domain `preview.fmr.web.id` on Cloudflare Pages and verify DNS
 - [x] Verify build (`npm run build`) and live endpoints via comprehensive health checks
+- [x] Invert default language routing to Indonesian at `/` and English at `/en/` with region auto-detect
 - [ ] Merge `dev` to `public` when user approves final release to `https://fatahmr.my.id`
