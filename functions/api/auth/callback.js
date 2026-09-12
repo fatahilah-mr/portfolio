@@ -33,7 +33,7 @@ export async function onRequestGet(context) {
         client_id: clientId,
         client_secret: clientSecret,
         code,
-        redirect_uri: `${url.origin}/api/auth/callback`
+        redirect_uri: `${url.origin}${url.pathname}`
       })
     });
 
