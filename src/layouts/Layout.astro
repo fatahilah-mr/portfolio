@@ -13,15 +13,23 @@ export interface Props {
   image?: string;
 }
 
+// Determine target URLs for hreflang & SEO
+const pathname = Astro.url.pathname.replace(/\/$/, '') || '/';
+
+// Contextual OG Image based on section/path
+let defaultOgImage = "https://cdn.fmr.web.id/og-image-fatahmr.my.id.png";
+if (pathname === '/projects' || pathname.includes('/projects')) {
+  defaultOgImage = "https://cdn.fmr.web.id/og-image-fatahmr.my.id-projects.png";
+} else if (pathname === '/certificates' || pathname.includes('/certificates')) {
+  defaultOgImage = "https://cdn.fmr.web.id/og-image-fatahmr.my.id-certificates.png";
+}
+
 const { 
   title, 
   description = "Portofolio resmi Fatahilah Miftahul Rahman - Juara 1 LKS IT Network System Administration Purworejo 2026. Menampilkan keahlian infrastruktur jaringan enterprise, administrasi server Linux, proyek web produksi publik, dan kredensial terverifikasi.",
   lang = 'id',
-  image = "https://cdn.fmr.web.id/og-image-fatahmr.my.id.png"
+  image = defaultOgImage
 } = Astro.props;
-
-// Determine target URLs for hreflang & SEO
-const pathname = Astro.url.pathname.replace(/\/$/, '') || '/';
 let targetIdUrl = '/';
 if (pathname === '/en' || pathname === '/id') {
   targetIdUrl = '/';
