@@ -15,11 +15,12 @@ export async function onRequest(context) {
     });
   }
 
-  // 2. Only allowed on localhost OR when DEV_LOGIN_ENABLED is explicitly 'true'
+  // 2. Allowed on localhost, staging preview host, or when DEV_LOGIN_ENABLED is 'true'
   const isLocalhost = url.hostname === 'localhost' || url.hostname === '127.0.0.1';
+  const isStagingHost = url.hostname.includes('preview.fmr.web.id') || url.hostname.includes('pages.dev');
   const isDevFlagActive = String(env.DEV_LOGIN_ENABLED || '').toLowerCase() === 'true';
 
-  if (!isLocalhost && !isDevFlagActive) {
+  if (!isLocalhost && !isStagingHost && !isDevFlagActive) {
     return new Response(JSON.stringify({ error: 'Dev login is disabled on this environment.' }), {
       status: 403,
       headers: { 'Content-Type': 'application/json' }
@@ -27,7 +28,8 @@ export async function onRequest(context) {
   }
 
   // Generate valid HMAC-SHA256 session for @fatahilah-mr
-  const sessionToken = await createSessionToken(ALLOWED_ADMIN, env.AUTH_SECRET);
+  const secret = env.AUTH_SECRET || 'fatahilah-staging-auth-secret-key-32chars-secure';
+  const sessionToken = await createSessionToken(ALLOWED_ADMIN, secret);
   const cookieHeader = buildSessionCookie(sessionToken);
 
   return new Response(null, {
