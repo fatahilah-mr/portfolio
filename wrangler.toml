@@ -2,6 +2,9 @@ name = "portfolio-new"
 compatibility_date = "2026-09-10"
 pages_build_output_dir = "dist"
 
+[vars]
+GITHUB_CLIENT_ID = "Ov23li8lMPzjcj7LU5yZ"
+
 [[d1_databases]]
 binding = "DB"
 database_name = "gateway-d1"
