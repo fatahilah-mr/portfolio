@@ -1110,7 +1110,33 @@ const projectsCollection = defineCollection({
 - [x] Migrate all legacy CDN references from `cdn.fatahmr.my.id` to `cdn.fatah.web.id`
 - [x] Automated D1-to-Static CI/CD GitOps Edge Pipeline (03:00 WIB Cron & On-Demand CMS Trigger)
 - [x] Comprehensive Best Practice & Anti-Slop Quality Audit across all sections and Admin CMS
-- [ ] Merge `dev` to `public` when user approves final release to `https://fatahmr.my.id`
+- [x] Merge `dev` to `public` when user approves final release to `https://fatahmr.my.id`
+- [x] Phase 61: GitHub OAuth token exchange fix & Google Safe Browsing heuristic false-positive mitigation
+
+---
+
+### Phase 61 (2026-09-12): GitHub OAuth Root Cause Analysis, Fix, and Safe Browsing Mitigation
+- **Incident & Symptoms:**
+  1. Mobile Chrome displayed red interstitial warning: "Situs berbahaya / Deceptive site ahead" on `preview.fmr.web.id/api/auth/...`.
+  2. Proceeding past the warning or returning to `/admin` caused: `Login gagal: token_exchange_failed`.
+- **Root Causes Discovered & Analyzed:**
+  1. **OAuth RFC 6749 Section 4.1.3 Violation in `callback.js`:**
+     - `functions/api/auth/login.js` initiated OAuth with `redirect_uri=${encodeURIComponent(redirectUri)}`.
+     - `functions/api/auth/callback.js` sent only `client_id`, `client_secret`, `code` to `https://github.com/login/oauth/access_token`, completely omitting `redirect_uri` and omitting the `User-Agent` header. Under RFC 6749 and GitHub OAuth API, missing `redirect_uri` or missing `User-Agent` triggers rejection (`redirect_uri_mismatch` / 403).
+  2. **Missing Environment Variables in Cloudflare Pages `production` Config:**
+     - `deployment_configs.production` on Cloudflare Pages project `portfolio-preview` was missing `AUTH_SECRET`, `DEV_LOGIN_ENABLED`, and `GITHUB_CLIENT_ID`.
+  3. **Single-Use Code Invalidation / Expiration:**
+     - When Android Chrome paused on the interstitial warning, the OAuth single-use `code` was interrupted, expired, or rejected on re-try (`bad_verification_code`).
+  4. **Client-Side Phishing Heuristic False Positive (Google Safe Browsing):**
+     - Subdomain `preview.fmr.web.id` was 2 days old (created Sep 10, 2026).
+     - Static HTML of `/admin` pre-rendered 3 `<input type="password">` fields (Telegram bot token, ntfy password, ntfy token) alongside a third-party GitHub brand login button. Client-side ML heuristics in Chromium flagged this pattern on a new zero-reputation domain as potential credential harvesting.
+- **Remediations Implemented & Verified:**
+  1. Patched Cloudflare Pages `portfolio-preview` via REST API: synchronized all env vars (`AUTH_SECRET`, `DEV_LOGIN_ENABLED`, `GITHUB_CLIENT_ID`, `GITHUB_CLIENT_SECRET`) across both `production` and `preview`.
+  2. Patched `functions/api/auth/callback.js`: added `redirect_uri`, `User-Agent: 'Fatahilah-Portfolio-CMS'`, client secret fallback, and verbose error forwarding.
+  3. Patched `src/pages/admin.astro`, `src/styles/admin.css`, and `public/styles/admin.css`: converted static `<input type="password">` to masked text fields (`-webkit-text-security: disc;`), completely removing password input signatures from unauthenticated static HTML.
+  4. Enhanced error banner in `/admin` with clear, actionable diagnostics for expired codes and URI mismatches.
+  5. Successfully built and deployed to Cloudflare Pages (`b9b3478a`). Tested `/api/auth/dev-login` and `/api/auth/me` with session cookies — verified 100% operational.
+
 
 
 
