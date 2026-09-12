@@ -3,10 +3,18 @@
 
 import { buildOAuthStateCookie } from '../_auth.js';
 
-export async function onRequestGet(context) {
+export async function onRequest(context) {
   const { request, env } = context;
-  const clientId = env.GITHUB_CLIENT_ID;
   const url = new URL(request.url);
+
+  if (request.method !== 'GET' && request.method !== 'HEAD') {
+    return new Response(JSON.stringify({ error: `Method ${request.method} Not Allowed` }), {
+      status: 405,
+      headers: { 'Content-Type': 'application/json' }
+    });
+  }
+
+  const clientId = env.GITHUB_CLIENT_ID;
 
   if (!clientId) {
     console.error('GITHUB_CLIENT_ID is not configured on Cloudflare environment.');
