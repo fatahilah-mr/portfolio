@@ -5,14 +5,11 @@ export async function onRequestGet(context) {
   const { request, env } = context;
   const clientId = env.GITHUB_CLIENT_ID;
 
-  if (!clientId) {
-    return new Response(
-      JSON.stringify({ error: 'GITHUB_CLIENT_ID environment variable is not configured' }),
-      { status: 500, headers: { 'Content-Type': 'application/json' } }
-    );
-  }
-
   const url = new URL(request.url);
+
+  if (!clientId) {
+    return Response.redirect(`${url.origin}/admin?error=oauth_unconfigured`, 302);
+  }
   const redirectUri = `${url.origin}/api/auth/callback`;
   const githubAuthUrl = `https://github.com/login/oauth/authorize?client_id=${clientId}&redirect_uri=${encodeURIComponent(redirectUri)}&scope=read:user`;
 

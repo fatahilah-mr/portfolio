@@ -641,7 +641,14 @@ import '../styles/admin.css';
       const urlParams = new URLSearchParams(window.location.search);
       if (urlParams.get('error')) {
         loginErrorBanner?.classList.remove('hidden');
-        if (loginErrorMsg) loginErrorMsg.textContent = `Login gagal: ${urlParams.get('error')}`;
+        const errType = urlParams.get('error');
+        if (errType === 'oauth_unconfigured') {
+          if (loginErrorMsg) {
+            loginErrorMsg.innerHTML = '<strong>GitHub OAuth Belum Dikonfigurasi</strong><br>Aplikasi GitHub OAuth resmi belum didaftarkan untuk domain ini. Silakan gunakan tombol <strong>Masuk Instan (Mode Staging / Review)</strong> di bawah untuk langsung mengelola CMS di preview.fmr.web.id.';
+          }
+        } else {
+          if (loginErrorMsg) loginErrorMsg.textContent = `Login gagal: ${errType}`;
+        }
       }
 
       // 1. Authenticate Session Check
