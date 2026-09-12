@@ -1135,9 +1135,29 @@ const projectsCollection = defineCollection({
   2. Patched `functions/api/auth/callback.js`: added `redirect_uri`, `User-Agent: 'Fatahilah-Portfolio-CMS'`, client secret fallback, and verbose error forwarding.
   3. Patched `src/pages/admin.astro`, `src/styles/admin.css`, and `public/styles/admin.css`: converted static `<input type="password">` to masked text fields (`-webkit-text-security: disc;`), completely removing password input signatures from unauthenticated static HTML.
   4. Enhanced error banner in `/admin` with clear, actionable diagnostics for expired codes and URI mismatches.
-  5. Successfully built and deployed to Cloudflare Pages (`b9b3478a`). Tested `/api/auth/dev-login` and `/api/auth/me` with session cookies — verified 100% operational.
+- [x] Phase 62: Live CI/CD Cloudflare Pages & D1 Sync Engine verification with [skip ci] edge-case resolution
 
+---
 
-
-
+### Phase 62 (2026-09-12): End-to-End Live Test of D1-to-Static GitOps Sync Engine & [skip ci] Fix
+- **Objective:** Execute live, real-world data modification in Cloudflare D1 to verify the automated pipeline: D1 change -> Pages Function `POST /api/admin/sync` -> GitHub commit -> Cloudflare Pages edge build (`npm run build`).
+- **Critical Discovery & Root Cause Analysis:**
+  - When the first live test was executed, `POST /api/admin/sync` successfully detected the D1 modification and created commit `fb576d5` on branch `dev`.
+  - However, Cloudflare Pages reported: `"is_skipped": true, "skip_reason": "commit_message"`.
+  - **Root Cause:** The commit message contained `[skip ci]`. Cloudflare Pages explicitly checks for `[skip ci]` anywhere in the commit message and aborts the build runner.
+- **Implemented Fix:**
+  - Removed `[skip ci]` from commit generator in `functions/api/admin/sync.js` (line 230) and `.github/workflows/d1-edge-sync.yml` (line 57).
+  - Pushed clean commit `b940af0` to `dev`.
+- **Live Verification Results:**
+  - Second live test executed with D1 modification:
+    1. Worker `POST /api/admin/sync` responded: `{ success: true, changed: true, commit_sha: "206bcd4c..." }`.
+    2. GitHub received commit `206bcd4` (`chore(sync): automated D1 to static JSON sync`).
+    3. Cloudflare Pages automatically triggered deployment `a20702c2-bcc9-41c7-8ebf-d45c593fc57a`:
+       - `queued: success`
+       - `initialize: success`
+       - `clone_repo: success`
+       - `build: success` (Astro static compilation in 19s)
+       - `deploy: success` (Total time: 56s)
+    4. Called `POST /api/admin/sync` again immediately: SHA-256 no-op guard returned `{ success: true, changed: false }`, verifying zero infinite loops or redundant commits.
+  - The entire D1 -> Git -> Cloudflare Pages edge build pipeline is 100% verified and operational.
 
