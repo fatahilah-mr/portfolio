@@ -10,12 +10,13 @@ interface Props {
 const { lang = 'id' } = Astro.props;
 const catalogUrl = lang === 'en' ? '/en/projects' : '/projects';
 
-// Top 3 featured projects: PERISAI Temon (ID: 2), PERISAI AYOM (ID: 3), FATAH Gateway (ID: 5)
-const featuredProjects = [
-  projectsData.find(p => p.id === '2'),
-  projectsData.find(p => p.id === '3'),
-  projectsData.find(p => p.id === '5')
-].filter(Boolean);
+// Top 3 featured projects dynamically driven by CMS is_featured flag and sort_order
+const featuredProjects = (() => {
+  const filtered = projectsData
+    .filter(p => Number(p.is_featured) === 1)
+    .sort((a, b) => (Number(a.sort_order) || 0) - (Number(b.sort_order) || 0));
+  return filtered.length >= 3 ? filtered.slice(0, 3) : projectsData.slice(0, 3);
+})();
 ---
 
 <section id="projects" class="section-padding featured-projects-section">

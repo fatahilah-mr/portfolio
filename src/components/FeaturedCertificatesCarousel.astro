@@ -10,12 +10,13 @@ interface Props {
 const { lang = 'id' } = Astro.props;
 const catalogUrl = lang === 'en' ? '/en/certificates' : '/certificates';
 
-// Top 3 featured landscape certificates: LKS Kab Purworejo (ID: 1), LKS Provinsi Jateng (ID: 2), PKL IMC Computer (ID: 4)
-const featuredCerts = [
-  certsData.find(c => c.id === '1'),
-  certsData.find(c => c.id === '2'),
-  certsData.find(c => c.id === '4')
-].filter(Boolean);
+// Top 3 featured landscape certificates dynamically driven by CMS is_featured flag and sort_order
+const featuredCerts = (() => {
+  const filtered = certsData
+    .filter(c => Number(c.is_featured) === 1)
+    .sort((a, b) => (Number(a.sort_order) || 0) - (Number(b.sort_order) || 0));
+  return filtered.length >= 3 ? filtered.slice(0, 3) : certsData.slice(0, 3);
+})();
 ---
 
 <section id="certificates" class="section-padding featured-certs-section">
@@ -453,9 +454,11 @@ const featuredCerts = [
             const curData = JSON.parse(card.getAttribute('data-cert') || '{}');
             const dbData = certMap.get(String(curData.id));
             if (dbData) {
-              if (dbData.link_gambar && dbData.link_gambar !== curData.link_gambar) {
+              const freshImg = dbData.url_gambar_depan || dbData.link_gambar;
+              const curImg = curData.url_gambar_depan || curData.link_gambar;
+              if (freshImg && freshImg !== curImg) {
                 const img = card.querySelector('img');
-                if (img) img.src = dbData.link_gambar;
+                if (img) img.src = freshImg;
               }
               card.setAttribute('data-cert', JSON.stringify({ ...curData, ...dbData }));
             }

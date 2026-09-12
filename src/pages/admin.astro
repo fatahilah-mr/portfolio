@@ -468,7 +468,12 @@ import '../styles/admin.css';
     <div class="admin-dialog-content">
       <div class="dialog-header">
         <h3 id="project-modal-title">Tambah / Edit Proyek</h3>
-        <button type="button" class="btn-icon-subtle" data-close-modal="project-modal">✕</button>
+        <button type="button" class="btn-icon-subtle" data-close-modal="project-modal" aria-label="Tutup Dialog">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
       </div>
 
       <form id="project-form" style="display: flex; flex-direction: column; gap: 1rem;">
@@ -547,7 +552,12 @@ import '../styles/admin.css';
     <div class="admin-dialog-content">
       <div class="dialog-header">
         <h3 id="cert-modal-title">Tambah / Edit Sertifikat</h3>
-        <button type="button" class="btn-icon-subtle" data-close-modal="cert-modal">✕</button>
+        <button type="button" class="btn-icon-subtle" data-close-modal="cert-modal" aria-label="Tutup Dialog">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
       </div>
 
       <form id="cert-form" style="display: flex; flex-direction: column; gap: 1rem;">
@@ -1528,36 +1538,56 @@ import '../styles/admin.css';
           if (data.changed) {
             showToast('success', `Berhasil! Commit ${data.commit_sha.slice(0, 7)} dibuat. Cloudflare Pages sedang melakukan build di edge.`);
             if (syncIndicator) {
-              syncIndicator.innerHTML = `Status: <span style="color: #22c55e;">● Terakhir sinkron: ${new Date().toLocaleTimeString('id-ID')} WIB (Commit: ${data.commit_sha.slice(0, 7)})</span>`;
+              syncIndicator.innerHTML = `Status: <span style="color: var(--admin-success); display: inline-flex; align-items: center; gap: 4px;"><span style="width: 6px; height: 6px; border-radius: 50%; background: var(--admin-success);"></span> Terakhir sinkron: ${new Date().toLocaleTimeString('id-ID')} WIB (Commit: ${data.commit_sha.slice(0, 7)})</span>`;
             }
             if (syncResultBox) {
               syncResultBox.innerHTML = `
-                <div style="color: #22c55e; font-weight: 600; margin-bottom: 4px;">✅ Sinkronisasi Selesai & Build Edge Dipicu!</div>
-                <div>Commit SHA: <strong>${data.commit_sha}</strong></div>
-                <div>File Diperbarui: ${data.files_updated ? data.files_updated.join(', ') : 'src/data/*.json'}</div>
-                <div style="margin-top: 4px; color: var(--admin-text-muted);">Cloudflare Pages otomatis mengompilasi dan menyebarkan versi terbaru ke seluruh CDN dunia dalam 1-2 menit.</div>
+                <div style="display: flex; align-items: center; gap: 8px; color: var(--admin-success); font-weight: 600; margin-bottom: 6px;">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="20 6 9 17 4 12"></polyline>
+                  </svg>
+                  <span>Sinkronisasi Selesai & Build Edge Dipicu!</span>
+                </div>
+                <div>Commit SHA: <strong style="font-family: var(--admin-font-mono);">${data.commit_sha}</strong></div>
+                <div style="margin-top: 2px;">File Diperbarui: ${data.files_updated ? data.files_updated.join(', ') : 'src/data/*.json'}</div>
+                <div style="margin-top: 6px; color: var(--admin-text-muted); font-size: 0.8rem;">Cloudflare Pages otomatis mengompilasi dan menyebarkan versi terbaru ke seluruh CDN dunia dalam 1-2 menit.</div>
               `;
             }
           } else {
             showToast('info', 'Data D1 sudah identik dengan Git. Tidak diperlukan build ulang.');
             if (syncIndicator) {
-              syncIndicator.innerHTML = `Status: <span style="color: #6366f1;">● Data D1 & Git identik (Pemeriksaan: ${new Date().toLocaleTimeString('id-ID')} WIB)</span>`;
+              syncIndicator.innerHTML = `Status: <span style="color: var(--admin-accent-blue); display: inline-flex; align-items: center; gap: 4px;"><span style="width: 6px; height: 6px; border-radius: 50%; background: var(--admin-accent-blue);"></span> Data D1 & Git identik (${new Date().toLocaleTimeString('id-ID')} WIB)</span>`;
             }
             if (syncResultBox) {
               syncResultBox.innerHTML = `
-                <div style="color: #6366f1; font-weight: 600;">✨ Data Sudah Sinkron</div>
-                <div style="color: var(--admin-text-sub); margin-top: 2px;">Data di Cloudflare D1 tidak memiliki perubahan dibandingkan file statis di repositori. Guard SHA-256 mencegah commit sampah dan menghemat kuota build.</div>
+                <div style="display: flex; align-items: center; gap: 8px; color: var(--admin-accent-blue); font-weight: 600; margin-bottom: 4px;">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                    <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                  </svg>
+                  <span>Data Sudah Sinkron</span>
+                </div>
+                <div style="color: var(--admin-text-sub); margin-top: 2px; font-size: 0.825rem;">Data di Cloudflare D1 identik dengan file statis di repositori. Guard SHA-256 mencegah commit berulang dan menghemat kuota edge build.</div>
               `;
             }
           }
         } catch (err) {
           showToast('error', `Gagal sinkronisasi: ${err.message}`);
           if (syncIndicator) {
-            syncIndicator.innerHTML = `Status: <span style="color: #ef4444;">● Gagal: ${err.message}</span>`;
+            syncIndicator.innerHTML = `Status: <span style="color: var(--admin-danger); display: inline-flex; align-items: center; gap: 4px;"><span style="width: 6px; height: 6px; border-radius: 50%; background: var(--admin-danger);"></span> Gagal: ${err.message}</span>`;
           }
           syncResultBox?.classList.remove('hidden');
           if (syncResultBox) {
-            syncResultBox.innerHTML = `<span style="color: #ef4444;">❌ Kesalahan: ${err.message}</span>`;
+            syncResultBox.innerHTML = `
+              <div style="display: flex; align-items: center; gap: 8px; color: var(--admin-danger); font-weight: 600;">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="12" cy="12" r="10"></circle>
+                  <line x1="15" y1="9" x2="9" y2="15"></line>
+                  <line x1="9" y1="9" x2="15" y2="15"></line>
+                </svg>
+                <span>Kesalahan: ${err.message}</span>
+              </div>
+            `;
           }
         } finally {
           if (syncBtn) {

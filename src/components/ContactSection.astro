@@ -1,6 +1,7 @@
 ---
 // src/components/ContactSection.astro
 // Direct Action Contact Cards: Email, LinkedIn, GitHub (Zero WhatsApp Public Exposure for Security)
+import siteConfig from '../data/config.json';
 ---
 
 <section id="contact" class="section-padding contact-section">
@@ -38,17 +39,17 @@
             <span class="lang-id">Email Resmi</span>
             <span class="lang-en">Official Email</span>
           </span>
-          <h3 class="contact-value font-mono">fatahilah@protonmail.com</h3>
+          <h3 class="contact-value font-mono">{siteConfig.email}</h3>
           <p class="contact-desc">
             <span class="lang-id">Saluran tercepat untuk penawaran kerja, kolaborasi teknis, dan surat resmi.</span>
             <span class="lang-en">Direct channel for job offers, technical inquiries, and formal proposals.</span>
           </p>
           <div class="contact-actions">
-            <a href="mailto:fatahilah@protonmail.com" class="btn btn-primary btn-sm">
+            <a href={`mailto:${siteConfig.email}`} class="btn btn-primary btn-sm">
               <span class="lang-id">Kirim Email</span>
               <span class="lang-en">Send Email</span>
             </a>
-            <button id="copy-email-btn" class="btn btn-secondary btn-sm" data-email="fatahilah@protonmail.com">
+            <button id="copy-email-btn" class="btn btn-secondary btn-sm" data-email={siteConfig.email}>
               <span class="copy-text-default">
                 <span class="lang-id">Salin Email</span>
                 <span class="lang-en">Copy Email</span>
@@ -76,13 +77,13 @@
             <span class="lang-id">Jejaring Profesional</span>
             <span class="lang-en">Professional Network</span>
           </span>
-          <h3 class="contact-value">Fatahilah Miftahul Rahman</h3>
+          <h3 class="contact-value">{siteConfig.name}</h3>
           <p class="contact-desc">
             <span class="lang-id">Terhubung untuk rekrutmen profesional, validasi sertifikasi, dan jejaring industri.</span>
             <span class="lang-en">Connect for professional recruitment, certificate verification, and industry networking.</span>
           </p>
           <div class="contact-actions">
-            <a href="https://www.linkedin.com/in/fatahilah-miftahul-rahman" target="_blank" rel="noopener noreferrer" class="btn btn-secondary btn-sm">
+            <a href={siteConfig.linkedin_url} target="_blank" rel="noopener noreferrer" class="btn btn-secondary btn-sm">
               <span class="lang-id">Buka LinkedIn</span>
               <span class="lang-en">View LinkedIn</span>
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -105,13 +106,13 @@
             <span class="lang-id">Repositori Terbuka</span>
             <span class="lang-en">Open Source Repositories</span>
           </span>
-          <h3 class="contact-value font-mono">@fatahilah-mr</h3>
+          <h3 class="contact-value font-mono">@{siteConfig.github_url.split('/').filter(Boolean).pop()}</h3>
           <p class="contact-desc">
             <span class="lang-id">Eksplorasi kode sumber terbuka, konfigurasi laboratorium, dan repositori proyek.</span>
             <span class="lang-en">Explore open-source code repositories, lab configurations, and project commits.</span>
           </p>
           <div class="contact-actions">
-            <a href="https://github.com/fatahilah-mr" target="_blank" rel="noopener noreferrer" class="btn btn-secondary btn-sm">
+            <a href={siteConfig.github_url} target="_blank" rel="noopener noreferrer" class="btn btn-secondary btn-sm">
               <span class="lang-id">Buka GitHub</span>
               <span class="lang-en">View GitHub</span>
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">

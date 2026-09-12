@@ -106,7 +106,7 @@
   {
     "id": "9",
     "judul": "Setup Gateway & Keamanan Jaringan MikroTik",
-    "english_title": "MicroTik Gateway Setup & Network Security",
+    "english_title": "MikroTik Gateway Setup & Network Security",
     "kategori": "MikroTik",
     "deskripsi": "Membangun jaringan gateway fungsional pada RouterBoard MikroTik lewat Winbox. Konfigurasi mencakup setup IPv4 address, aktivasi dan manajemen WLAN interface untuk akses wireless, implementasi Firewall NAT agar jaringan lokal terhubung ke internet, konfigurasi DNS dan DHCP Server, serta pengujian stabilitas koneksi via terminal.",
     "english_desc": "Setting up a functional gateway network on a MikroTik RouterBoard via Winbox. The configuration includes setting up an IPv4 address, activating and managing the WLAN interface for wireless access, implementing a NAT firewall to connect the local network to the internet, configuring the DNS and DHCP servers, and testing the stability of the connection via the terminal.",
