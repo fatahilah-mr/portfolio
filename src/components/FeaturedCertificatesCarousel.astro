@@ -10,12 +10,12 @@ interface Props {
 const { lang = 'id' } = Astro.props;
 const catalogUrl = lang === 'en' ? '/en/certificates' : '/certificates';
 
-// Top 3 featured landscape certificates dynamically driven by CMS is_featured flag and sort_order
+// Featured landscape certificates dynamically driven by CMS is_featured flag and sort_order
 const featuredCerts = (() => {
   const filtered = certsData
-    .filter(c => Number(c.is_featured) === 1)
+    .filter(c => Number(c.is_featured) === 1 || c.is_featured === true)
     .sort((a, b) => (Number(a.sort_order) || 0) - (Number(b.sort_order) || 0));
-  return filtered.length >= 3 ? filtered.slice(0, 3) : certsData.slice(0, 3);
+  return filtered.length > 0 ? filtered : certsData.slice(0, 3);
 })();
 ---
 
@@ -290,11 +290,14 @@ const featuredCerts = (() => {
     const stage = document.getElementById('cert-carousel-stage');
     if (!stage) return;
 
-    const cards = Array.from(stage.querySelectorAll('.carousel-card'));
-    const dots = Array.from(stage.querySelectorAll('.carousel-dot'));
+    const viewport = document.getElementById('cert-carousel-viewport');
+    const dotsContainer = document.getElementById('cert-dots');
     const prevBtn = document.getElementById('cert-prev-btn');
     const nextBtn = document.getElementById('cert-next-btn');
     const hint = document.getElementById('cert-click-hint');
+
+    let cards = Array.from(stage.querySelectorAll('.carousel-card'));
+    let dots = Array.from(stage.querySelectorAll('.carousel-dot'));
 
     let currentIndex = 0;
     let autoPlayTimer = null;
@@ -309,7 +312,18 @@ const featuredCerts = (() => {
       }
     }
 
+    function escapeHtml(str) {
+      if (!str) return '';
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+    }
+
     function updateCarousel(newIndex) {
+      if (cards.length === 0) return;
       currentIndex = (newIndex + cards.length) % cards.length;
 
       cards.forEach((card, idx) => {
@@ -334,7 +348,7 @@ const featuredCerts = (() => {
 
     function startAutoPlay() {
       stopAutoPlay();
-      if (!isVisible) return;
+      if (!isVisible || cards.length <= 1) return;
       autoPlayTimer = setInterval(() => {
         updateCarousel(currentIndex + 1);
       }, 5500);
@@ -346,6 +360,117 @@ const featuredCerts = (() => {
         autoPlayTimer = null;
       }
     }
+
+    function bindCardEvents() {
+      cards.forEach((card, idx) => {
+        card.onclick = () => {
+          fadeOutHint();
+          if (idx === currentIndex) {
+            const certData = JSON.parse(card.getAttribute('data-cert') || '{}');
+            if (window.openCertModal) {
+              window.openCertModal(certData);
+            }
+          } else {
+            updateCarousel(idx);
+            startAutoPlay();
+          }
+        };
+
+        card.onkeydown = (e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            card.click();
+          }
+        };
+      });
+    }
+
+    function bindDotEvents() {
+      dots.forEach((dot, i) => {
+        dot.onclick = () => {
+          fadeOutHint();
+          updateCarousel(i);
+          startAutoPlay();
+        };
+      });
+    }
+
+    function rehydrateCerts(items) {
+      if (!viewport || !dotsContainer || items.length === 0) return;
+
+      viewport.innerHTML = items.map((cert, idx) => {
+        let posClass = 'hidden-card';
+        if (idx === 0) posClass = 'active';
+        else if (idx === 1) posClass = 'next';
+        else if (idx === items.length - 1 && items.length > 2) posClass = 'prev';
+
+        const nama = escapeHtml(cert.nama_sertifikat || '');
+        const engTitle = escapeHtml(cert.english_title || cert.nama_sertifikat || '');
+        const penerbit = escapeHtml(cert.penerbit || '');
+        const tahun = escapeHtml(cert.tahun || '');
+        const imgUrl = escapeHtml(cert.url_gambar_depan || cert.link_gambar || '');
+
+        return `
+          <div 
+            class="carousel-card ${posClass}" 
+            data-index="${idx}"
+            role="button"
+            tabindex="0"
+            aria-label="Lihat sertifikat ${nama}"
+          >
+            <div class="aspect-a4-landscape">
+              <img 
+                src="${imgUrl}" 
+                alt="${nama}" 
+                loading="lazy" 
+                decoding="async" 
+                width="1414" 
+                height="1000"
+              />
+            </div>
+            <div class="carousel-card-footer">
+              <div class="footer-meta">
+                <div class="cert-meta-row">
+                  <span class="footer-issuer">${penerbit}</span>
+                  <span class="footer-year font-mono">${tahun}</span>
+                </div>
+                <h3 class="footer-title">
+                  <span class="lang-id">${nama}</span>
+                  <span class="lang-en">${engTitle}</span>
+                </h3>
+              </div>
+              <div class="footer-arrow">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M7 17 17 7M7 7h10v10"/>
+                </svg>
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      dotsContainer.innerHTML = items.map((_, i) => (
+        `<button class="carousel-dot ${i === 0 ? 'active' : ''}" data-dot-index="${i}" aria-label="Slide ${i + 1}"></button>`
+      )).join('');
+
+      cards = Array.from(viewport.querySelectorAll('.carousel-card'));
+      dots = Array.from(dotsContainer.querySelectorAll('.carousel-dot'));
+
+      cards.forEach((card, idx) => {
+        card.setAttribute('data-cert', JSON.stringify(items[idx]));
+      });
+
+      bindCardEvents();
+      bindDotEvents();
+
+      currentIndex = Math.min(currentIndex, cards.length - 1);
+      updateCarousel(currentIndex);
+      startAutoPlay();
+    }
+
+    // Bind initial cards & dots
+    bindCardEvents();
+    bindDotEvents();
 
     // Pause autoplay during active window scroll to prevent frame-drop collisions
     window.addEventListener('scroll', () => {
@@ -387,39 +512,9 @@ const featuredCerts = (() => {
       startAutoPlay();
     });
 
-    dots.forEach((dot, i) => {
-      dot.addEventListener('click', () => {
-        fadeOutHint();
-        updateCarousel(i);
-        startAutoPlay();
-      });
-    });
-
     stage.addEventListener('mouseenter', stopAutoPlay);
     stage.addEventListener('mouseleave', () => {
       if (isVisible) startAutoPlay();
-    });
-
-    cards.forEach((card, idx) => {
-      card.addEventListener('click', () => {
-        fadeOutHint();
-        if (idx === currentIndex) {
-          const certData = JSON.parse(card.getAttribute('data-cert') || '{}');
-          if (window.openCertModal) {
-            window.openCertModal(certData);
-          }
-        } else {
-          updateCarousel(idx);
-          startAutoPlay();
-        }
-      });
-
-      card.addEventListener('keydown', (e) => {
-        if (e.key === 'Enter' || e.key === ' ') {
-          e.preventDefault();
-          card.click();
-        }
-      });
     });
 
     let touchStartX = 0;
@@ -448,22 +543,54 @@ const featuredCerts = (() => {
       .then(res => res.ok ? res.json() : null)
       .then(dbCerts => {
         if (!Array.isArray(dbCerts) || dbCerts.length === 0) return;
-        const certMap = new Map(dbCerts.map(c => [String(c.id), c]));
-        cards.forEach(card => {
+
+        const freshFeatured = dbCerts
+          .filter(c => Number(c.is_featured) === 1 || c.is_featured === true)
+          .sort((a, b) => (Number(a.sort_order) || 0) - (Number(b.sort_order) || 0));
+
+        const targetItems = freshFeatured.length > 0 ? freshFeatured : dbCerts.slice(0, 3);
+
+        const currentCardIds = cards.map(c => {
           try {
-            const curData = JSON.parse(card.getAttribute('data-cert') || '{}');
-            const dbData = certMap.get(String(curData.id));
-            if (dbData) {
-              const freshImg = dbData.url_gambar_depan || dbData.link_gambar;
-              const curImg = curData.url_gambar_depan || curData.link_gambar;
-              if (freshImg && freshImg !== curImg) {
-                const img = card.querySelector('img');
-                if (img) img.src = freshImg;
-              }
-              card.setAttribute('data-cert', JSON.stringify({ ...curData, ...dbData }));
-            }
-          } catch (_) {}
+            return String(JSON.parse(c.getAttribute('data-cert') || '{}').id);
+          } catch (_) {
+            return '';
+          }
         });
+        const targetIds = targetItems.map(c => String(c.id));
+
+        const isExactMatch = currentCardIds.length === targetIds.length &&
+          currentCardIds.every((id, idx) => id === targetIds[idx]);
+
+        if (!isExactMatch) {
+          rehydrateCerts(targetItems);
+        } else {
+          const certMap = new Map(targetItems.map(c => [String(c.id), c]));
+          cards.forEach(card => {
+            try {
+              const curData = JSON.parse(card.getAttribute('data-cert') || '{}');
+              const dbData = certMap.get(String(curData.id));
+              if (dbData) {
+                const freshImg = dbData.url_gambar_depan || dbData.link_gambar;
+                const curImg = curData.url_gambar_depan || curData.link_gambar;
+                if (freshImg && freshImg !== curImg) {
+                  const img = card.querySelector('img');
+                  if (img) img.src = freshImg;
+                }
+                const titleId = card.querySelector('.footer-title .lang-id');
+                const titleEn = card.querySelector('.footer-title .lang-en');
+                if (titleId && dbData.nama_sertifikat) titleId.textContent = dbData.nama_sertifikat;
+                if (titleEn) titleEn.textContent = dbData.english_title || dbData.nama_sertifikat || '';
+                const issuerEl = card.querySelector('.footer-issuer');
+                if (issuerEl && dbData.penerbit) issuerEl.textContent = dbData.penerbit;
+                const yearEl = card.querySelector('.footer-year');
+                if (yearEl && dbData.tahun) yearEl.textContent = dbData.tahun;
+
+                card.setAttribute('data-cert', JSON.stringify({ ...curData, ...dbData }));
+              }
+            } catch (_) {}
+          });
+        }
       })
       .catch(() => {});
   })();

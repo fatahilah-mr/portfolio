@@ -10,12 +10,12 @@ interface Props {
 const { lang = 'id' } = Astro.props;
 const catalogUrl = lang === 'en' ? '/en/projects' : '/projects';
 
-// Top 3 featured projects dynamically driven by CMS is_featured flag and sort_order
+// Featured projects dynamically driven by CMS is_featured flag and sort_order
 const featuredProjects = (() => {
   const filtered = projectsData
-    .filter(p => Number(p.is_featured) === 1)
+    .filter(p => Number(p.is_featured) === 1 || p.is_featured === true)
     .sort((a, b) => (Number(a.sort_order) || 0) - (Number(b.sort_order) || 0));
-  return filtered.length >= 3 ? filtered.slice(0, 3) : projectsData.slice(0, 3);
+  return filtered.length > 0 ? filtered : projectsData.slice(0, 3);
 })();
 ---
 
@@ -261,11 +261,14 @@ const featuredProjects = (() => {
     const stage = document.getElementById('project-carousel-stage');
     if (!stage) return;
 
-    const cards = Array.from(stage.querySelectorAll('.carousel-card'));
-    const dots = Array.from(stage.querySelectorAll('.carousel-dot'));
+    const viewport = document.getElementById('project-carousel-viewport');
+    const dotsContainer = document.getElementById('proj-dots');
     const prevBtn = document.getElementById('proj-prev-btn');
     const nextBtn = document.getElementById('proj-next-btn');
     const hint = document.getElementById('project-click-hint');
+
+    let cards = Array.from(stage.querySelectorAll('.carousel-card'));
+    let dots = Array.from(stage.querySelectorAll('.carousel-dot'));
 
     let currentIndex = 0;
     let autoPlayTimer = null;
@@ -280,7 +283,18 @@ const featuredProjects = (() => {
       }
     }
 
+    function escapeHtml(str) {
+      if (!str) return '';
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+    }
+
     function updateCarousel(newIndex) {
+      if (cards.length === 0) return;
       currentIndex = (newIndex + cards.length) % cards.length;
 
       cards.forEach((card, idx) => {
@@ -305,7 +319,7 @@ const featuredProjects = (() => {
 
     function startAutoPlay() {
       stopAutoPlay();
-      if (!isVisible) return;
+      if (!isVisible || cards.length <= 1) return;
       autoPlayTimer = setInterval(() => {
         updateCarousel(currentIndex + 1);
       }, 5000);
@@ -317,6 +331,113 @@ const featuredProjects = (() => {
         autoPlayTimer = null;
       }
     }
+
+    function bindCardEvents() {
+      cards.forEach((card, idx) => {
+        card.onclick = () => {
+          fadeOutHint();
+          if (idx === currentIndex) {
+            const projData = JSON.parse(card.getAttribute('data-project') || '{}');
+            if (window.openProjectModal) {
+              window.openProjectModal(projData);
+            }
+          } else {
+            updateCarousel(idx);
+            startAutoPlay();
+          }
+        };
+
+        card.onkeydown = (e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            card.click();
+          }
+        };
+      });
+    }
+
+    function bindDotEvents() {
+      dots.forEach((dot, i) => {
+        dot.onclick = () => {
+          fadeOutHint();
+          updateCarousel(i);
+          startAutoPlay();
+        };
+      });
+    }
+
+    function rehydrateCards(items) {
+      if (!viewport || !dotsContainer || items.length === 0) return;
+
+      viewport.innerHTML = items.map((proj, idx) => {
+        let posClass = 'hidden-card';
+        if (idx === 0) posClass = 'active';
+        else if (idx === 1) posClass = 'next';
+        else if (idx === items.length - 1 && items.length > 2) posClass = 'prev';
+
+        const judul = escapeHtml(proj.judul || '');
+        const engTitle = escapeHtml(proj.english_title || proj.judul || '');
+        const kategori = escapeHtml(proj.kategori || 'Website');
+        const imgUrl = escapeHtml(proj.link_gambar || '');
+
+        return `
+          <div 
+            class="carousel-card ${posClass}" 
+            data-index="${idx}"
+            role="button"
+            tabindex="0"
+            aria-label="Lihat detail proyek ${judul}"
+          >
+            <div class="aspect-16-10">
+              <img 
+                src="${imgUrl}" 
+                alt="${judul}" 
+                loading="lazy" 
+                decoding="async" 
+                width="1440" 
+                height="900"
+              />
+            </div>
+            <div class="carousel-card-footer">
+              <div class="footer-meta">
+                <span class="footer-category">${kategori}</span>
+                <h3 class="footer-title">
+                  <span class="lang-id">${judul}</span>
+                  <span class="lang-en">${engTitle}</span>
+                </h3>
+              </div>
+              <div class="footer-arrow">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M7 17 17 7M7 7h10v10"/>
+                </svg>
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      dotsContainer.innerHTML = items.map((_, i) => (
+        `<button class="carousel-dot ${i === 0 ? 'active' : ''}" data-dot-index="${i}" aria-label="Slide ${i + 1}"></button>`
+      )).join('');
+
+      cards = Array.from(viewport.querySelectorAll('.carousel-card'));
+      dots = Array.from(dotsContainer.querySelectorAll('.carousel-dot'));
+
+      cards.forEach((card, idx) => {
+        card.setAttribute('data-project', JSON.stringify(items[idx]));
+      });
+
+      bindCardEvents();
+      bindDotEvents();
+
+      currentIndex = Math.min(currentIndex, cards.length - 1);
+      updateCarousel(currentIndex);
+      startAutoPlay();
+    }
+
+    // Bind initial cards & dots
+    bindCardEvents();
+    bindDotEvents();
 
     // Pause autoplay during active window scroll to prevent frame-drop collisions
     window.addEventListener('scroll', () => {
@@ -359,42 +480,10 @@ const featuredProjects = (() => {
       startAutoPlay();
     });
 
-    dots.forEach((dot, i) => {
-      dot.addEventListener('click', () => {
-        fadeOutHint();
-        updateCarousel(i);
-        startAutoPlay();
-      });
-    });
-
     // Hover pauses auto-rotation
     stage.addEventListener('mouseenter', stopAutoPlay);
     stage.addEventListener('mouseleave', () => {
       if (isVisible) startAutoPlay();
-    });
-
-    // Card clicks: if center, open modal; if side, navigate to that card
-    cards.forEach((card, idx) => {
-      card.addEventListener('click', () => {
-        fadeOutHint();
-        if (idx === currentIndex) {
-          // Open detail modal
-          const projData = JSON.parse(card.getAttribute('data-project') || '{}');
-          if (window.openProjectModal) {
-            window.openProjectModal(projData);
-          }
-        } else {
-          updateCarousel(idx);
-          startAutoPlay();
-        }
-      });
-
-      card.addEventListener('keydown', (e) => {
-        if (e.key === 'Enter' || e.key === ' ') {
-          e.preventDefault();
-          card.click();
-        }
-      });
     });
 
     // Touch swipe support
@@ -425,20 +514,50 @@ const featuredProjects = (() => {
       .then(res => res.ok ? res.json() : null)
       .then(dbProjects => {
         if (!Array.isArray(dbProjects) || dbProjects.length === 0) return;
-        const projectMap = new Map(dbProjects.map(p => [String(p.id), p]));
-        cards.forEach(card => {
+
+        const freshFeatured = dbProjects
+          .filter(p => Number(p.is_featured) === 1 || p.is_featured === true)
+          .sort((a, b) => (Number(a.sort_order) || 0) - (Number(b.sort_order) || 0));
+
+        const targetItems = freshFeatured.length > 0 ? freshFeatured : dbProjects.slice(0, 3);
+
+        const currentCardIds = cards.map(c => {
           try {
-            const curData = JSON.parse(card.getAttribute('data-project') || '{}');
-            const dbData = projectMap.get(String(curData.id));
-            if (dbData) {
-              if (dbData.link_gambar && dbData.link_gambar !== curData.link_gambar) {
-                const img = card.querySelector('img');
-                if (img) img.src = dbData.link_gambar;
-              }
-              card.setAttribute('data-project', JSON.stringify({ ...curData, ...dbData }));
-            }
-          } catch (_) {}
+            return String(JSON.parse(c.getAttribute('data-project') || '{}').id);
+          } catch (_) {
+            return '';
+          }
         });
+        const targetIds = targetItems.map(p => String(p.id));
+
+        const isExactMatch = currentCardIds.length === targetIds.length &&
+          currentCardIds.every((id, idx) => id === targetIds[idx]);
+
+        if (!isExactMatch) {
+          rehydrateCards(targetItems);
+        } else {
+          const projectMap = new Map(targetItems.map(p => [String(p.id), p]));
+          cards.forEach(card => {
+            try {
+              const curData = JSON.parse(card.getAttribute('data-project') || '{}');
+              const dbData = projectMap.get(String(curData.id));
+              if (dbData) {
+                if (dbData.link_gambar && dbData.link_gambar !== curData.link_gambar) {
+                  const img = card.querySelector('img');
+                  if (img) img.src = dbData.link_gambar;
+                }
+                const titleId = card.querySelector('.footer-title .lang-id');
+                const titleEn = card.querySelector('.footer-title .lang-en');
+                if (titleId && dbData.judul) titleId.textContent = dbData.judul;
+                if (titleEn) titleEn.textContent = dbData.english_title || dbData.judul || '';
+                const catEl = card.querySelector('.footer-category');
+                if (catEl && dbData.kategori) catEl.textContent = dbData.kategori;
+
+                card.setAttribute('data-project', JSON.stringify({ ...curData, ...dbData }));
+              }
+            } catch (_) {}
+          });
+        }
       })
       .catch(() => {});
   })();

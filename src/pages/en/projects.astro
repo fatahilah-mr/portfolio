@@ -436,6 +436,17 @@ const categories = [
                 const img = card.querySelector('img');
                 if (img) img.src = dbData.link_gambar;
               }
+              const metaEl = card.querySelector('.card-meta');
+              const isFeat = Boolean(dbData.is_featured);
+              const existingBadge = metaEl?.querySelector('.featured-badge');
+              if (isFeat && !existingBadge && metaEl) {
+                const badge = document.createElement('span');
+                badge.className = 'featured-badge';
+                badge.textContent = 'Featured ★';
+                metaEl.appendChild(badge);
+              } else if (!isFeat && existingBadge) {
+                existingBadge.remove();
+              }
               card.setAttribute('data-project', JSON.stringify({ ...curData, ...dbData }));
             }
           } catch (_) {}
