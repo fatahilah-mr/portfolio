@@ -1,0 +1,1622 @@
+---
+// src/pages/admin.astro
+// Single-Page CMS Admin Panel with GitHub OAuth, Full CRUD, and Dynamic Notification Settings
+// Redesigned with Obsidian Dark Solid Dashboard Theme (Gateway & Vercel Pro Style)
+import AdminToaster from '../components/admin/AdminToaster.jsx';
+import '../styles/admin.css';
+---
+
+<!DOCTYPE html>
+<html lang="id" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CMS Admin Panel | FATAHILAH.MR</title>
+  <link rel="icon" type="image/svg+xml" href="/assets/favicon/favicon.svg" />
+  <link rel="stylesheet" href="/styles/global.css" />
+  <link rel="stylesheet" href="/styles/admin.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet" />
+</head>
+<body class="admin-body">
+  <!-- Toast Notification System via Sonner (React Island) -->
+  <AdminToaster client:load />
+
+  <div id="admin-app" class="admin-app-container">
+    <!-- Loading State Screen -->
+    <div id="loading-screen" class="loading-state">
+      <div class="spinner"></div>
+      <p style="font-family: var(--admin-font-mono); font-size: 0.85rem; letter-spacing: 0.05em;">MEMVERIFIKASI SESI OTENTIKASI EDGE...</p>
+    </div>
+
+    <!-- Login Screen (Shown when unauthenticated) -->
+    <div id="login-screen" class="login-wrapper hidden">
+      <div class="login-card">
+        <div class="login-brand">
+          <span class="brand-text">FATAHILAH<span class="brand-accent">.MR</span></span>
+          <span class="cms-tag">COMMAND CENTER ADMIN</span>
+        </div>
+
+        <div id="login-error-banner" class="hidden" style="margin-bottom: 1.25rem; padding: 0.75rem 1rem; border-radius: 8px; background: var(--admin-danger-soft); border: 1px solid var(--admin-danger-border); color: var(--admin-danger); font-size: 0.825rem;">
+          <span id="login-error-msg">Akses ditolak atau sesi kedaluwarsa.</span>
+        </div>
+
+        <p class="login-desc">
+          Panel kontrol portofolio dilindungi otentikasi dua arah. Akses dibatasi secara ketat hanya untuk akun GitHub terverifikasi <strong>@fatahilah-mr</strong>.
+        </p>
+
+        <div style="display: flex; flex-direction: column; gap: 0.75rem;">
+          <a href="/api/auth/login" class="btn-solid-primary" style="padding: 0.75rem 1rem;">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor">
+              <path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/>
+            </svg>
+            Masuk dengan GitHub
+          </a>
+        </div>
+
+        <div style="margin-top: 1.5rem;">
+          <a href="/" style="color: var(--admin-text-muted); font-size: 0.825rem; text-decoration: none;">← Kembali ke Halaman Utama</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Authenticated Dashboard -->
+    <div id="dashboard-screen" class="hidden">
+      <!-- Admin Topbar -->
+      <header class="admin-navbar">
+        <div class="admin-brand-group">
+          <span class="brand-text">FATAHILAH<span class="brand-accent">.MR</span></span>
+          <span class="d1-status-badge">
+            <span class="status-dot"></span>
+            CLOUDFLARE D1 LIVE
+          </span>
+          <span class="admin-role-badge">ADMIN: @fatahilah-mr</span>
+        </div>
+
+        <div class="admin-nav-actions">
+          <a href="/" target="_blank" class="btn-solid-secondary">
+            Lihat Website
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" x2="21" y1="14" y2="3"/>
+            </svg>
+          </a>
+          <button id="logout-btn" class="btn-solid-danger">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" x2="9" y1="12" y2="12"/>
+            </svg>
+            Keluar
+          </button>
+        </div>
+      </header>
+
+      <!-- KPI Stat Summary Cards -->
+      <div class="admin-kpi-grid">
+        <div class="kpi-card">
+          <div class="kpi-icon-wrap">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M4 20h16a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.93a2 2 0 0 1-1.66-.9l-.82-1.2A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13c0 1.1.9 2 2 2Z"/>
+            </svg>
+          </div>
+          <div class="kpi-info">
+            <span class="kpi-value" id="kpi-projects-count">-</span>
+            <span class="kpi-label">Total Proyek Portofolio</span>
+          </div>
+        </div>
+
+        <div class="kpi-card">
+          <div class="kpi-icon-wrap amber">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+            </svg>
+          </div>
+          <div class="kpi-info">
+            <span class="kpi-value" id="kpi-featured-count">-</span>
+            <span class="kpi-label">Proyek Featured (Beranda)</span>
+          </div>
+        </div>
+
+        <div class="kpi-card">
+          <div class="kpi-icon-wrap green">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="8" r="6"/><path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11"/>
+            </svg>
+          </div>
+          <div class="kpi-info">
+            <span class="kpi-value" id="kpi-certs-count">-</span>
+            <span class="kpi-label">Sertifikat Terverifikasi</span>
+          </div>
+        </div>
+
+        <div class="kpi-card">
+          <div class="kpi-icon-wrap purple">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/>
+            </svg>
+          </div>
+          <div class="kpi-info">
+            <span class="kpi-value" id="kpi-notify-status">Aktif</span>
+            <span class="kpi-label">Telegram & ntfy Channel</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Segmented Tab Navigation -->
+      <nav class="admin-tab-container" role="tablist">
+        <button class="admin-tab-pill active" data-tab="tab-projects" role="tab">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M4 20h16a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.93a2 2 0 0 1-1.66-.9l-.82-1.2A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13c0 1.1.9 2 2 2Z"/>
+          </svg>
+          Proyek
+        </button>
+        <button class="admin-tab-pill" data-tab="tab-certs" role="tab">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="8" r="6"/><path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11"/>
+          </svg>
+          Sertifikat
+        </button>
+        <button class="admin-tab-pill" data-tab="tab-profile" role="tab">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
+          </svg>
+          Profil & Bio
+        </button>
+        <button class="admin-tab-pill" data-tab="tab-notifications" role="tab">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/>
+          </svg>
+          Pengaturan Notifikasi
+        </button>
+      </nav>
+
+      <!-- TAB 1: PROYEK -->
+      <section id="tab-projects" class="tab-pane">
+        <div class="section-header-bar">
+          <div class="section-title-group">
+            <h2>Manajemen Proyek Portofolio</h2>
+            <p>Kelola daftar proyek teknis, thumbnail CDN, urutan tampilan (sort order), dan switch featured langsung.</p>
+          </div>
+          <button id="add-project-btn" class="btn-solid-primary">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+            </svg>
+            Tambah Proyek Baru
+          </button>
+        </div>
+
+        <div id="projects-list-container" class="admin-items-list">
+          <div class="loading-state" style="min-height: 200px;">
+            <div class="spinner"></div>
+            <p>Memuat katalog proyek dari Cloudflare D1...</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- TAB 2: SERTIFIKAT -->
+      <section id="tab-certs" class="tab-pane hidden">
+        <div class="section-header-bar">
+          <div class="section-title-group">
+            <h2>Manajemen Sertifikat & Transkrip</h2>
+            <p>Kelola kredensial resmi, thumbnail A4, tombol transkrip dua sisi, dan sorotan di carousel beranda.</p>
+          </div>
+          <button id="add-cert-btn" class="btn-solid-primary">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+            </svg>
+            Tambah Sertifikat Baru
+          </button>
+        </div>
+
+        <div id="certs-list-container" class="admin-items-list">
+          <div class="loading-state" style="min-height: 200px;">
+            <div class="spinner"></div>
+            <p>Memuat daftar sertifikat dari Cloudflare D1...</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- TAB 3: PROFIL & BIO -->
+      <section id="tab-profile" class="tab-pane hidden">
+        <div class="section-header-bar">
+          <div class="section-title-group">
+            <h2>Konfigurasi Profil & Bio Situs</h2>
+            <p>Perbarui narasi dwibahasa, tautan media sosial, dan data kontak resmi yang tampil di header dan footer.</p>
+          </div>
+        </div>
+
+        <form id="profile-form" class="admin-card-surface" style="display: flex; flex-direction: column; gap: 1.25rem;">
+          <div class="form-grid-2">
+            <div class="form-group-solid">
+              <label>Nama Lengkap</label>
+              <input type="text" id="cfg-name" class="form-control-solid" required />
+            </div>
+            <div class="form-group-solid">
+              <label>Nama Panggilan (Short Name)</label>
+              <input type="text" id="cfg-short-name" class="form-control-solid" required />
+            </div>
+          </div>
+
+          <div class="form-group-solid">
+            <label>Judul / Headline Utama (ID)</label>
+            <input type="text" id="cfg-title-id" class="form-control-solid" required />
+          </div>
+
+          <div class="form-group-solid">
+            <label>Judul / Headline Utama (EN)</label>
+            <input type="text" id="cfg-title-en" class="form-control-solid" required />
+          </div>
+
+          <div class="form-group-solid">
+            <label>Biografi Singkat (ID)</label>
+            <textarea id="cfg-bio-id" rows="3" class="form-control-solid"></textarea>
+          </div>
+
+          <div class="form-group-solid">
+            <label>Biografi Singkat (EN)</label>
+            <textarea id="cfg-bio-en" rows="3" class="form-control-solid"></textarea>
+          </div>
+
+          <div class="form-grid-2">
+            <div class="form-group-solid">
+              <label>Email Resmi</label>
+              <input type="email" id="cfg-email" class="form-control-solid" required />
+            </div>
+            <div class="form-group-solid">
+              <label>GitHub Profile URL</label>
+              <input type="url" id="cfg-github" class="form-control-solid" required />
+            </div>
+          </div>
+
+          <div class="form-group-solid">
+            <label>LinkedIn Profile URL</label>
+            <input type="url" id="cfg-linkedin" class="form-control-solid" required />
+          </div>
+
+          <div style="display: flex; justify-content: flex-end; padding-top: 1rem; border-top: 1px solid var(--admin-border);">
+            <button type="submit" class="btn-solid-primary" id="save-profile-btn">
+              Simpan Perubahan Profil
+            </button>
+          </div>
+        </form>
+      </section>
+
+      <!-- TAB 4: PENGATURAN NOTIFIKASI & UJI COBA -->
+      <section id="tab-notifications" class="tab-pane hidden">
+        <div class="section-header-bar">
+          <div class="section-title-group">
+            <h2>Pengaturan Notifikasi Real-Time (Telegram & ntfy)</h2>
+            <p>Konfigurasikan endpoint push notification ke smartphone tanpa perlu menyentuh file server atau database manual.</p>
+          </div>
+        </div>
+
+        <form id="notify-form" style="display: flex; flex-direction: column; gap: 1.5rem;">
+          <div class="form-grid-2">
+            <!-- Box Telegram -->
+            <div class="admin-card-surface">
+              <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.25rem; padding-bottom: 0.75rem; border-bottom: 1px solid var(--admin-border);">
+                <div style="display: flex; align-items: center; gap: 0.6rem;">
+                  <div class="kpi-icon-wrap blue" style="width: 32px; height: 32px; border-radius: 8px;">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="m22 2-7 20-4-9-9-4Z"/><path d="M22 2 11 13"/>
+                    </svg>
+                  </div>
+                  <strong style="color: var(--admin-text-title); font-size: 0.95rem;">Telegram Bot Push</strong>
+                </div>
+                <label class="switch-control">
+                  <input type="checkbox" id="notify-tele-enabled" class="switch-input" />
+                  <span class="switch-track"><span class="switch-thumb"></span></span>
+                  <span class="switch-label-text">Aktif</span>
+                </label>
+              </div>
+
+              <div style="display: flex; flex-direction: column; gap: 1rem;">
+                <div class="form-group-solid">
+                  <label>Telegram Bot Token</label>
+                  <div style="display: flex; gap: 6px;">
+                    <input type="text" id="notify-tele-token" class="form-control-solid masked-field" style="font-family: var(--admin-font-mono); -webkit-text-security: disc;" placeholder="123456789:ABCdefGHIjkl..." autocomplete="off" />
+                    <button type="button" class="btn-icon-subtle toggle-pass-btn" data-target="notify-tele-token" title="Lihat/Sembunyikan Token">
+                      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/>
+                      </svg>
+                    </button>
+                  </div>
+                  <span class="form-hint">Token bot Telegram yang diperoleh dari @BotFather.</span>
+                </div>
+
+                <div class="form-group-solid">
+                  <label>Telegram Chat ID</label>
+                  <input type="text" id="notify-tele-chat-id" class="form-control-solid" style="font-family: var(--admin-font-mono);" placeholder="Contoh: 123456789 atau -100..." />
+                  <span class="form-hint">ID chat atau channel tujuan notifikasi langsung.</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Box ntfy -->
+            <div class="admin-card-surface">
+              <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.25rem; padding-bottom: 0.75rem; border-bottom: 1px solid var(--admin-border);">
+                <div style="display: flex; align-items: center; gap: 0.6rem;">
+                  <div class="kpi-icon-wrap amber" style="width: 32px; height: 32px; border-radius: 8px;">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/>
+                    </svg>
+                  </div>
+                  <strong style="color: var(--admin-text-title); font-size: 0.95rem;">ntfy Android / Web Push</strong>
+                </div>
+                <span class="d1-status-badge" style="font-size: 0.65rem;">HTTP REST</span>
+              </div>
+
+              <div style="display: flex; flex-direction: column; gap: 1rem;">
+                <div class="form-group-solid">
+                  <label>ntfy Server URL</label>
+                  <input type="url" id="notify-ntfy-server" class="form-control-solid" style="font-family: var(--admin-font-mono);" placeholder="https://ntfy.fmr.web.id" />
+                  <span class="form-hint">Server ntfy yang digunakan (default: ntfy.fmr.web.id).</span>
+                </div>
+
+                <div class="form-group-solid">
+                  <label>ntfy Topic Name</label>
+                  <input type="text" id="notify-ntfy-topic" class="form-control-solid" style="font-family: var(--admin-font-mono);" placeholder="agent" />
+                  <span class="form-hint">Nama topik ntfy yang di-subscribe di smartphone Android.</span>
+                </div>
+
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 0.75rem;">
+                  <div class="form-group-solid">
+                    <label>ntfy Username (HTTP Basic Auth)</label>
+                    <input type="text" id="notify-ntfy-user" class="form-control-solid" style="font-family: var(--admin-font-mono);" placeholder="fatah" autocomplete="off" />
+                    <span class="form-hint">Username akun instance private ntfy.</span>
+                  </div>
+                  <div class="form-group-solid">
+                    <label>ntfy Password (HTTP Basic Auth)</label>
+                    <div style="display: flex; gap: 6px;">
+                      <input type="text" id="notify-ntfy-pass" class="form-control-solid masked-field" style="font-family: var(--admin-font-mono); -webkit-text-security: disc;" placeholder="••••••••" autocomplete="off" />
+                      <button type="button" class="btn-icon-subtle toggle-pass-btn" data-target="notify-ntfy-pass" title="Lihat/Sembunyikan Password">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                          <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/>
+                        </svg>
+                      </button>
+                    </div>
+                    <span class="form-hint">Password akun user ntfy.</span>
+                  </div>
+                </div>
+
+                <div class="form-group-solid">
+                  <label>ntfy Access Token (Alternatif Bearer Auth)</label>
+                  <div style="display: flex; gap: 6px;">
+                    <input type="text" id="notify-ntfy-token" class="form-control-solid masked-field" style="font-family: var(--admin-font-mono); -webkit-text-security: disc;" placeholder="tk_..." autocomplete="off" />
+                    <button type="button" class="btn-icon-subtle toggle-pass-btn" data-target="notify-ntfy-token" title="Lihat/Sembunyikan Token">
+                      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/>
+                      </svg>
+                    </button>
+                  </div>
+                  <span class="form-hint">Alternatif token Bearer jika tidak menggunakan username & password.</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="admin-card-surface" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+            <div>
+              <strong style="color: var(--admin-text-title); font-size: 0.9rem;">Simpan Konfigurasi</strong>
+              <p style="color: var(--admin-text-muted); font-size: 0.78rem; margin: 2px 0 0;">Parameter akan disimpan ke tabel ekosistem D1 `port_config`.</p>
+            </div>
+
+            <div style="display: flex; gap: 0.75rem;">
+              <button type="button" id="test-notify-btn" class="btn-solid-secondary">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <polygon points="5 3 19 12 5 21 5 3"/>
+                </svg>
+                Kirim Uji Coba Notifikasi
+              </button>
+              <button type="submit" class="btn-solid-primary">
+                Simpan Pengaturan
+              </button>
+            </div>
+          </div>
+        </form>
+
+        <!-- Test Results Feedback Box -->
+        <div id="notify-test-result" class="admin-card-surface hidden" style="margin-top: 1.25rem;">
+          <h4 style="margin: 0 0 0.5rem; font-size: 0.9rem; color: var(--admin-text-title);">Hasil Pengujian Notifikasi Real-Time</h4>
+          <div id="notify-test-content" style="font-family: var(--admin-font-mono); font-size: 0.8rem; color: var(--admin-text-sub);"></div>
+        </div>
+
+        <!-- CI/CD GITOPS EDGE SYNC CARD -->
+        <div class="admin-card-surface" style="margin-top: 1.5rem; border-left: 3px solid #6366f1;">
+          <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 1rem;">
+            <div style="max-width: 620px;">
+              <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 6px;">
+                <span style="display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: #22c55e;"></span>
+                <strong style="color: var(--admin-text-title); font-size: 0.95rem;">Sinkronisasi Data ke Static Edge (CI/CD GitOps)</strong>
+              </div>
+              <p style="color: var(--admin-text-sub); font-size: 0.82rem; margin: 0 0 8px; line-height: 1.5;">
+                Otomatisasi terjadwal berjalan setiap hari pukul <strong>03:00 WIB</strong> (jam sepi). Anda juga dapat memicu sinkronisasi on-demand sekarang: data D1 (Proyek, Sertifikat, & Konfigurasi) akan di-commit ke branch <code>dev</code> di GitHub dan memicu <em>Cloudflare Pages edge build</em> otomatis.
+              </p>
+              <div id="sync-status-indicator" style="font-size: 0.76rem; color: var(--admin-text-muted); font-family: var(--admin-font-mono);">
+                Status: Siap (Jadwal otomatis aktif pukul 03:00 WIB)
+              </div>
+            </div>
+
+            <div style="display: flex; flex-direction: column; align-items: flex-end; gap: 0.5rem;">
+              <button type="button" id="trigger-sync-btn" class="btn-solid-primary" style="background: #4f46e5; border-color: #4338ca;">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M21 12a9 9 0 0 0-9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/>
+                  <path d="M3 3v5h5"/>
+                  <path d="M3 12a9 9 0 0 0 9 9 9.75 9.75 0 0 0 6.74-2.74L21 16"/>
+                  <path d="M16 21h5v-5"/>
+                </svg>
+                Sinkronkan ke Statis & Rebuild Sekarang
+              </button>
+              <span style="font-size: 0.72rem; color: var(--admin-text-muted);">Aksi aman: Guard SHA-256 mencegah commit sampah</span>
+            </div>
+          </div>
+
+          <div id="sync-result-box" class="hidden" style="margin-top: 1rem; padding: 0.75rem; background: var(--admin-bg); border: 1px solid var(--admin-border); border-radius: 6px; font-family: var(--admin-font-mono); font-size: 0.78rem; color: var(--admin-text-sub);">
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <!-- PROJECT EDIT/CREATE MODAL -->
+  <dialog id="project-modal" class="admin-dialog">
+    <div class="admin-dialog-content">
+      <div class="dialog-header">
+        <h3 id="project-modal-title">Tambah / Edit Proyek</h3>
+        <button type="button" class="btn-icon-subtle" data-close-modal="project-modal" aria-label="Tutup Dialog">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+
+      <form id="project-form" style="display: flex; flex-direction: column; gap: 1rem;">
+        <input type="hidden" id="pm-id" />
+
+        <div class="form-grid-2">
+          <div class="form-group-solid">
+            <label>Judul Proyek (ID) *</label>
+            <input type="text" id="pm-judul" class="form-control-solid" required />
+          </div>
+          <div class="form-group-solid">
+            <label>Judul Proyek (EN)</label>
+            <input type="text" id="pm-title-en" class="form-control-solid" />
+          </div>
+        </div>
+
+        <div class="form-grid-2">
+          <div class="form-group-solid">
+            <label>Kategori *</label>
+            <select id="pm-kategori" class="form-control-solid" style="cursor: pointer;">
+              <option value="Website">Website</option>
+              <option value="Cisco">Cisco</option>
+              <option value="MikroTik">MikroTik</option>
+              <option value="AI">AI</option>
+              <option value="Linux">Linux</option>
+            </select>
+          </div>
+          <div class="form-group-solid">
+            <label>Urutan Tampilan (Sort Order)</label>
+            <input type="number" id="pm-sort" class="form-control-solid" value="10" />
+          </div>
+        </div>
+
+        <div class="form-group-solid">
+          <label>Deskripsi Proyek (ID) *</label>
+          <textarea id="pm-deskripsi" rows="3" class="form-control-solid" required></textarea>
+        </div>
+
+        <div class="form-group-solid">
+          <label>Deskripsi Proyek (EN)</label>
+          <textarea id="pm-desc-en" rows="3" class="form-control-solid"></textarea>
+        </div>
+
+        <div class="form-group-solid">
+          <label>URL Gambar Thumbnail (CDN / R2) *</label>
+          <input type="url" id="pm-gambar" class="form-control-solid" style="font-family: var(--admin-font-mono);" required />
+          <!-- Real-Time Image Preview Box -->
+          <div class="modal-image-preview-box" id="pm-img-preview-box">
+            <span class="preview-placeholder">Preview gambar akan muncul di sini secara otomatis</span>
+          </div>
+        </div>
+
+        <div class="form-group-solid">
+          <label>URL Dokumentasi / Live Demo</label>
+          <input type="url" id="pm-link" class="form-control-solid" style="font-family: var(--admin-font-mono);" placeholder="https://..." />
+        </div>
+
+        <div style="padding-top: 0.5rem;">
+          <label class="switch-control">
+            <input type="checkbox" id="pm-featured" class="switch-input" />
+            <span class="switch-track"><span class="switch-thumb"></span></span>
+            <span class="switch-label-text" style="color: var(--admin-text-title); font-weight: 600;">Tampilkan di Carousel Unggulan Beranda (Top 3)</span>
+          </label>
+        </div>
+
+        <div class="dialog-footer">
+          <button type="button" class="btn-solid-secondary" data-close-modal="project-modal">Batal</button>
+          <button type="submit" class="btn-solid-primary" id="save-proj-btn">Simpan Proyek</button>
+        </div>
+      </form>
+    </div>
+  </dialog>
+
+  <!-- CERTIFICATE EDIT/CREATE MODAL -->
+  <dialog id="cert-modal" class="admin-dialog">
+    <div class="admin-dialog-content">
+      <div class="dialog-header">
+        <h3 id="cert-modal-title">Tambah / Edit Sertifikat</h3>
+        <button type="button" class="btn-icon-subtle" data-close-modal="cert-modal" aria-label="Tutup Dialog">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+
+      <form id="cert-form" style="display: flex; flex-direction: column; gap: 1rem;">
+        <input type="hidden" id="cm-id" />
+
+        <div class="form-group-solid">
+          <label>Nama Sertifikat *</label>
+          <input type="text" id="cm-nama" class="form-control-solid" required />
+        </div>
+
+        <div class="form-grid-2">
+          <div class="form-group-solid">
+            <label>Penerbit Sertifikat *</label>
+            <input type="text" id="cm-penerbit" class="form-control-solid" required />
+          </div>
+          <div class="form-group-solid">
+            <label>Tahun Terbit *</label>
+            <input type="text" id="cm-tahun" class="form-control-solid" placeholder="2026" required />
+          </div>
+        </div>
+
+        <div class="form-grid-2">
+          <div class="form-group-solid">
+            <label>Tipe Orientasi *</label>
+            <select id="cm-tipe" class="form-control-solid" style="cursor: pointer;">
+              <option value="horizontal">Horizontal (Landscape)</option>
+              <option value="vertical">Vertical (Portrait)</option>
+            </select>
+          </div>
+          <div class="form-group-solid">
+            <label>Urutan Tampilan (Sort Order)</label>
+            <input type="number" id="cm-sort" class="form-control-solid" value="10" />
+          </div>
+        </div>
+
+        <div class="form-group-solid">
+          <label>URL Gambar Depan (CDN / R2) *</label>
+          <input type="url" id="cm-depan" class="form-control-solid" style="font-family: var(--admin-font-mono);" required />
+          <div class="modal-image-preview-box" id="cm-img-preview-box">
+            <span class="preview-placeholder">Preview gambar depan akan muncul di sini</span>
+          </div>
+        </div>
+
+        <div class="form-group-solid">
+          <label>URL Gambar Belakang / Transkrip (Opsional)</label>
+          <input type="url" id="cm-belakang" class="form-control-solid" style="font-family: var(--admin-font-mono);" />
+        </div>
+
+        <div style="display: flex; flex-direction: column; gap: 0.75rem; padding-top: 0.5rem;">
+          <label class="switch-control">
+            <input type="checkbox" id="cm-transkrip" class="switch-input" />
+            <span class="switch-track"><span class="switch-thumb"></span></span>
+            <span class="switch-label-text">Aktifkan Tombol Transkrip Nilai (Halaman Belakang)</span>
+          </label>
+
+          <label class="switch-control">
+            <input type="checkbox" id="cm-featured" class="switch-input" />
+            <span class="switch-track"><span class="switch-thumb"></span></span>
+            <span class="switch-label-text" style="color: var(--admin-text-title); font-weight: 600;">Tampilkan di Carousel Unggulan Beranda (Top 3)</span>
+          </label>
+        </div>
+
+        <div class="dialog-footer">
+          <button type="button" class="btn-solid-secondary" data-close-modal="cert-modal">Batal</button>
+          <button type="submit" class="btn-solid-primary" id="save-cert-btn">Simpan Sertifikat</button>
+        </div>
+      </form>
+    </div>
+  </dialog>
+
+  <!-- ADMIN APPLICATION CLIENT SCRIPT -->
+  <script is:inline>
+    (function initAdminApp() {
+      // Toast notification helper with fallback
+      function showToast(type, msg, options = {}) {
+        if (window.toast && typeof window.toast[type] === 'function') {
+          return window.toast[type](msg, options);
+        } else if (window.toast) {
+          return window.toast(msg, options);
+        }
+        console.log(`[Toast ${type}]: ${msg}`);
+      }
+
+      const loadingScreen = document.getElementById('loading-screen');
+      const loginScreen = document.getElementById('login-screen');
+      const dashboardScreen = document.getElementById('dashboard-screen');
+      const loginErrorBanner = document.getElementById('login-error-banner');
+      const loginErrorMsg = document.getElementById('login-error-msg');
+
+      // Check URL query error
+      const urlParams = new URLSearchParams(window.location.search);
+      if (urlParams.get('error')) {
+        loginErrorBanner?.classList.remove('hidden');
+        const errType = urlParams.get('error');
+        if (errType === 'oauth_unconfigured') {
+          if (loginErrorMsg) {
+            loginErrorMsg.innerHTML = '<strong>GitHub OAuth Belum Dikonfigurasi</strong><br>Aplikasi GitHub OAuth belum dikonfigurasi (<code>GITHUB_CLIENT_ID</code> / <code>GITHUB_CLIENT_SECRET</code> belum disetel di Cloudflare Pages).';
+          }
+        } else if (errType === 'bad_verification_code' || errType.toLowerCase().includes('incorrect or expired')) {
+          if (loginErrorMsg) {
+            loginErrorMsg.innerHTML = '<strong>Kode Otorisasi Kedaluwarsa</strong><br>Sesi verifikasi GitHub telah kedaluwarsa. Silakan klik tombol <strong>Masuk dengan GitHub</strong> untuk mencoba kembali.';
+          }
+        } else if (errType === 'redirect_uri_mismatch' || errType.toLowerCase().includes('redirect_uri')) {
+          if (loginErrorMsg) {
+            loginErrorMsg.innerHTML = '<strong>Redirect URI Mismatch</strong><br>Callback URL di aplikasi GitHub OAuth belum cocok. Pastikan di GitHub Developer Settings Authorization callback URL diatur ke <code>' + window.location.origin + '/api/auth/callback</code>.';
+          }
+        } else {
+          if (loginErrorMsg) {
+            loginErrorMsg.innerHTML = `<strong>Otorisasi Gagal:</strong> ${errType}.<br>Silakan coba klik <strong>Masuk dengan GitHub</strong> kembali.`;
+          }
+        }
+      }
+
+      // 1. Authenticate Session Check
+      async function checkAuth() {
+        try {
+          const res = await fetch('/api/auth/me');
+          if (res.ok) {
+            const data = await res.json();
+            if (data.authenticated) {
+              loadingScreen?.classList.add('hidden');
+              loginScreen?.classList.add('hidden');
+              dashboardScreen?.classList.remove('hidden');
+              loadAllData();
+              return;
+            }
+          }
+        } catch (_) {}
+
+        loadingScreen?.classList.add('hidden');
+        loginScreen?.classList.remove('hidden');
+        dashboardScreen?.classList.add('hidden');
+      }
+
+      // Logout handler
+      document.getElementById('logout-btn')?.addEventListener('click', () => {
+        window.location.href = '/api/auth/logout';
+      });
+
+      // Tab switcher with robust visibility logic
+      const tabBtns = Array.from(document.querySelectorAll('.admin-tab-pill'));
+      const tabPanes = Array.from(document.querySelectorAll('.tab-pane'));
+
+      tabBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+          tabBtns.forEach(b => b.classList.remove('active'));
+          tabPanes.forEach(p => p.classList.add('hidden'));
+          btn.classList.add('active');
+          const targetId = btn.getAttribute('data-tab');
+          const targetPane = document.getElementById(targetId);
+          if (targetPane) {
+            targetPane.classList.remove('hidden');
+          }
+        });
+      });
+
+      // Password visibility toggler
+      document.querySelectorAll('.toggle-pass-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const targetId = btn.getAttribute('data-target');
+          const input = document.getElementById(targetId);
+          if (input) {
+            if (input.classList.contains('masked-field')) {
+              const isHidden = input.style.webkitTextSecurity !== 'none';
+              input.style.webkitTextSecurity = isHidden ? 'none' : 'disc';
+            } else {
+              input.type = input.type === 'password' ? 'text' : 'password';
+            }
+          }
+        });
+      });
+
+      // Dialog closer buttons
+      document.querySelectorAll('[data-close-modal]').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const modalId = btn.getAttribute('data-close-modal');
+          document.getElementById(modalId)?.close();
+        });
+      });
+
+      // Real-time image preview listeners in modals
+      function setupImagePreview(inputId, previewBoxId) {
+        const input = document.getElementById(inputId);
+        const box = document.getElementById(previewBoxId);
+        if (!input || !box) return;
+
+        const updatePreview = () => {
+          const url = input.value.trim();
+          if (url && (url.startsWith('http://') || url.startsWith('https://'))) {
+            box.innerHTML = `<img src="${url}" alt="Preview" onerror="this.onerror=null; this.parentElement.innerHTML='<span class=\\'preview-placeholder\\' style=\\'color:#fb7185;\\'>Gambar gagal dimuat (cek URL)</span>';" />`;
+          } else {
+            box.innerHTML = `<span class="preview-placeholder">Preview gambar akan muncul di sini</span>`;
+          }
+        };
+
+        input.addEventListener('input', updatePreview);
+        input.addEventListener('change', updatePreview);
+      }
+
+      setupImagePreview('pm-gambar', 'pm-img-preview-box');
+      setupImagePreview('cm-depan', 'cm-img-preview-box');
+
+      // 2. DATA LOADERS & RENDERING
+      let projectsList = [];
+      let certsList = [];
+
+      function updateKPICards() {
+        const projCount = document.getElementById('kpi-projects-count');
+        const featCount = document.getElementById('kpi-featured-count');
+        const certCount = document.getElementById('kpi-certs-count');
+
+        if (projCount) projCount.textContent = `${projectsList.length}`;
+        if (featCount) {
+          const featuredNum = projectsList.filter(p => Boolean(p.is_featured)).length;
+          featCount.textContent = `${featuredNum} Aktif`;
+        }
+        if (certCount) certCount.textContent = `${certsList.length}`;
+      }
+
+      function getCategoryClass(cat) {
+        const c = String(cat || '').toLowerCase();
+        if (c.includes('web')) return 'website';
+        if (c.includes('cisco')) return 'cisco';
+        if (c.includes('mikro')) return 'mikrotik';
+        if (c.includes('ai')) return 'ai';
+        if (c.includes('linux')) return 'linux';
+        return 'website';
+      }
+
+      // LOAD PROJECTS
+      async function loadProjects() {
+        const container = document.getElementById('projects-list-container');
+        try {
+          const res = await fetch('/api/admin/projects');
+          projectsList = await res.json();
+          projectsList.sort((a, b) => (a.sort_order || 0) - (b.sort_order || 0));
+
+          updateKPICards();
+
+          if (projectsList.length === 0) {
+            container.innerHTML = `<div class="admin-empty-state">Belum ada proyek terdaftar di database.</div>`;
+            return;
+          }
+
+          container.innerHTML = projectsList.map((p, index) => `
+            <div class="admin-item-card" data-id="${p.id}">
+              <div class="item-main-info">
+                <div class="item-reorder-controls">
+                  <button type="button" class="btn-move move-up-proj" data-index="${index}" title="Geser ke atas" ${index === 0 ? 'disabled style="opacity:0.25; cursor:not-allowed;"' : ''}>▲</button>
+                  <button type="button" class="btn-move move-down-proj" data-index="${index}" title="Geser ke bawah" ${index === projectsList.length - 1 ? 'disabled style="opacity:0.25; cursor:not-allowed;"' : ''}>▼</button>
+                </div>
+                <span class="item-order-badge">${p.sort_order || index + 1}</span>
+
+                <div class="item-thumb-wrapper">
+                  <img src="${p.link_gambar}" alt="${p.judul}" loading="lazy" />
+                </div>
+
+                <div class="item-text-details">
+                  <div class="item-title-row">
+                    <h3 class="item-title">${p.judul}</h3>
+                    <span class="badge-cat ${getCategoryClass(p.kategori)}">${p.kategori || 'Website'}</span>
+                  </div>
+                  <p class="item-subtitle">${p.english_title || p.deskripsi || ''}</p>
+                </div>
+              </div>
+
+              <div class="item-actions-group">
+                <label class="switch-control" title="Tampilkan di carousel beranda">
+                  <input type="checkbox" class="switch-input toggle-proj-featured" data-id="${p.id}" ${p.is_featured ? 'checked' : ''} />
+                  <span class="switch-track"><span class="switch-thumb"></span></span>
+                  <span class="switch-label-text">Featured</span>
+                </label>
+
+                <button class="btn-icon-subtle edit-proj-btn" data-id="${p.id}" title="Edit Proyek">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/><path d="m15 5 4 4"/>
+                  </svg>
+                </button>
+
+                <button class="btn-icon-subtle btn-icon-danger del-proj-btn" data-id="${p.id}" title="Hapus Proyek">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/><line x1="10" x2="10" y1="11" y2="17"/><line x1="14" x2="14" y1="11" y2="17"/>
+                  </svg>
+                </button>
+              </div>
+            </div>
+          `).join('');
+
+          attachProjectActionHandlers();
+        } catch (e) {
+          container.innerHTML = `<div class="admin-empty-state" style="color:#fb7185;">Gagal memuat data proyek: ${e.message}</div>`;
+        }
+      }
+
+      // LOAD CERTIFICATES
+      async function loadCertificates() {
+        const container = document.getElementById('certs-list-container');
+        try {
+          const res = await fetch('/api/admin/certificates');
+          certsList = await res.json();
+          certsList.sort((a, b) => (a.sort_order || 0) - (b.sort_order || 0));
+
+          updateKPICards();
+
+          if (certsList.length === 0) {
+            container.innerHTML = `<div class="admin-empty-state">Belum ada sertifikat terdaftar di database.</div>`;
+            return;
+          }
+
+          container.innerHTML = certsList.map((c, index) => `
+            <div class="admin-item-card" data-id="${c.id}">
+              <div class="item-main-info">
+                <div class="item-reorder-controls">
+                  <button type="button" class="btn-move move-up-cert" data-index="${index}" title="Geser ke atas" ${index === 0 ? 'disabled style="opacity:0.25; cursor:not-allowed;"' : ''}>▲</button>
+                  <button type="button" class="btn-move move-down-cert" data-index="${index}" title="Geser ke bawah" ${index === certsList.length - 1 ? 'disabled style="opacity:0.25; cursor:not-allowed;"' : ''}>▼</button>
+                </div>
+                <span class="item-order-badge">${c.sort_order || index + 1}</span>
+
+                <div class="item-thumb-wrapper cert">
+                  <img src="${c.url_gambar_depan}" alt="${c.nama_sertifikat}" loading="lazy" />
+                </div>
+
+                <div class="item-text-details">
+                  <div class="item-title-row">
+                    <h3 class="item-title">${c.nama_sertifikat}</h3>
+                    <span class="badge-cat cisco">${c.tahun || '2026'}</span>
+                    ${c.tombol_transkrip === 'ada' ? '<span class="badge-cat linux" style="font-size:0.6rem;">TRANSKRIP</span>' : ''}
+                  </div>
+                  <p class="item-subtitle">${c.penerbit} • ${c.tipe === 'vertical' ? 'Portrait' : 'Landscape'}</p>
+                </div>
+              </div>
+
+              <div class="item-actions-group">
+                <label class="switch-control" title="Tampilkan di carousel beranda">
+                  <input type="checkbox" class="switch-input toggle-cert-featured" data-id="${c.id}" ${c.is_featured ? 'checked' : ''} />
+                  <span class="switch-track"><span class="switch-thumb"></span></span>
+                  <span class="switch-label-text">Featured</span>
+                </label>
+
+                <button class="btn-icon-subtle edit-cert-btn" data-id="${c.id}" title="Edit Sertifikat">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/><path d="m15 5 4 4"/>
+                  </svg>
+                </button>
+
+                <button class="btn-icon-subtle btn-icon-danger del-cert-btn" data-id="${c.id}" title="Hapus Sertifikat">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/><line x1="10" x2="10" y1="11" y2="17"/><line x1="14" x2="14" y1="11" y2="17"/>
+                  </svg>
+                </button>
+              </div>
+            </div>
+          `).join('');
+
+          attachCertActionHandlers();
+        } catch (e) {
+          container.innerHTML = `<div class="admin-empty-state" style="color:#fb7185;">Gagal memuat sertifikat: ${e.message}</div>`;
+        }
+      }
+
+      // LOAD CONFIG
+      async function loadConfig() {
+        try {
+          const res = await fetch('/api/admin/config');
+          const cfg = await res.json();
+
+          // Profile fields
+          document.getElementById('cfg-name').value = cfg.name || '';
+          document.getElementById('cfg-short-name').value = cfg.short_name || '';
+          document.getElementById('cfg-title-id').value = cfg.title_id || '';
+          document.getElementById('cfg-title-en').value = cfg.title_en || '';
+          document.getElementById('cfg-bio-id').value = cfg.bio_id || '';
+          document.getElementById('cfg-bio-en').value = cfg.bio_en || '';
+          document.getElementById('cfg-email').value = cfg.email || '';
+          document.getElementById('cfg-github').value = cfg.github_url || '';
+          document.getElementById('cfg-linkedin').value = cfg.linkedin_url || '';
+
+          // Notification fields
+          document.getElementById('notify-tele-enabled').checked = Boolean(cfg.tele_enabled);
+          document.getElementById('notify-tele-token').value = cfg.tele_bot_token || '';
+          document.getElementById('notify-tele-chat-id').value = cfg.tele_chat_id || '';
+          document.getElementById('notify-ntfy-server').value = cfg.ntfy_server || 'https://ntfy.fmr.web.id';
+          document.getElementById('notify-ntfy-topic').value = cfg.ntfy_topic || 'agent';
+          document.getElementById('notify-ntfy-user').value = cfg.ntfy_username || '';
+          document.getElementById('notify-ntfy-pass').value = cfg.ntfy_password || '';
+          document.getElementById('notify-ntfy-token').value = cfg.ntfy_token || '';
+        } catch (e) {
+          showToast('error', `Gagal memuat konfigurasi: ${e.message}`);
+        }
+      }
+
+      function loadAllData() {
+        loadProjects();
+        loadCertificates();
+        loadConfig();
+      }
+
+      // 3. PROJECT CRUD & INTERACTION HANDLERS
+      const projectModal = document.getElementById('project-modal');
+      const projectForm = document.getElementById('project-form');
+
+      document.getElementById('add-project-btn')?.addEventListener('click', () => {
+        projectForm.reset();
+        document.getElementById('pm-id').value = '';
+        document.getElementById('project-modal-title').textContent = 'Tambah Proyek Baru';
+        document.getElementById('pm-img-preview-box').innerHTML = `<span class="preview-placeholder">Preview gambar akan muncul di sini</span>`;
+        projectModal.showModal();
+      });
+
+      function attachProjectActionHandlers() {
+        // Edit button
+        document.querySelectorAll('.edit-proj-btn').forEach(btn => {
+          btn.addEventListener('click', () => {
+            const id = btn.getAttribute('data-id');
+            const p = projectsList.find(item => String(item.id) === String(id));
+            if (!p) return;
+
+            document.getElementById('pm-id').value = p.id;
+            document.getElementById('pm-judul').value = p.judul || '';
+            document.getElementById('pm-title-en').value = p.english_title || '';
+            document.getElementById('pm-kategori').value = p.kategori || 'Website';
+            document.getElementById('pm-sort').value = p.sort_order || 0;
+            document.getElementById('pm-deskripsi').value = p.deskripsi || '';
+            document.getElementById('pm-desc-en').value = p.english_desc || '';
+            document.getElementById('pm-gambar').value = p.link_gambar || '';
+            document.getElementById('pm-link').value = p.link_dokumentasi || '';
+            document.getElementById('pm-featured').checked = Boolean(p.is_featured);
+
+            const imgBox = document.getElementById('pm-img-preview-box');
+            if (p.link_gambar) {
+              imgBox.innerHTML = `<img src="${p.link_gambar}" alt="${p.judul}" />`;
+            }
+
+            document.getElementById('project-modal-title').textContent = `Edit Proyek: ${p.judul}`;
+            projectModal.showModal();
+          });
+        });
+
+        // Instant Featured Toggle Switch
+        document.querySelectorAll('.toggle-proj-featured').forEach(input => {
+          input.addEventListener('change', async () => {
+            const id = input.getAttribute('data-id');
+            const isFeatured = input.checked;
+            try {
+              const res = await fetch('/api/admin/projects', {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ id, is_featured: isFeatured })
+              });
+              if (!res.ok) throw new Error('Gagal memperbarui status');
+              const target = projectsList.find(p => String(p.id) === String(id));
+              if (target) target.is_featured = isFeatured;
+              updateKPICards();
+              showToast('success', `Status featured proyek diperbarui`);
+            } catch (err) {
+              input.checked = !isFeatured; // rollback
+              showToast('error', `Gagal mengubah status: ${err.message}`);
+            }
+          });
+        });
+
+        // Reorder Move Up / Down
+        document.querySelectorAll('.move-up-proj').forEach(btn => {
+          btn.addEventListener('click', () => {
+            const idx = parseInt(btn.getAttribute('data-index'), 10);
+            reorderProject(idx, -1);
+          });
+        });
+
+        document.querySelectorAll('.move-down-proj').forEach(btn => {
+          btn.addEventListener('click', () => {
+            const idx = parseInt(btn.getAttribute('data-index'), 10);
+            reorderProject(idx, 1);
+          });
+        });
+
+        // Delete with Sonner Action Confirmation
+        document.querySelectorAll('.del-proj-btn').forEach(btn => {
+          btn.addEventListener('click', () => {
+            const id = btn.getAttribute('data-id');
+            const target = projectsList.find(p => String(p.id) === String(id));
+            const name = target ? target.judul : `ID ${id}`;
+
+            if (window.toast) {
+              window.toast(`Hapus proyek "${name}"?`, {
+                description: 'Data akan dihapus permanen dari Cloudflare D1.',
+                action: {
+                  label: 'Hapus',
+                  onClick: () => executeDeleteProject(id, name)
+                },
+                cancel: {
+                  label: 'Batal'
+                }
+              });
+            } else {
+              if (confirm(`Hapus proyek "${name}"?`)) {
+                executeDeleteProject(id, name);
+              }
+            }
+          });
+        });
+      }
+
+      async function reorderProject(index, direction) {
+        const targetIndex = index + direction;
+        if (targetIndex < 0 || targetIndex >= projectsList.length) return;
+
+        const current = projectsList[index];
+        const target = projectsList[targetIndex];
+
+        // Swap sort_order
+        const tempOrder = current.sort_order || index + 1;
+        current.sort_order = target.sort_order || targetIndex + 1;
+        target.sort_order = tempOrder;
+
+        // Optimistic UI update
+        loadProjects();
+
+        try {
+          await Promise.all([
+            fetch('/api/admin/projects', {
+              method: 'PUT',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ id: current.id, sort_order: current.sort_order })
+            }),
+            fetch('/api/admin/projects', {
+              method: 'PUT',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ id: target.id, sort_order: target.sort_order })
+            })
+          ]);
+          showToast('success', 'Urutan proyek berhasil diperbarui');
+        } catch (err) {
+          showToast('error', `Gagal menyimpan urutan: ${err.message}`);
+          loadProjects(); // Rollback
+        }
+      }
+
+      async function executeDeleteProject(id, name) {
+        try {
+          const res = await fetch(`/api/admin/projects?id=${id}`, { method: 'DELETE' });
+          if (res.ok) {
+            showToast('success', `Proyek "${name}" berhasil dihapus.`);
+            loadProjects();
+          } else {
+            const err = await res.json();
+            showToast('error', `Gagal menghapus: ${err.error}`);
+          }
+        } catch (e) {
+          showToast('error', `Gagal menghubungi server: ${e.message}`);
+        }
+      }
+
+      // Save Project Form Submit
+      projectForm?.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const id = document.getElementById('pm-id').value;
+        const isEdit = Boolean(id);
+
+        const payload = {
+          judul: document.getElementById('pm-judul').value.trim(),
+          english_title: document.getElementById('pm-title-en').value.trim(),
+          kategori: document.getElementById('pm-kategori').value,
+          sort_order: parseInt(document.getElementById('pm-sort').value, 10),
+          deskripsi: document.getElementById('pm-deskripsi').value.trim(),
+          english_desc: document.getElementById('pm-desc-en').value.trim(),
+          link_gambar: document.getElementById('pm-gambar').value.trim(),
+          link_dokumentasi: document.getElementById('pm-link').value.trim(),
+          is_featured: document.getElementById('pm-featured').checked
+        };
+
+        if (isEdit) payload.id = id;
+
+        const saveBtn = document.getElementById('save-proj-btn');
+        if (saveBtn) {
+          saveBtn.disabled = true;
+          saveBtn.textContent = 'Menyimpan...';
+        }
+
+        try {
+          const res = await fetch('/api/admin/projects', {
+            method: isEdit ? 'PUT' : 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+          });
+
+          if (res.ok) {
+            projectModal.close();
+            showToast('success', isEdit ? 'Proyek berhasil diperbarui ke D1.' : 'Proyek baru berhasil ditambahkan.');
+            loadProjects();
+          } else {
+            const err = await res.json();
+            showToast('error', `Gagal menyimpan: ${err.error}`);
+          }
+        } catch (err) {
+          showToast('error', `Terjadi kesalahan jaringan: ${err.message}`);
+        } finally {
+          if (saveBtn) {
+            saveBtn.disabled = false;
+            saveBtn.textContent = 'Simpan Proyek';
+          }
+        }
+      });
+
+      // 4. CERTIFICATE CRUD & INTERACTION HANDLERS
+      const certModal = document.getElementById('cert-modal');
+      const certForm = document.getElementById('cert-form');
+
+      document.getElementById('add-cert-btn')?.addEventListener('click', () => {
+        certForm.reset();
+        document.getElementById('cm-id').value = '';
+        document.getElementById('cert-modal-title').textContent = 'Tambah Sertifikat Baru';
+        document.getElementById('cm-img-preview-box').innerHTML = `<span class="preview-placeholder">Preview gambar akan muncul di sini</span>`;
+        certModal.showModal();
+      });
+
+      function attachCertActionHandlers() {
+        // Edit button
+        document.querySelectorAll('.edit-cert-btn').forEach(btn => {
+          btn.addEventListener('click', () => {
+            const id = btn.getAttribute('data-id');
+            const c = certsList.find(item => String(item.id) === String(id));
+            if (!c) return;
+
+            document.getElementById('cm-id').value = c.id;
+            document.getElementById('cm-nama').value = c.nama_sertifikat || '';
+            document.getElementById('cm-penerbit').value = c.penerbit || '';
+            document.getElementById('cm-tahun').value = c.tahun || '';
+            document.getElementById('cm-tipe').value = c.tipe || 'horizontal';
+            document.getElementById('cm-sort').value = c.sort_order || 0;
+            document.getElementById('cm-depan').value = c.url_gambar_depan || '';
+            document.getElementById('cm-belakang').value = c.url_gambar_belakang || '';
+            document.getElementById('cm-transkrip').checked = c.tombol_transkrip === 'ada';
+            document.getElementById('cm-featured').checked = Boolean(c.is_featured);
+
+            const imgBox = document.getElementById('cm-img-preview-box');
+            if (c.url_gambar_depan) {
+              imgBox.innerHTML = `<img src="${c.url_gambar_depan}" alt="${c.nama_sertifikat}" />`;
+            }
+
+            document.getElementById('cert-modal-title').textContent = `Edit Sertifikat: ${c.nama_sertifikat}`;
+            certModal.showModal();
+          });
+        });
+
+        // Instant Featured Toggle Switch
+        document.querySelectorAll('.toggle-cert-featured').forEach(input => {
+          input.addEventListener('change', async () => {
+            const id = input.getAttribute('data-id');
+            const isFeatured = input.checked;
+            try {
+              const res = await fetch('/api/admin/certificates', {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ id, is_featured: isFeatured })
+              });
+              if (!res.ok) throw new Error('Gagal memperbarui status');
+              const target = certsList.find(c => String(c.id) === String(id));
+              if (target) target.is_featured = isFeatured;
+              updateKPICards();
+              showToast('success', `Status featured sertifikat diperbarui`);
+            } catch (err) {
+              input.checked = !isFeatured;
+              showToast('error', `Gagal mengubah status: ${err.message}`);
+            }
+          });
+        });
+
+        // Reorder Move Up / Down
+        document.querySelectorAll('.move-up-cert').forEach(btn => {
+          btn.addEventListener('click', () => {
+            const idx = parseInt(btn.getAttribute('data-index'), 10);
+            reorderCert(idx, -1);
+          });
+        });
+
+        document.querySelectorAll('.move-down-cert').forEach(btn => {
+          btn.addEventListener('click', () => {
+            const idx = parseInt(btn.getAttribute('data-index'), 10);
+            reorderCert(idx, 1);
+          });
+        });
+
+        // Delete with Sonner Action Confirmation
+        document.querySelectorAll('.del-cert-btn').forEach(btn => {
+          btn.addEventListener('click', () => {
+            const id = btn.getAttribute('data-id');
+            const target = certsList.find(c => String(c.id) === String(id));
+            const name = target ? target.nama_sertifikat : `ID ${id}`;
+
+            if (window.toast) {
+              window.toast(`Hapus sertifikat "${name}"?`, {
+                description: 'Kredensial akan dihapus permanen dari database D1.',
+                action: {
+                  label: 'Hapus',
+                  onClick: () => executeDeleteCert(id, name)
+                },
+                cancel: {
+                  label: 'Batal'
+                }
+              });
+            } else {
+              if (confirm(`Hapus sertifikat "${name}"?`)) {
+                executeDeleteCert(id, name);
+              }
+            }
+          });
+        });
+      }
+
+      async function reorderCert(index, direction) {
+        const targetIndex = index + direction;
+        if (targetIndex < 0 || targetIndex >= certsList.length) return;
+
+        const current = certsList[index];
+        const target = certsList[targetIndex];
+
+        const tempOrder = current.sort_order || index + 1;
+        current.sort_order = target.sort_order || targetIndex + 1;
+        target.sort_order = tempOrder;
+
+        loadCertificates();
+
+        try {
+          await Promise.all([
+            fetch('/api/admin/certificates', {
+              method: 'PUT',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ id: current.id, sort_order: current.sort_order })
+            }),
+            fetch('/api/admin/certificates', {
+              method: 'PUT',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ id: target.id, sort_order: target.sort_order })
+            })
+          ]);
+          showToast('success', 'Urutan sertifikat berhasil disimpan');
+        } catch (err) {
+          showToast('error', `Gagal menyimpan urutan: ${err.message}`);
+          loadCertificates();
+        }
+      }
+
+      async function executeDeleteCert(id, name) {
+        try {
+          const res = await fetch(`/api/admin/certificates?id=${id}`, { method: 'DELETE' });
+          if (res.ok) {
+            showToast('success', `Sertifikat "${name}" berhasil dihapus.`);
+            loadCertificates();
+          } else {
+            const err = await res.json();
+            showToast('error', `Gagal menghapus: ${err.error}`);
+          }
+        } catch (e) {
+          showToast('error', `Gagal menghubungi server: ${e.message}`);
+        }
+      }
+
+      // Save Certificate Form Submit
+      certForm?.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const id = document.getElementById('cm-id').value;
+        const isEdit = Boolean(id);
+
+        const payload = {
+          nama_sertifikat: document.getElementById('cm-nama').value.trim(),
+          penerbit: document.getElementById('cm-penerbit').value.trim(),
+          tahun: document.getElementById('cm-tahun').value.trim(),
+          tipe: document.getElementById('cm-tipe').value,
+          sort_order: parseInt(document.getElementById('cm-sort').value, 10),
+          url_gambar_depan: document.getElementById('cm-depan').value.trim(),
+          url_gambar_belakang: document.getElementById('cm-belakang').value.trim(),
+          tombol_transkrip: document.getElementById('cm-transkrip').checked ? 'ada' : 'tidak',
+          is_featured: document.getElementById('cm-featured').checked
+        };
+
+        if (isEdit) payload.id = id;
+
+        const saveBtn = document.getElementById('save-cert-btn');
+        if (saveBtn) {
+          saveBtn.disabled = true;
+          saveBtn.textContent = 'Menyimpan...';
+        }
+
+        try {
+          const res = await fetch('/api/admin/certificates', {
+            method: isEdit ? 'PUT' : 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+          });
+
+          if (res.ok) {
+            certModal.close();
+            showToast('success', isEdit ? 'Sertifikat berhasil diperbarui.' : 'Sertifikat baru berhasil disimpan.');
+            loadCertificates();
+          } else {
+            const err = await res.json();
+            showToast('error', `Gagal menyimpan: ${err.error}`);
+          }
+        } catch (err) {
+          showToast('error', `Terjadi kesalahan jaringan: ${err.message}`);
+        } finally {
+          if (saveBtn) {
+            saveBtn.disabled = false;
+            saveBtn.textContent = 'Simpan Sertifikat';
+          }
+        }
+      });
+
+      // 5. PROFILE FORM HANDLER
+      document.getElementById('profile-form')?.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const btn = document.getElementById('save-profile-btn');
+        if (btn) {
+          btn.disabled = true;
+          btn.textContent = 'Menyimpan...';
+        }
+
+        const payload = {
+          type: 'profile',
+          name: document.getElementById('cfg-name').value.trim(),
+          short_name: document.getElementById('cfg-short-name').value.trim(),
+          title_id: document.getElementById('cfg-title-id').value.trim(),
+          title_en: document.getElementById('cfg-title-en').value.trim(),
+          bio_id: document.getElementById('cfg-bio-id').value.trim(),
+          bio_en: document.getElementById('cfg-bio-en').value.trim(),
+          email: document.getElementById('cfg-email').value.trim(),
+          github_url: document.getElementById('cfg-github').value.trim(),
+          linkedin_url: document.getElementById('cfg-linkedin').value.trim()
+        };
+
+        try {
+          const res = await fetch('/api/admin/config', {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+          });
+
+          if (res.ok) {
+            showToast('success', 'Profil dan bio berhasil diperbarui di database D1.');
+          } else {
+            const err = await res.json();
+            showToast('error', `Gagal menyimpan profil: ${err.error}`);
+          }
+        } catch (err) {
+          showToast('error', `Kesalahan jaringan: ${err.message}`);
+        } finally {
+          if (btn) {
+            btn.disabled = false;
+            btn.textContent = 'Simpan Perubahan Profil';
+          }
+        }
+      });
+
+      // 6. NOTIFICATION CONFIG & TEST DISPATCHER
+      document.getElementById('notify-form')?.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const payload = {
+          type: 'notifications',
+          tele_enabled: document.getElementById('notify-tele-enabled').checked,
+          tele_bot_token: document.getElementById('notify-tele-token').value.trim(),
+          tele_chat_id: document.getElementById('notify-tele-chat-id').value.trim(),
+          ntfy_server: document.getElementById('notify-ntfy-server').value.trim(),
+          ntfy_topic: document.getElementById('notify-ntfy-topic').value.trim(),
+          ntfy_username: document.getElementById('notify-ntfy-user')?.value.trim() || '',
+          ntfy_password: document.getElementById('notify-ntfy-pass')?.value || '',
+          ntfy_token: document.getElementById('notify-ntfy-token').value.trim()
+        };
+
+        try {
+          const res = await fetch('/api/admin/config', {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+          });
+
+          if (res.ok) {
+            showToast('success', 'Parameter notifikasi Telegram & ntfy berhasil disimpan.');
+          } else {
+            const err = await res.json();
+            showToast('error', `Gagal menyimpan parameter: ${err.error}`);
+          }
+        } catch (err) {
+          showToast('error', `Kesalahan jaringan: ${err.message}`);
+        }
+      });
+
+      // Uji Coba Notifikasi Real-Time
+      document.getElementById('test-notify-btn')?.addEventListener('click', async () => {
+        const testBtn = document.getElementById('test-notify-btn');
+        const resultBox = document.getElementById('notify-test-result');
+        const resultContent = document.getElementById('notify-test-content');
+
+        if (testBtn) {
+          testBtn.disabled = true;
+          testBtn.innerHTML = `
+            <span class="spinner" style="width: 12px; height: 12px; border-width: 2px; display: inline-block;"></span>
+            Mengirim Pesan Uji Coba...
+          `;
+        }
+
+        showToast('info', 'Mengirim sinyal uji coba ke Telegram & ntfy...');
+
+        try {
+          const res = await fetch('/api/admin/notify-test', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              title: '[Portfolio | ' + window.location.hostname + '] Uji Coba Notifikasi Admin CMS',
+              message: `Pesan pengujian dikirim dari panel CMS admin portofolio pada ${new Date().toLocaleString('id-ID')}. Koneksi Telegram & ntfy berjalan optimal!`,
+              tags: ['white_check_mark', 'bell']
+            })
+          });
+
+          const data = await res.json();
+
+          const tg = data.details?.telegram || data.telegram;
+          const ntfy = data.details?.ntfy || data.ntfy;
+
+          resultBox?.classList.remove('hidden');
+          if (resultContent) {
+            resultContent.innerHTML = `
+              <div style="display: flex; gap: 1rem; flex-wrap: wrap; margin-bottom: 0.5rem;">
+                <span style="color: ${tg?.success ? 'var(--admin-success)' : 'var(--admin-danger)'}; font-weight: 500;">
+                  ● Telegram: ${tg?.success ? 'BERHASIL (Terkirim)' : `GAGAL / Nonaktif (${tg?.info || 'Error'})`}
+                </span>
+                <span style="color: ${ntfy?.success ? 'var(--admin-success)' : 'var(--admin-danger)'}; font-weight: 500;">
+                  ● ntfy Push: ${ntfy?.success ? 'BERHASIL (HTTP 200)' : `GAGAL / Offline (${ntfy?.info || 'Error'})`}
+                </span>
+              </div>
+              <pre style="background: var(--admin-surface-well); border: 1px solid var(--admin-border); padding: 0.75rem; border-radius: 6px; overflow-x: auto; margin: 0; font-size: 0.75rem; color: var(--admin-text-sub);">${JSON.stringify(data, null, 2)}</pre>
+            `;
+          }
+
+          if (tg?.success || ntfy?.success) {
+            showToast('success', 'Uji coba notifikasi berhasil diproses!');
+          } else {
+            showToast('warning', 'Pengujian selesai namun kedua kanal gagal/nonaktif.');
+          }
+        } catch (err) {
+          showToast('error', `Gagal mengeksekusi uji coba: ${err.message}`);
+          resultBox?.classList.remove('hidden');
+          if (resultContent) {
+            resultContent.textContent = `Kesalahan: ${err.message}`;
+          }
+        } finally {
+          if (testBtn) {
+            testBtn.disabled = false;
+            testBtn.innerHTML = `
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polygon points="5 3 19 12 5 21 5 3"/>
+              </svg>
+              Kirim Uji Coba Notifikasi
+            `;
+          }
+        }
+      });
+
+      // CI/CD GitOps Edge Sync Handler
+      document.getElementById('trigger-sync-btn')?.addEventListener('click', async () => {
+        const syncBtn = document.getElementById('trigger-sync-btn');
+        const syncResultBox = document.getElementById('sync-result-box');
+        const syncIndicator = document.getElementById('sync-status-indicator');
+
+        if (!confirm('Apakah Anda yakin ingin menyinkronkan data Cloudflare D1 ke repositori Git dan memicu build Cloudflare Pages di edge?')) {
+          return;
+        }
+
+        if (syncBtn) {
+          syncBtn.disabled = true;
+          syncBtn.innerHTML = `
+            <span class="spinner" style="width: 12px; height: 12px; border-width: 2px; display: inline-block;"></span>
+            Menyinkronkan ke Git & Memicu Edge Build...
+          `;
+        }
+
+        showToast('info', 'Memeriksa perubahan data D1 & menghubungkan ke GitHub API...');
+        if (syncIndicator) syncIndicator.textContent = 'Status: Memproses sinkronisasi D1 ke Git...';
+
+        try {
+          const res = await fetch('/api/admin/sync', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' }
+          });
+
+          const data = await res.json();
+
+          if (!res.ok) {
+            throw new Error(data.error || 'Gagal menyinkronkan data');
+          }
+
+          syncResultBox?.classList.remove('hidden');
+          if (data.changed) {
+            showToast('success', `Berhasil! Commit ${data.commit_sha.slice(0, 7)} dibuat. Cloudflare Pages sedang melakukan build di edge.`);
+            if (syncIndicator) {
+              syncIndicator.innerHTML = `Status: <span style="color: var(--admin-success); display: inline-flex; align-items: center; gap: 4px;"><span style="width: 6px; height: 6px; border-radius: 50%; background: var(--admin-success);"></span> Terakhir sinkron: ${new Date().toLocaleTimeString('id-ID')} WIB (Commit: ${data.commit_sha.slice(0, 7)})</span>`;
+            }
+            if (syncResultBox) {
+              syncResultBox.innerHTML = `
+                <div style="display: flex; align-items: center; gap: 8px; color: var(--admin-success); font-weight: 600; margin-bottom: 6px;">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="20 6 9 17 4 12"></polyline>
+                  </svg>
+                  <span>Sinkronisasi Selesai & Build Edge Dipicu!</span>
+                </div>
+                <div>Commit SHA: <strong style="font-family: var(--admin-font-mono);">${data.commit_sha}</strong></div>
+                <div style="margin-top: 2px;">File Diperbarui: ${data.files_updated ? data.files_updated.join(', ') : 'src/data/*.json'}</div>
+                <div style="margin-top: 6px; color: var(--admin-text-muted); font-size: 0.8rem;">Cloudflare Pages otomatis mengompilasi dan menyebarkan versi terbaru ke seluruh CDN dunia dalam 1-2 menit.</div>
+              `;
+            }
+          } else {
+            showToast('info', 'Data D1 sudah identik dengan Git. Tidak diperlukan build ulang.');
+            if (syncIndicator) {
+              syncIndicator.innerHTML = `Status: <span style="color: var(--admin-accent-blue); display: inline-flex; align-items: center; gap: 4px;"><span style="width: 6px; height: 6px; border-radius: 50%; background: var(--admin-accent-blue);"></span> Data D1 & Git identik (${new Date().toLocaleTimeString('id-ID')} WIB)</span>`;
+            }
+            if (syncResultBox) {
+              syncResultBox.innerHTML = `
+                <div style="display: flex; align-items: center; gap: 8px; color: var(--admin-accent-blue); font-weight: 600; margin-bottom: 4px;">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                    <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                  </svg>
+                  <span>Data Sudah Sinkron</span>
+                </div>
+                <div style="color: var(--admin-text-sub); margin-top: 2px; font-size: 0.825rem;">Data di Cloudflare D1 identik dengan file statis di repositori. Guard SHA-256 mencegah commit berulang dan menghemat kuota edge build.</div>
+              `;
+            }
+          }
+        } catch (err) {
+          showToast('error', `Gagal sinkronisasi: ${err.message}`);
+          if (syncIndicator) {
+            syncIndicator.innerHTML = `Status: <span style="color: var(--admin-danger); display: inline-flex; align-items: center; gap: 4px;"><span style="width: 6px; height: 6px; border-radius: 50%; background: var(--admin-danger);"></span> Gagal: ${err.message}</span>`;
+          }
+          syncResultBox?.classList.remove('hidden');
+          if (syncResultBox) {
+            syncResultBox.innerHTML = `
+              <div style="display: flex; align-items: center; gap: 8px; color: var(--admin-danger); font-weight: 600;">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="12" cy="12" r="10"></circle>
+                  <line x1="15" y1="9" x2="9" y2="15"></line>
+                  <line x1="9" y1="9" x2="15" y2="15"></line>
+                </svg>
+                <span>Kesalahan: ${err.message}</span>
+              </div>
+            `;
+          }
+        } finally {
+          if (syncBtn) {
+            syncBtn.disabled = false;
+            syncBtn.innerHTML = `
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 12a9 9 0 0 0-9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/>
+                <path d="M3 3v5h5"/>
+                <path d="M3 12a9 9 0 0 0 9 9 9.75 9.75 0 0 0 6.74-2.74L21 16"/>
+                <path d="M16 21h5v-5"/>
+              </svg>
+              Sinkronkan ke Statis & Rebuild Sekarang
+            `;
+          }
+        }
+      });
+
+      // Start auth check
+      checkAuth();
+    })();
+  </script>
+</body>
+</html>

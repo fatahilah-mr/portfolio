@@ -1,708 +1,445 @@
 ---
+// src/pages/projects.astro
+// Complete Project Catalog (Indonesian Default Version)
 import Layout from '../layouts/Layout.astro';
+import initialProjects from '../data/projects.json';
+
+const categories = [
+  { id: 'all', labelId: 'Semua', labelEn: 'All' },
+  { id: 'Website', labelId: 'Website', labelEn: 'Website' },
+  { id: 'Cisco', labelId: 'Cisco', labelEn: 'Cisco' },
+  { id: 'MikroTik', labelId: 'MikroTik', labelEn: 'MikroTik' },
+  { id: 'AI', labelId: 'AI', labelEn: 'AI' }
+];
 ---
 
-<Layout title="Proyek" description="Galeri dokumentasi proyek teknis, eksperimen lab jaringan, Cisco, MikroTik, Linux, AI, Windows Server, dan pembuatan website Fatahilah Miftahul Rahman.">
-  <section class="projects-section container section-py">
-    <div class="section-header">
-      <h1 class="font-heading" data-i18n="projects.title">Lab Archive & Proyek Portofolio</h1>
-      <p class="section-subtitle" data-i18n="projects.subtitle">
-        Dokumentasi langsung dari eksperimen laboratorium infrastruktur, konfigurasi server, serta proyek pengembangan teknologi terapan.
-      </p>
-
-      <!-- CMS Actions & Caching Info -->
-      <div class="cms-toolbar mt-6 flex flex-wrap justify-center items-center gap-4">
-        <button id="refresh-projects-btn" class="btn-refresh font-mono text-xs flex items-center gap-2" aria-label="Segarkan data Proyek dari Google Sheets" data-i18n="projects.btn.refresh">
-          <svg class="refresh-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 4v6h-6"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
-          <span>Segarkan Data CMS</span>
-        </button>
-        <span id="projects-cache-status" class="cache-status font-mono text-xs text-muted">Status: Memuat data...</span>
+<Layout 
+  title="Katalog Proyek & Lab | Fatahilah Miftahul Rahman" 
+  description="Katalog lengkap proyek teknologi terapan, platform web produksi, simulasi laboratorium jaringan Cisco & MikroTik, serta integrasi AI Fatahilah Miftahul Rahman."
+  lang="id"
+>
+  <section class="section-padding projects-page-section">
+    <div class="container">
+      <div class="section-header">
+        <h1 class="section-title">
+          <span class="lang-id">Arsip Proyek & Eksperimen Lab</span>
+          <span class="lang-en">Project Archive & Technical Labs</span>
+        </h1>
+        <p class="section-subtitle">
+          <span class="lang-id">
+            Dokumentasi komprehensif platform web publik, desain topologi jaringan Cisco multi-lantai, gateway MikroTik, dan aplikasi AI.
+          </span>
+          <span class="lang-en">
+            Comprehensive documentation of public web platforms, multi-floor Cisco network topologies, MikroTik gateways, and AI applications.
+          </span>
+        </p>
       </div>
-    </div>
 
-    <!-- Category Filter Buttons (Exact Categories from cms logic) -->
-    <div class="cert-buttons-wrapper flex flex-wrap justify-center gap-3 mb-10" role="group" aria-label="Filter Kategori Proyek">
-      <button class="cert-btn btn-secondary active-filter" data-category="all" data-i18n="projects.filter.all">Semua Proyek</button>
-      <button class="cert-btn btn-secondary" data-category="AI">AI</button>
-      <button class="cert-btn btn-secondary" data-category="Cisco">Cisco</button>
-      <button class="cert-btn btn-secondary" data-category="Linux">Linux</button>
-      <button class="cert-btn btn-secondary" data-category="MikroTik">MikroTik</button>
-      <button class="cert-btn btn-secondary" data-category="Windows Server">Windows Server</button>
-      <button class="cert-btn btn-secondary" data-category="Website">Website</button>
-    </div>
+      <!-- Controls: Category Filter & Search Bar -->
+      <div class="catalog-controls">
+        <!-- Category Filter Buttons -->
+        <div class="filter-pills" role="tablist" aria-label="Filter Kategori Proyek">
+          {categories.map((cat, idx) => (
+            <button 
+              class={`filter-pill ${idx === 0 ? 'active' : ''}`} 
+              data-category={cat.id}
+              role="tab"
+              aria-selected={idx === 0 ? 'true' : 'false'}
+            >
+              <span class="lang-id">{cat.labelId}</span>
+              <span class="lang-en">{cat.labelEn}</span>
+            </button>
+          ))}
+        </div>
 
-    <!-- Projects Grid Container (Dynamically rendered by app.js logic, with SSR static fallback for SEO) -->
-    <div id="projects-grid" class="projects-grid" aria-live="polite">
-      <div class="project-card glass-card">
-        <div class="project-img-wrap">
-          <img src="https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=600" alt="Preview Lab Cisco Routing & Switching" loading="lazy" />
-        </div>
-        <div class="project-info">
-          <div>
-            <span class="project-badge badge-cisco">Cisco</span>
-            <h3 class="project-title font-heading">Infrastruktur Routing &amp; Switching Cisco</h3>
-            <p class="project-desc text-muted">Simulasi topologi jaringan enterprise, konfigurasi VLAN, Inter-VLAN Routing, EtherChannel, OSPF, dan Access Control List (ACL).</p>
-          </div>
-          <div class="project-actions">
-            <a href="https://github.com/fatahilah-mr" target="_blank" rel="noopener noreferrer" class="project-link-full">
-              <span>Lihat Dokumentasi</span>
-            </a>
-          </div>
-        </div>
-      </div>
-      <div class="project-card glass-card">
-        <div class="project-img-wrap">
-          <img src="https://images.unsplash.com/photo-1544197150-b99a580bb7a8?w=600" alt="Preview MikroTik Hotspot & Firewall" loading="lazy" />
-        </div>
-        <div class="project-info">
-          <div>
-            <span class="project-badge badge-mikrotik">MikroTik</span>
-            <h3 class="project-title font-heading">Hotspot Gateway &amp; Firewall MikroTik</h3>
-            <p class="project-desc text-muted">Implementasi MikroTik RouterOS, user manager hotspot, NAT masquerade, firewall filtering, dan manajemen bandwidth Queues.</p>
-          </div>
-          <div class="project-actions">
-            <a href="https://github.com/fatahilah-mr" target="_blank" rel="noopener noreferrer" class="project-link-full">
-              <span>Lihat Dokumentasi</span>
-            </a>
-          </div>
+        <!-- Search Input -->
+        <div class="search-box">
+          <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="11" cy="11" r="8"></circle>
+            <path d="m21 21-4.3-4.3"></path>
+          </svg>
+          <input 
+            type="text" 
+            id="project-search-input" 
+            placeholder="Cari proyek atau teknologi..." 
+            aria-label="Cari proyek"
+            class="search-input"
+          />
         </div>
       </div>
-      <div class="project-card glass-card">
-        <div class="project-img-wrap">
-          <img src="https://images.unsplash.com/photo-1618401471353-b98afee0b2eb?w=600" alt="Preview Linux Debian Server Administration" loading="lazy" />
-        </div>
-        <div class="project-info">
-          <div>
-            <span class="project-badge badge-linux">Linux</span>
-            <h3 class="project-title font-heading">Administrasi Server Linux Debian 12</h3>
-            <p class="project-desc text-muted">Instalasi &amp; hardening server Linux Debian, DNS Bind9, Nginx web server, DHCP server, serta database server MySQL/MariaDB.</p>
-          </div>
-          <div class="project-actions">
-            <a href="https://github.com/fatahilah-mr" target="_blank" rel="noopener noreferrer" class="project-link-full">
-              <span>Lihat Dokumentasi</span>
-            </a>
-          </div>
-        </div>
+
+      <!-- Projects Grid -->
+      <div class="projects-grid" id="projects-grid">
+        {initialProjects.map((proj) => (
+          <article 
+            class="editorial-card project-catalog-card" 
+            data-category={proj.kategori}
+            data-project={JSON.stringify(proj)}
+          >
+            <!-- 1440x900 aspect ratio thumbnail -->
+            <div class="aspect-16-10 card-thumbnail-wrap" role="button" tabindex="0" aria-label={`Buka detail ${proj.judul}`}>
+              <img 
+                src={proj.link_gambar} 
+                alt={proj.judul} 
+                loading="lazy" 
+                decoding="async" 
+                width="1440" 
+                height="900"
+              />
+              <div class="thumbnail-hover-overlay">
+                <span class="overlay-text">
+                  <span class="lang-id">Klik untuk Detail</span>
+                  <span class="lang-en">Click for Details</span>
+                </span>
+              </div>
+            </div>
+
+            <!-- Card Info -->
+            <div class="card-content">
+              <div class="card-meta">
+                <span class="card-badge">{proj.kategori}</span>
+                {proj.is_featured === 1 && (
+                  <span class="featured-badge">Featured ★</span>
+                )}
+              </div>
+
+              <h2 class="card-title">
+                <span class="lang-id">{proj.judul}</span>
+                <span class="lang-en">{proj.english_title || proj.judul}</span>
+              </h2>
+
+              <p class="card-desc">
+                <span class="lang-id">{proj.deskripsi}</span>
+                <span class="lang-en">{proj.english_desc || proj.deskripsi}</span>
+              </p>
+
+              <!-- Actions -->
+              <div class="card-footer">
+                <button class="btn btn-secondary btn-sm open-detail-btn">
+                  <span class="lang-id">Detail</span>
+                  <span class="lang-en">Details</span>
+                </button>
+                {proj.link_dokumentasi && (
+                  <a 
+                    href={proj.link_dokumentasi} 
+                    target="_blank" 
+                    rel="noopener noreferrer" 
+                    class="btn btn-primary btn-sm"
+                  >
+                    <span class="lang-id">Dokumentasi</span>
+                    <span class="lang-en">Live Docs</span>
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6M15 3h6v6M10 14 21 3"/>
+                    </svg>
+                  </a>
+                )}
+              </div>
+            </div>
+          </article>
+        ))}
+      </div>
+
+      <div id="no-projects-found" class="no-results hidden">
+        <p>
+          <span class="lang-id">Tidak ada proyek yang sesuai dengan kriteria pencarian.</span>
+          <span class="lang-en">No projects matched your search criteria.</span>
+        </p>
       </div>
     </div>
   </section>
 </Layout>
 
-<!-- CMS Logic Script (Exact from cms logic/halaman projects & lab/app.js with 1h localStorage caching) -->
-<script is:inline>
-(function() {
-  // 1. Konfigurasi Database Google Sheets API Baru (Sesuai app.js)
-  const SPREADSHEET_ID = '1YMxR6-SlP-TT0B3y6NScT4L0YH0GXZEId_PY0Jgp8fQ';
-  const SHEET_NAME = 'Database_App'; 
-  const GOOGLE_SHEETS_URL = `https://docs.google.com/spreadsheets/d/${SPREADSHEET_ID}/gviz/tq?tqx=out:json&sheet=${SHEET_NAME}`;
-  const CACHE_KEY = 'portfolio_projects_cache_v2';
-  const CACHE_TIME_KEY = 'portfolio_projects_cache_time_v2';
-  const CACHE_DURATION_MS = 86400000; // 1 hari (24 jam)
-
-  let localProjectsData = [];
-
-  const projectsGrid = document.getElementById('projects-grid');
-  const filterButtons = document.querySelectorAll('.cert-btn');
-  const refreshBtn = document.getElementById('refresh-projects-btn');
-  const cacheStatus = document.getElementById('projects-cache-status');
-
-  // UTILITY: ESCAPE HTML (XSS Protection)
-  function escapeHtml(str) {
-    if (!str) return '';
-    return String(str).replace(/[&<>'"]/g, function(m) {
-      if (m === '&') return '&amp;';
-      if (m === '<') return '&lt;';
-      if (m === '>') return '&gt;';
-      if (m === "'") return '&#039;';
-      if (m === '"') return '&quot;';
-      return m;
-    });
+<style>
+  .projects-page-section {
+    min-height: 80vh;
   }
 
-  let currentCacheState = { type: 'loading', mins: 0 };
+  .catalog-controls {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: clamp(2rem, 4vw, 3.5rem);
+  }
 
-  function renderCacheStatusText() {
-    if (!cacheStatus) return;
-    const lang = localStorage.getItem('lang') || 'id';
-    const isEn = lang === 'en';
-    switch (currentCacheState.type) {
-      case 'loading':
-        cacheStatus.textContent = isEn ? 'Status: Fetching from Google Sheets...' : 'Status: Mengambil dari Google Sheets...';
-        break;
-      case 'cached':
-        cacheStatus.textContent = isEn ? `Status: Cached Data (${currentCacheState.mins}m remaining)` : `Status: Data dari Cache (${currentCacheState.mins}m tersisa)`;
-        break;
-      case 'live_success':
-        cacheStatus.textContent = isEn ? 'Status: Live Update Success (24h Cache)' : 'Status: Pembaruan Live Berhasil (Cache 1 Hari)';
-        break;
-      case 'offline_cache':
-        cacheStatus.textContent = isEn ? 'Status: Offline (Showing Last Cache)' : 'Status: Offline (Menampilkan Cache Terakhir)';
-        break;
-      case 'offline_fallback':
-        cacheStatus.textContent = isEn ? 'Status: Offline (Showing Fallback Data)' : 'Status: Offline (Menampilkan Data Fallback)';
-        break;
-      default:
-        cacheStatus.textContent = currentCacheState.type;
+  @media (min-width: 768px) {
+    .catalog-controls {
+      flex-direction: row;
     }
   }
 
-  function updateCacheStatusText(type, mins = 0) {
-    if (typeof type === 'string') {
-      if (type.includes('Data dari Cache') || type.includes('Cached Data')) {
-        const m = type.match(/\((\d+)m/);
-        currentCacheState = { type: 'cached', mins: m ? parseInt(m[1], 10) : mins };
-      } else if (type.includes('Mengambil') || type.includes('Fetching') || type.includes('Memuat')) {
-        currentCacheState = { type: 'loading', mins: 0 };
-      } else if (type.includes('Pembaruan Live') || type.includes('Live Update')) {
-        currentCacheState = { type: 'live_success', mins: 0 };
-      } else if (type.includes('Menampilkan Cache Terakhir') || type.includes('Showing Last Cache')) {
-        currentCacheState = { type: 'offline_cache', mins: 0 };
-      } else if (type.includes('Menampilkan Data Fallback') || type.includes('Showing Fallback Data')) {
-        currentCacheState = { type: 'offline_fallback', mins: 0 };
-      } else {
-        currentCacheState = { type: type, mins: mins };
-      }
-    } else {
-      currentCacheState = { type: 'loading', mins: 0 };
-    }
-    renderCacheStatusText();
+  .filter-pills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
   }
 
-  window.addEventListener('languagechange', (e) => {
-    renderCacheStatusText();
-    // Swap bilingual descriptions and titles on project cards
-    const lang = e.detail?.lang || localStorage.getItem('lang') || 'id';
-    
-    document.querySelectorAll('.project-card .dynamic-desc').forEach(el => {
-      const idDesc = el.getAttribute('data-id-desc');
-      const enDesc = el.getAttribute('data-en-desc');
-      el.textContent = lang === 'en' ? enDesc : idDesc;
-    });
-
-    document.querySelectorAll('.project-card .dynamic-title').forEach(el => {
-      const idTitle = el.getAttribute('data-id-title');
-      const enTitle = el.getAttribute('data-en-title');
-      el.textContent = lang === 'en' ? enTitle : idTitle;
-    });
-  });
-
-  // 3. WARNA BADGE BERDASARKAN KATEGORI (Sesuai app.js)
-  function getBadgeClass(kategori) {
-    if (!kategori) return 'badge-default';
-    const kat = kategori.toLowerCase().trim();
-    if (kat === 'ai') return 'badge-ai';
-    if (kat === 'cisco') return 'badge-cisco';
-    if (kat === 'linux') return 'badge-linux';
-    if (kat === 'mikrotik') return 'badge-mikrotik';
-    if (kat === 'windows server') return 'badge-windows';
-    if (kat === 'website') return 'badge-website';
-    return 'badge-default';
-  }
-
-  // 4. FUNGSI BAGIKAN (SHARE)
-  async function shareProject(url, title) {
-    if (!url || url === '#' || url === '') {
-      alert('Tidak ada link dokumentasi untuk proyek ini.');
-      return;
-    }
-    const shareData = {
-      title: title,
-      text: 'Lihat proyek ini di Lab Archive saya:',
-      url: url
-    };
-    if (navigator.share) {
-      try {
-        await navigator.share(shareData);
-      } catch (err) {
-        if (err.name !== 'AbortError') {
-          console.warn('Gagal membagikan:', err);
-          fallbackCopy(url);
-        }
-      }
-    } else {
-      fallbackCopy(url);
-    }
-  }
-
-  function fallbackCopy(url) {
-    if (navigator.clipboard && navigator.clipboard.writeText) {
-      navigator.clipboard.writeText(url).then(() => {
-        alert('Link dokumentasi telah disalin ke clipboard!');
-      }).catch(() => {
-        alert('Gagal menyalin link. Silakan salin manual: ' + url);
-      });
-    } else {
-      alert('Silakan salin manual link berikut: ' + url);
-    }
-  }
-
-  // 5. RENDER KARTU PROYEK (Sesuai app.js)
-  function renderProjects(projects) {
-    if (!projectsGrid) return;
-    projectsGrid.innerHTML = '';
-
-    if (!projects || projects.length === 0) {
-      projectsGrid.innerHTML = `
-        <div class="loading-status glass-card p-12 text-center col-span-full">
-          <p class="font-heading text-lg text-muted" data-i18n="projects.empty">Tidak ada proyek dalam kategori ini.</p>
-        </div>
-      `;
-      if (window.applyLanguage && localStorage.getItem('lang')) {
-        window.applyLanguage(localStorage.getItem('lang'));
-      }
-      return;
-    }
-
-    projects.forEach(project => {
-      const card = document.createElement('div');
-      card.className = 'project-card glass-card';
-      
-      const imgUrl = project.link_gambar ? project.link_gambar : 'https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=600';
-      const badgeClass = getBadgeClass(project.kategori);
-      
-      const judulEscaped = escapeHtml(project.judul);
-      const judulEnEscaped = escapeHtml(project.english_title || project.judul);
-      const deskripsiEscaped = escapeHtml(project.deskripsi);
-      const deskripsiEnEscaped = escapeHtml(project.english_desc);
-      const kategoriEscaped = escapeHtml(project.kategori);
-      const linkEscaped = escapeHtml(project.link_dokumentasi || '#');
-      
-      const currentLang = localStorage.getItem('lang') || 'id';
-      const initialDesc = currentLang === 'en' ? deskripsiEnEscaped : deskripsiEscaped;
-      const initialTitle = currentLang === 'en' ? judulEnEscaped : judulEscaped;
-
-      card.innerHTML = `
-        <div class="project-img-wrap">
-          <img src="${imgUrl}" alt="Preview ${judulEscaped}" loading="lazy" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=600';">
-        </div>
-        <div class="project-info">
-          <div>
-            <span class="project-badge ${badgeClass}">${kategoriEscaped}</span>
-            <h3 class="project-title font-heading dynamic-title" data-id-title="${judulEscaped}" data-en-title="${judulEnEscaped}">${initialTitle}</h3>
-            <p class="project-desc text-muted dynamic-desc" data-id-desc="${deskripsiEscaped}" data-en-desc="${deskripsiEnEscaped}">${initialDesc}</p>
-          </div>
-          <div class="project-actions mt-auto pt-4 border-t border-border flex justify-between items-center gap-3">
-            <a href="${linkEscaped}" target="_blank" rel="noopener noreferrer" class="project-link text-xs py-2 px-3 flex items-center gap-1.5" data-i18n="projects.btn.doc">
-              <span>Lihat Dokumentasi</span>
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="7" y1="17" x2="17" y2="7"></line><polyline points="7 7 17 7 17 17"></polyline></svg>
-            </a>
-            <button class="project-share text-xs py-2 px-3 flex items-center gap-1.5" data-url="${linkEscaped}" data-title="${judulEscaped}" data-i18n="projects.btn.share">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
-              <span>Bagikan</span>
-            </button>
-          </div>
-        </div>
-      `;
-      
-      projectsGrid.appendChild(card);
-      
-      const shareBtn = card.querySelector('.project-share');
-      if (shareBtn) {
-        shareBtn.addEventListener('click', (e) => {
-          e.preventDefault();
-          const url = shareBtn.getAttribute('data-url');
-          const title = shareBtn.getAttribute('data-title');
-          shareProject(url, title);
-        });
-      }
-    });
-
-    if (window.applyLanguage && localStorage.getItem('lang')) {
-      window.applyLanguage(localStorage.getItem('lang'));
-    }
-  }
-
-  // 2. AMBIL DATA DARI GOOGLE SHEETS
-  async function fetchProjectsData(forceRefresh = false) {
-    // Cek cache terlebih dahulu jika tidak dipaksa refresh
-    if (!forceRefresh) {
-      try {
-        const cached = localStorage.getItem(CACHE_KEY);
-        const cachedTime = localStorage.getItem(CACHE_TIME_KEY);
-        if (cached && cachedTime) {
-          const now = Date.now();
-          if (now - parseInt(cachedTime, 10) < CACHE_DURATION_MS) {
-            localProjectsData = JSON.parse(cached);
-            renderProjects(localProjectsData);
-            const remainingMins = Math.round((CACHE_DURATION_MS - (now - parseInt(cachedTime, 10))) / 60000);
-            updateCacheStatusText(`Status: Data dari Cache (${remainingMins}m tersisa)`);
-            return;
-          }
-        }
-      } catch (e) {
-        console.warn('Gagal membaca cache:', e);
-      }
-    }
-
-    updateCacheStatusText('Status: Mengambil dari Google Sheets...');
-    if (refreshBtn) refreshBtn.classList.add('loading');
-
-    try {
-      const response = await fetch(GOOGLE_SHEETS_URL);
-      if (!response.ok) throw new Error('Gagal mengakses URL spreadsheet');
-      
-      const rawText = await response.text();
-      const jsonMatch = rawText.match(/google\.visualization\.Query\.setResponse\(([\s\S]*?)\);/);
-      if (!jsonMatch) throw new Error('Respons JSON tidak valid dari Google Sheets');
-      
-      const data = JSON.parse(jsonMatch[1]);
-      const rows = data.table.rows || [];
-      
-      localProjectsData = rows.map((row, index) => {
-        return {
-          id: row.c[0] ? row.c[0].v : '',
-          timestamp: row.c[1] ? (row.c[1].f || row.c[1].v) : '',
-          judul: row.c[2] ? row.c[2].v : 'Tanpa Judul',
-          kategori: row.c[3] ? row.c[3].v : 'Umum',
-          link_dokumentasi: row.c[4] ? row.c[4].v : '#',
-          deskripsi: row.c[5] ? row.c[5].v : 'Tidak ada deskripsi.',
-          link_gambar: row.c[6] ? row.c[6].v : '',
-          english_desc: row.c[7] ? row.c[7].v : (row.c[5] ? row.c[5].v : 'Tidak ada deskripsi.'),
-          english_title: row.c[8] ? row.c[8].v : (row.c[2] ? row.c[2].v : 'Untitled')
-        };
-      });
-
-      // Simpan ke localStorage
-      try {
-        localStorage.setItem(CACHE_KEY, JSON.stringify(localProjectsData));
-        localStorage.setItem(CACHE_TIME_KEY, Date.now().toString());
-      } catch (e) {
-        console.warn('Gagal menyimpan cache:', e);
-      }
-
-      renderProjects(localProjectsData);
-      updateCacheStatusText('Status: Pembaruan Live Berhasil (Cache 1 Hari)');
-    } catch (error) {
-      console.error('Error fetching data:', error);
-      
-      // Coba load cache lama jika gagal fetch online
-      try {
-        const cached = localStorage.getItem(CACHE_KEY);
-        if (cached) {
-          localProjectsData = JSON.parse(cached);
-          renderProjects(localProjectsData);
-          updateCacheStatusText('Status: Offline (Menampilkan Cache Terakhir)');
-          if (refreshBtn) refreshBtn.classList.remove('loading');
-          return;
-        }
-      } catch (e) {}
-
-      // Jika tidak ada cache, tampilkan data statis terverifikasi
-      localProjectsData = [
-        {
-          id: "1",
-          judul: "Rancang Bangun Jaringan Kantor 3 Lantai (Cisco Packet Tracer)",
-          kategori: "Cisco",
-          link_dokumentasi: "https://github.com/fatahilah-mr/portofolio",
-          deskripsi: "Perancangan infrastruktur jaringan lengkap menggunakan Cisco Packet Tracer dengan segmentasi VLAN, inter-VLAN routing, OSPF, DHCP Relay, dan pengamanan Port Security.",
-          link_gambar: "/assets/Topologi-Cisco-PT-01.webp"
-        },
-        {
-          id: "2",
-          judul: "Setup Gateway, Firewall Nftables & Keamanan Jaringan MikroTik",
-          kategori: "MikroTik",
-          link_dokumentasi: "https://github.com/fatahilah-mr/portofolio",
-          deskripsi: "Konfigurasi RouterBoard MikroTik sebagai gateway internet, manajemen bandwidth Queue Tree, isolasi jaringan tamu, dan pengamanan akses menggunakan Nftables/Firewall Filter.",
-          link_gambar: "/assets/Mikrotik-01.webp"
-        }
-      ];
-      renderProjects(localProjectsData);
-      updateCacheStatusText('Status: Offline (Menampilkan Data Fallback)');
-    } finally {
-      if (refreshBtn) refreshBtn.classList.remove('loading');
-    }
-  }
-
-  // 6. LOGIKA FILTER KATEGORI
-  filterButtons.forEach(button => {
-    button.addEventListener('click', () => {
-      filterButtons.forEach(btn => btn.classList.remove('active-filter'));
-      button.classList.add('active-filter');
-
-      const selectedCategory = button.getAttribute('data-category');
-
-      if (selectedCategory === 'all') {
-        renderProjects(localProjectsData);
-      } else {
-        const filtered = localProjectsData.filter(p => (p.kategori || '').toLowerCase().trim() === selectedCategory.toLowerCase().trim());
-        renderProjects(filtered);
-      }
-    });
-  });
-
-  if (refreshBtn) {
-    refreshBtn.addEventListener('click', () => fetchProjectsData(true));
-  }
-
-  // 9. JALANKAN FETCH SAAT DOM SIAP
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', () => fetchProjectsData(false));
-  } else {
-    fetchProjectsData(false);
-  }
-})();
-</script>
-
-<style is:global>
-  .section-header { text-align: center; max-width: 800px; margin: 0 auto 48px; }
-  .section-subtitle { font-size: 1.1rem; margin-top: 16px; margin-bottom: 24px; }
-
-  .btn-refresh {
+  .filter-pill {
     padding: 6px 14px;
-    border-radius: 20px;
-    background: var(--bg-surface);
+    border-radius: 9999px;
+    background: var(--bg-card);
+    border: 1px solid var(--color-border);
+    color: var(--color-muted);
+    font-size: 0.8125rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.15s ease;
+  }
+
+  .filter-pill:hover {
+    border-color: var(--color-border-hover);
+    color: var(--color-foreground);
+  }
+
+  .filter-pill.active {
+    background: var(--color-primary);
+    color: var(--bg-main);
+    border-color: var(--color-primary);
+  }
+
+  .search-box {
+    position: relative;
+    width: 100%;
+    max-width: 320px;
+  }
+
+  .search-icon {
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--color-subtle);
+    pointer-events: none;
+  }
+
+  .search-input {
+    width: 100%;
+    padding: 8px 12px 8px 36px;
+    border-radius: 8px;
+    background: var(--bg-card);
     border: 1px solid var(--color-border);
     color: var(--color-foreground);
-    transition: all 0.2s ease;
-  }
-  .btn-refresh:hover { border-color: var(--color-primary); color: var(--color-primary); }
-  .btn-refresh.loading .refresh-icon { animation: spin 1s linear infinite; }
-  @keyframes spin { 100% { transform: rotate(360deg); } }
-
-  .cms-toolbar {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    align-items: center;
-    gap: 1rem;
-    margin-top: 1.5rem;
+    font-size: 0.875rem;
+    outline: none;
+    transition: border-color 0.15s ease;
   }
 
-  /* ==========================================
-     FILTER TOMBOL WRAPPER & TOMBOL KATEGORI
-     ========================================== */
-  .cert-buttons-wrapper {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 0.85rem;
-    margin-top: 1.5rem;
-    margin-bottom: 3.5rem !important; /* Jarak luas dan jelas antara tombol filter kategori dengan content box / display box di bawahnya */
+  .search-input:focus {
+    border-color: var(--color-ring);
   }
 
-  .cert-btn {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    padding: .6rem 1.2rem;
-    font-family: 'DM Sans', sans-serif;
-    font-size: .85rem;
-    font-weight: 600;
-    text-decoration: none;
-    border-radius: 6px;
-    transition: all 0.2s ease;
-    cursor: pointer;
-    white-space: nowrap;
-    background-color: transparent;
-    color: var(--color-primary);
-    border: 2px solid var(--color-primary);
-  }
-  .cert-btn.active-filter, .cert-btn:hover {
-    background-color: var(--color-primary);
-    color: #ffffff;
-    border-color: var(--color-primary);
-    box-shadow: 0 0 16px var(--color-primary-glow);
-  }
-
-  /* ==========================================
-     STATUS LOADING & EMPTY STATE (Rata Tengah)
-     ========================================== */
-  .col-span-full {
-    grid-column: 1 / -1 !important;
-    width: 100%;
-  }
-  .loading-status {
-    grid-column: 1 / -1 !important;
-    width: 100%;
-    padding: 3.5rem 2rem !important;
-    text-align: center !important;
-    display: flex !important;
-    flex-direction: column !important;
-    align-items: center !important;
-    justify-content: center !important;
-  }
-  .loading-status p, .loading-status div {
-    text-align: center !important;
-    margin-left: auto !important;
-    margin-right: auto !important;
-  }
-
-  /* ==========================================
-     KARTU PROYEK & GRID (Sesuai backup-style.css)
-     ========================================== */
+  /* Projects Grid */
   .projects-grid {
     display: grid;
     grid-template-columns: 1fr;
-    gap: 1.5rem;
+    gap: 24px;
   }
+
   @media (min-width: 640px) {
     .projects-grid {
       grid-template-columns: repeat(2, 1fr);
-      gap: 1.75rem;
     }
   }
+
   @media (min-width: 1024px) {
     .projects-grid {
       grid-template-columns: repeat(3, 1fr);
-      gap: 1.75rem;
     }
   }
 
-  .project-card {
-    border: 1px solid var(--color-border);
-    border-radius: 14px;
-    background: var(--bg-card);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.02);
+  .project-catalog-card {
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
     overflow: hidden;
-    transition: box-shadow 0.25s, transform 0.25s, border-color 0.25s;
-  }
-  .project-card:hover {
-    box-shadow: 0 10px 36px rgba(0, 0, 0, 0.15);
-    transform: translateY(-4px);
-    border-color: var(--color-primary);
   }
 
-  .project-img-wrap {
-    width: 100%;
-    aspect-ratio: 16/9;
-    background: var(--bg-surface);
-    overflow: hidden;
-    border-bottom: 1px solid var(--color-border);
+  .card-thumbnail-wrap {
+    cursor: pointer;
     position: relative;
   }
-  .project-img-wrap img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    display: block;
-    transition: transform 0.4s ease;
-  }
-  .project-card:hover .project-img-wrap img {
-    transform: scale(1.03);
+
+  .thumbnail-hover-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.45);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.2s ease;
   }
 
-  .project-info {
-    padding: 1.5rem;
+  .card-thumbnail-wrap:hover .thumbnail-hover-overlay {
+    opacity: 1;
+  }
+
+  .overlay-text {
+    background: #FFFFFF;
+    color: #09090B;
+    font-size: 0.75rem;
+    font-weight: 700;
+    padding: 6px 14px;
+    border-radius: 9999px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  }
+
+  .card-content {
+    padding: 20px;
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
-    flex-grow: 1;
-    gap: 14px;
+    flex: 1;
   }
 
-  /* ==========================================
-     BADGE WARNA KATEGORI (Sesuai backup-style.css)
-     ========================================== */
-  .project-badge {
-    display: inline-block;
-    font-size: .72rem;
-    font-weight: 700 !important;
-    letter-spacing: .08em;
-    text-transform: uppercase;
-    padding: .25rem .75rem;
-    border-radius: 20px;
-    margin-bottom: 1rem;
-    align-self: flex-start;
-  }
-  .badge-ai { background-color: #E0F2FE !important; color: #0369A1 !important; }
-  .badge-cisco { background-color: #FEF3C7 !important; color: #B45309 !important; }
-  .badge-linux { background-color: #DCFCE7 !important; color: #15803D !important; }
-  .badge-mikrotik { background-color: #FEE2E2 !important; color: #B91C1C !important; }
-  .badge-windows { background-color: #EDE9FE !important; color: #6D28D9 !important; }
-  .badge-website { background-color: #E0E7FF !important; color: #3730A3 !important; }
-  .badge-default { background-color: #E5E7EB !important; color: #374151 !important; }
-
-  [data-theme="dark"] .badge-ai { background-color: rgba(3, 105, 161, 0.25) !important; color: #38BDF8 !important; }
-  [data-theme="dark"] .badge-cisco { background-color: rgba(180, 83, 9, 0.25) !important; color: #FBBF24 !important; }
-  [data-theme="dark"] .badge-linux { background-color: rgba(21, 128, 61, 0.25) !important; color: #4ADE80 !important; }
-  [data-theme="dark"] .badge-mikrotik { background-color: rgba(185, 28, 28, 0.25) !important; color: #F87171 !important; }
-  [data-theme="dark"] .badge-windows { background-color: rgba(109, 40, 217, 0.25) !important; color: #A78BFA !important; }
-  [data-theme="dark"] .badge-website { background-color: rgba(55, 48, 163, 0.25) !important; color: #818CF8 !important; }
-  [data-theme="dark"] .badge-default { background-color: rgba(55, 65, 81, 0.4) !important; color: #E5E7EB !important; }
-
-  .project-title {
-    font-weight: 600;
-    font-size: 1.1rem;
-    color: var(--color-foreground);
-    margin-bottom: .5rem;
-  }
-
-  .project-desc {
-    font-size: .88rem;
-    color: var(--color-muted) !important;
-    line-height: 1.6;
-    margin-bottom: 1.5rem;
-    flex-grow: 1;
-  }
-
-  /* ==========================================
-     TOMBOL BAGIKAN & DOKUMENTASI (Sesuai backup-style.css)
-     ========================================== */
-  .project-actions {
+  .card-meta {
     display: flex;
-    justify-content: space-between;
     align-items: center;
-    margin-top: 0.5rem;
-    gap: 1rem;
+    gap: 8px;
+    margin-bottom: 8px;
   }
 
-  .project-link {
-    display: inline-flex;
-    align-items: center;
-    gap: .4rem;
-    padding: .5rem 1rem;
-    background-color: transparent;
-    color: var(--color-primary);
-    border: 1.5px solid var(--color-primary);
-    border-radius: 4px;
-    font-size: .85rem;
-    font-weight: 600;
-    text-decoration: none;
-    cursor: pointer;
-    align-self: flex-start;
-    transition: all 0.2s;
-  }
-  .project-link:hover {
-    background-color: var(--color-primary);
-    color: #ffffff;
+  .card-badge {
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--color-accent);
   }
 
-  .project-share {
-    background: transparent;
-    border: 1.5px solid var(--color-border);
-    border-radius: 4px;
-    cursor: pointer;
-    display: inline-flex;
-    align-items: center;
-    gap: 0.4rem;
-    padding: 0.5rem 0.8rem;
-    font-size: 0.85rem;
-    font-weight: 600;
+  .featured-badge {
+    font-size: 0.7rem;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 9999px;
+    background: rgba(234, 179, 8, 0.12);
+    color: #CA8A04;
+    border: 1px solid rgba(234, 179, 8, 0.3);
+  }
+
+  .card-title {
+    font-size: 1.15rem;
+    margin-bottom: 8px;
+    line-height: 1.35;
+  }
+
+  .card-desc {
+    font-size: 0.875rem;
     color: var(--color-muted);
-    transition: all 0.2s;
-  }
-  .project-share:hover {
-    background-color: var(--bg-surface);
-    color: var(--color-primary);
-    border-color: var(--color-primary);
-  }
-  .project-share svg {
-    width: 16px;
-    height: 16px;
-    stroke: currentColor;
+    line-height: 1.6;
+    margin-bottom: 20px;
+    flex: 1;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
   }
 
-  @media (max-width: 480px) {
-    .project-actions {
-      flex-direction: column;
-      gap: 0.75rem;
-    }
-    .project-link, .project-share {
-      width: 100%;
-      justify-content: center;
-    }
+  .card-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    padding-top: 16px;
+    border-top: 1px solid var(--color-border);
+  }
+
+  .no-results {
+    text-align: center;
+    padding: 48px 0;
+    color: var(--color-muted);
+  }
+
+  .hidden {
+    display: none !important;
   }
 </style>
+
+<script is:inline>
+  (function initProjectsCatalog() {
+    const filterPills = Array.from(document.querySelectorAll('.filter-pill'));
+    const searchInput = document.getElementById('project-search-input');
+    const cards = Array.from(document.querySelectorAll('.project-catalog-card'));
+    const noResults = document.getElementById('no-projects-found');
+
+    let activeCategory = 'all';
+    let searchQuery = '';
+
+    function applyFilter() {
+      let visibleCount = 0;
+
+      cards.forEach(card => {
+        const cat = (card.getAttribute('data-category') || '').toLowerCase().trim();
+        const projData = JSON.parse(card.getAttribute('data-project') || '{}');
+        const textContent = `${projData.judul || ''} ${projData.english_title || ''} ${projData.deskripsi || ''} ${projData.kategori || ''}`.toLowerCase();
+
+        const matchesCat = activeCategory === 'all' || cat === activeCategory.toLowerCase();
+        const matchesSearch = !searchQuery || textContent.includes(searchQuery.toLowerCase());
+
+        if (matchesCat && matchesSearch) {
+          card.classList.remove('hidden');
+          visibleCount++;
+        } else {
+          card.classList.add('hidden');
+        }
+      });
+
+      noResults?.classList.toggle('hidden', visibleCount > 0);
+    }
+
+    filterPills.forEach(pill => {
+      pill.addEventListener('click', () => {
+        filterPills.forEach(p => {
+          p.classList.remove('active');
+          p.setAttribute('aria-selected', 'false');
+        });
+        pill.classList.add('active');
+        pill.setAttribute('aria-selected', 'true');
+        activeCategory = pill.getAttribute('data-category') || 'all';
+        applyFilter();
+      });
+    });
+
+    searchInput?.addEventListener('input', (e) => {
+      searchQuery = e.target.value.trim();
+      applyFilter();
+    });
+
+    // Card click handlers for modal
+    cards.forEach(card => {
+      const projData = JSON.parse(card.getAttribute('data-project') || '{}');
+      const thumb = card.querySelector('.card-thumbnail-wrap');
+      const detailBtn = card.querySelector('.open-detail-btn');
+
+      const openModal = () => {
+        if (window.openProjectModal) {
+          window.openProjectModal(projData);
+        }
+      };
+
+      thumb?.addEventListener('click', openModal);
+      detailBtn?.addEventListener('click', openModal);
+    });
+
+    // Client-side dynamic refresh from D1 API
+    fetch('/api/projects')
+      .then(res => res.ok ? res.json() : null)
+      .then(dbProjects => {
+        if (!Array.isArray(dbProjects) || dbProjects.length === 0) return;
+        const projectMap = new Map(dbProjects.map(p => [String(p.id), p]));
+        cards.forEach(card => {
+          try {
+            const curData = JSON.parse(card.getAttribute('data-project') || '{}');
+            const dbData = projectMap.get(String(curData.id));
+            if (dbData) {
+              if (dbData.link_gambar && dbData.link_gambar !== curData.link_gambar) {
+                const img = card.querySelector('img');
+                if (img) img.src = dbData.link_gambar;
+              }
+              card.setAttribute('data-project', JSON.stringify({ ...curData, ...dbData }));
+            }
+          } catch (_) {}
+        });
+      })
+      .catch(() => {});
+  })();
+</script>

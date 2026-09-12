@@ -1,0 +1,20 @@
+---
+// src/pages/certificates/id.astro
+// Legacy Indonesian Route -> Permanent 301 Redirect to /certificates
+---
+
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="refresh" content="0;url=/certificates" />
+  <link rel="canonical" href="https://fatahmr.my.id/certificates" />
+  <title>Mengarahkan ke Katalog Sertifikat | Fatahilah Miftahul Rahman</title>
+  <script is:inline>
+    window.location.replace('/certificates');
+  </script>
+</head>
+<body>
+  <p>Mengarahkan ke <a href="/certificates">Katalog Sertifikat</a>...</p>
+</body>
+</html>

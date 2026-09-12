@@ -1,0 +1,26 @@
+# Enterprise Security Headers for Cloudflare Pages
+/*
+  X-Frame-Options: DENY
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+  Permissions-Policy: accelerometer=(), camera=(), geolocation=(), gyroscope=(), magnetometer=(), microphone=(), payment=(), usb=(), browsing-topics=()
+  Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
+  X-Permitted-Cross-Domain-Policies: none
+  X-XSS-Protection: 0
+  Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data: blob: https://cdn.fatah.web.id https://avatars.githubusercontent.com; font-src 'self' https://fonts.gstatic.com data:; connect-src 'self' https://api.github.com https://cdn.fatah.web.id; frame-ancestors 'none'; base-uri 'self'; form-action 'self' https://github.com/login/oauth/authorize; object-src 'none'; upgrade-insecure-requests;
+
+# Immutable Long-Term Caching for Fingerprinted Static Assets
+/_astro/*
+  Cache-Control: public, max-age=31536000, immutable
+  X-Content-Type-Options: nosniff
+
+/assets/*
+  Cache-Control: public, max-age=86400, stale-while-revalidate=604800
+  X-Content-Type-Options: nosniff
+
+# Sensitive API Headers - Fail Safe No-Store
+/api/*
+  Cache-Control: no-store, no-cache, must-revalidate, max-age=0
+  Pragma: no-cache
+  X-Content-Type-Options: nosniff
+  X-Frame-Options: DENY

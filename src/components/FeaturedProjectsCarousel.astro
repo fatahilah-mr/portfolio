@@ -1,0 +1,445 @@
+---
+// src/components/FeaturedProjectsCarousel.astro
+// 3D Centered Carousel with Top 3 Web Projects (1440x900 / 16:10), animated micro-indicator, and modal trigger
+import projectsData from '../data/projects.json';
+
+interface Props {
+  lang?: 'en' | 'id';
+}
+
+const { lang = 'id' } = Astro.props;
+const catalogUrl = lang === 'en' ? '/en/projects' : '/projects';
+
+// Top 3 featured projects dynamically driven by CMS is_featured flag and sort_order
+const featuredProjects = (() => {
+  const filtered = projectsData
+    .filter(p => Number(p.is_featured) === 1)
+    .sort((a, b) => (Number(a.sort_order) || 0) - (Number(b.sort_order) || 0));
+  return filtered.length >= 3 ? filtered.slice(0, 3) : projectsData.slice(0, 3);
+})();
+---
+
+<section id="projects" class="section-padding featured-projects-section">
+  <div class="container">
+    <div class="section-header">
+      <span class="section-tag">
+        <span class="lang-id">Proyek Unggulan</span>
+        <span class="lang-en">Featured Projects</span>
+      </span>
+      <h2 class="section-title">
+        <span class="lang-id">Karya & Rekayasa Web Pilihan</span>
+        <span class="lang-en">Curated Engineering Showcase</span>
+      </h2>
+      <p class="section-subtitle">
+        <span class="lang-id">
+          Platform web produksi nyata dengan integrasi AI cerdas, arsitektur serverless, dan kinerja ultra-responsif.
+        </span>
+        <span class="lang-en">
+          Real production web applications featuring intelligent AI integration, serverless edge hosting, and ultra-fast performance.
+        </span>
+      </p>
+    </div>
+
+    <!-- 3D Centered Carousel Stage -->
+    <div class="carousel-stage" id="project-carousel-stage">
+      <!-- Animated Click-Here Callout with Curved Looping Arrow (Points to Center Card) -->
+      <div class="carousel-hint-callout" id="project-click-hint">
+        <div class="callout-badge">
+          <span class="callout-badge-icon">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M18 11V6a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v0"/>
+              <path d="M14 10V4a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v2"/>
+              <path d="M10 10.5V6a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v8"/>
+              <path d="M18 8a2 2 0 1 1 4 0v6a8 8 0 0 1-8 8h-2c-2.8 0-4.5-.86-5.99-2.34l-3.6-3.6a2 2 0 0 1 2.83-2.82L7 15"/>
+            </svg>
+          </span>
+          <span class="lang-id">Lihat Detail Proyek</span>
+          <span class="lang-en">View Project Details</span>
+        </div>
+        <svg class="hint-arrow" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M 38 2 C 30 10 16 14 12 22 C 8 30 24 34 28 26 C 32 16 16 20 12 36 C 10 40 12 44 14 46" 
+                stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M 8 40 L 14 46 L 20 40" 
+                stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+
+      <div class="carousel-viewport" id="project-carousel-viewport" role="region" aria-label="Galeri Proyek Unggulan">
+        {featuredProjects.map((proj, idx) => {
+          let posClass = 'hidden-card';
+          if (idx === 0) posClass = 'active';
+          else if (idx === 1) posClass = 'next';
+          else if (idx === 2) posClass = 'prev';
+
+          return (
+            <div 
+              class={`carousel-card ${posClass}`} 
+              data-index={idx}
+              data-project={JSON.stringify(proj)}
+              role="button"
+              tabindex="0"
+              aria-label={`Lihat detail proyek ${proj.judul}`}
+            >
+              <!-- Aspect Ratio 1440x900 (16:10) -->
+              <div class="aspect-16-10">
+                <img 
+                  src={proj.link_gambar} 
+                  alt={proj.judul} 
+                  loading="lazy" 
+                  decoding="async" 
+                  width="1440" 
+                  height="900"
+                />
+              </div>
+
+              <!-- Card Info Footer -->
+              <div class="carousel-card-footer">
+                <div class="footer-meta">
+                  <span class="footer-category">{proj.kategori}</span>
+                  <h3 class="footer-title">
+                    <span class="lang-id">{proj.judul}</span>
+                    <span class="lang-en">{proj.english_title || proj.judul}</span>
+                  </h3>
+                </div>
+                <div class="footer-arrow">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M7 17 17 7M7 7h10v10"/>
+                  </svg>
+                </div>
+              </div>
+            </div>
+          );
+        })}
+      </div>
+
+      <!-- Carousel Navigation Controls -->
+      <div class="carousel-controls">
+        <button id="proj-prev-btn" class="carousel-arrow-btn" aria-label="Proyek Sebelumnya">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="m15 18-6-6 6-6"/>
+          </svg>
+        </button>
+
+        <div class="carousel-dots" id="proj-dots">
+          {featuredProjects.map((_, i) => (
+            <button class={`carousel-dot ${i === 0 ? 'active' : ''}`} data-dot-index={i} aria-label={`Slide ${i + 1}`}></button>
+          ))}
+        </div>
+
+        <button id="proj-next-btn" class="carousel-arrow-btn" aria-label="Proyek Berikutnya">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="m9 18 6-6-6-6"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- Catalog CTA -->
+    <div class="carousel-view-all">
+      <a href={catalogUrl} class="btn btn-secondary">
+        <span class="lang-id">Lihat Semua Proyek Lengkap (10+)</span>
+        <span class="lang-en">View All Projects (10+)</span>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="m9 18 6-6-6-6"/>
+        </svg>
+      </a>
+    </div>
+  </div>
+</section>
+
+<style>
+  .featured-projects-section {
+    background: var(--bg-surface);
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .carousel-card-footer {
+    padding: 16px 20px;
+    background: var(--bg-card);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-top: 1px solid var(--color-border);
+  }
+
+  .footer-meta {
+    max-width: 85%;
+    min-width: 0;
+    overflow: hidden;
+  }
+
+  .footer-category {
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--color-accent);
+    display: block;
+    margin-bottom: 2px;
+  }
+
+  .footer-title {
+    margin: 0;
+    font-size: 1.05rem;
+    font-weight: 700;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .footer-title span {
+    display: block;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%;
+  }
+
+  .footer-arrow {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: var(--bg-surface);
+    border: 1px solid var(--color-border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--color-muted);
+    flex-shrink: 0;
+  }
+
+  .carousel-view-all {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    margin-top: 32px;
+    padding: 0 16px;
+    box-sizing: border-box;
+  }
+
+  .carousel-view-all .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 12px 24px;
+    font-size: 0.9375rem;
+    font-weight: 600;
+    line-height: 1.4;
+    border-radius: 10px;
+    border: 1px solid var(--color-border);
+    background: var(--bg-card);
+    color: var(--color-foreground) !important;
+    box-shadow: var(--shadow-sm);
+    max-width: 100%;
+    text-align: center;
+    transition: all 0.2s ease;
+    box-sizing: border-box;
+  }
+
+  .carousel-view-all .btn:hover {
+    border-color: var(--color-border-hover);
+    background: var(--bg-card-hover);
+    box-shadow: var(--shadow-md);
+    transform: translateY(-1px);
+  }
+
+  @media (max-width: 480px) {
+    .carousel-view-all .btn {
+      width: 100%;
+      max-width: 320px;
+      padding: 11px 16px;
+      font-size: 0.875rem;
+      white-space: normal;
+    }
+  }
+</style>
+
+<script is:inline>
+  (function initProjectCarousel() {
+    const stage = document.getElementById('project-carousel-stage');
+    if (!stage) return;
+
+    const cards = Array.from(stage.querySelectorAll('.carousel-card'));
+    const dots = Array.from(stage.querySelectorAll('.carousel-dot'));
+    const prevBtn = document.getElementById('proj-prev-btn');
+    const nextBtn = document.getElementById('proj-next-btn');
+    const hint = document.getElementById('project-click-hint');
+
+    let currentIndex = 0;
+    let autoPlayTimer = null;
+    let hasInteracted = false;
+    let isVisible = false;
+    let scrollDebounceTimer = null;
+
+    function fadeOutHint() {
+      if (!hasInteracted && hint) {
+        hint.classList.add('faded');
+        hasInteracted = true;
+      }
+    }
+
+    function updateCarousel(newIndex) {
+      currentIndex = (newIndex + cards.length) % cards.length;
+
+      cards.forEach((card, idx) => {
+        card.classList.remove('active', 'prev', 'next', 'hidden-card');
+        const diff = (idx - currentIndex + cards.length) % cards.length;
+
+        if (diff === 0) {
+          card.classList.add('active');
+        } else if (diff === 1) {
+          card.classList.add('next');
+        } else if (diff === cards.length - 1) {
+          card.classList.add('prev');
+        } else {
+          card.classList.add('hidden-card');
+        }
+      });
+
+      dots.forEach((dot, idx) => {
+        dot.classList.toggle('active', idx === currentIndex);
+      });
+    }
+
+    function startAutoPlay() {
+      stopAutoPlay();
+      if (!isVisible) return;
+      autoPlayTimer = setInterval(() => {
+        updateCarousel(currentIndex + 1);
+      }, 5000);
+    }
+
+    function stopAutoPlay() {
+      if (autoPlayTimer) {
+        clearInterval(autoPlayTimer);
+        autoPlayTimer = null;
+      }
+    }
+
+    // Pause autoplay during active window scroll to prevent frame-drop collisions
+    window.addEventListener('scroll', () => {
+      if (!isVisible) return;
+      stopAutoPlay();
+      clearTimeout(scrollDebounceTimer);
+      scrollDebounceTimer = setTimeout(() => {
+        if (isVisible) startAutoPlay();
+      }, 1500);
+    }, { passive: true });
+
+    // Viewport IntersectionObserver: Only run autoplay when visible in viewport
+    if ('IntersectionObserver' in window) {
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          isVisible = entry.isIntersecting;
+          if (isVisible) {
+            startAutoPlay();
+          } else {
+            stopAutoPlay();
+          }
+        });
+      }, { threshold: 0.2 });
+      observer.observe(stage);
+    } else {
+      isVisible = true;
+      startAutoPlay();
+    }
+
+    // Event listeners for controls
+    prevBtn?.addEventListener('click', () => {
+      fadeOutHint();
+      updateCarousel(currentIndex - 1);
+      startAutoPlay();
+    });
+
+    nextBtn?.addEventListener('click', () => {
+      fadeOutHint();
+      updateCarousel(currentIndex + 1);
+      startAutoPlay();
+    });
+
+    dots.forEach((dot, i) => {
+      dot.addEventListener('click', () => {
+        fadeOutHint();
+        updateCarousel(i);
+        startAutoPlay();
+      });
+    });
+
+    // Hover pauses auto-rotation
+    stage.addEventListener('mouseenter', stopAutoPlay);
+    stage.addEventListener('mouseleave', () => {
+      if (isVisible) startAutoPlay();
+    });
+
+    // Card clicks: if center, open modal; if side, navigate to that card
+    cards.forEach((card, idx) => {
+      card.addEventListener('click', () => {
+        fadeOutHint();
+        if (idx === currentIndex) {
+          // Open detail modal
+          const projData = JSON.parse(card.getAttribute('data-project') || '{}');
+          if (window.openProjectModal) {
+            window.openProjectModal(projData);
+          }
+        } else {
+          updateCarousel(idx);
+          startAutoPlay();
+        }
+      });
+
+      card.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          card.click();
+        }
+      });
+    });
+
+    // Touch swipe support
+    let touchStartX = 0;
+    let touchEndX = 0;
+    stage.addEventListener('touchstart', (e) => {
+      touchStartX = e.changedTouches[0].screenX;
+      stopAutoPlay();
+    }, { passive: true });
+
+    stage.addEventListener('touchend', (e) => {
+      touchEndX = e.changedTouches[0].screenX;
+      if (touchStartX - touchEndX > 50) {
+        fadeOutHint();
+        updateCarousel(currentIndex + 1);
+      } else if (touchEndX - touchStartX > 50) {
+        fadeOutHint();
+        updateCarousel(currentIndex - 1);
+      }
+      startAutoPlay();
+    }, { passive: true });
+
+    // Initial state
+    updateCarousel(0);
+
+    // Live D1 dynamic sync
+    fetch('/api/projects')
+      .then(res => res.ok ? res.json() : null)
+      .then(dbProjects => {
+        if (!Array.isArray(dbProjects) || dbProjects.length === 0) return;
+        const projectMap = new Map(dbProjects.map(p => [String(p.id), p]));
+        cards.forEach(card => {
+          try {
+            const curData = JSON.parse(card.getAttribute('data-project') || '{}');
+            const dbData = projectMap.get(String(curData.id));
+            if (dbData) {
+              if (dbData.link_gambar && dbData.link_gambar !== curData.link_gambar) {
+                const img = card.querySelector('img');
+                if (img) img.src = dbData.link_gambar;
+              }
+              card.setAttribute('data-project', JSON.stringify({ ...curData, ...dbData }));
+            }
+          } catch (_) {}
+        });
+      })
+      .catch(() => {});
+  })();
+</script>

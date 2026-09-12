@@ -1,0 +1,460 @@
+---
+// src/components/ExperienceSection.astro
+// Concrete timeline of achievements, internships, and production deployments
+---
+
+<section id="experience" class="section-padding experience-section">
+  <div class="container">
+    <div class="section-header reveal-on-scroll">
+      <span class="section-tag">
+        <span class="lang-id">Pengalaman & Prestasi</span>
+        <span class="lang-en">Experience & Milestones</span>
+      </span>
+      <h2 class="section-title">
+        <span class="lang-id">Rekam Jejak Teknis & Profesional</span>
+        <span class="lang-en">Technical & Professional Track Record</span>
+      </h2>
+      <p class="section-subtitle">
+        <span class="lang-id">
+          Rekam jejak kompetisi LKS, implementasi sistem skala nyata, dan 3 Praktik Kerja Lapangan (PKL): administrasi server di BLK Kebumen, instalasi FTTH di Fazza Computer, dan pemeliharaan hardware di IMC Computer.
+        </span>
+        <span class="lang-en">
+          A verifiable record of LKS competition, production system implementations, and 3 vocational internships (PKL): server administration at BLK Kebumen, FTTH deployment at Fazza Computer, and hardware maintenance at IMC Computer.
+        </span>
+      </p>
+    </div>
+
+    <div class="timeline-container">
+      <!-- Item 1: LKS 2026 -->
+      <div class="timeline-item reveal-on-scroll reveal-delay-1">
+        <div class="timeline-dot-wrapper">
+          <div class="timeline-dot gold"></div>
+          <div class="timeline-line"></div>
+        </div>
+        <div class="editorial-card timeline-card highlight-border">
+          <div class="timeline-card-header">
+            <div>
+              <span class="timeline-period font-mono">
+                <span class="lang-id">April 2026</span>
+                <span class="lang-en">April 2026</span>
+              </span>
+              <h3 class="timeline-role">
+                <span class="lang-id">Juara 1 LKS Purworejo & Kontingen Jawa Tengah XXXIV</span>
+                <span class="lang-en">1st Place LKS Purworejo & Central Java XXXIV Finalist</span>
+              </h3>
+              <span class="timeline-org">
+                <span class="lang-id">SMK Nurusalaf Kemiri & Universitas Telkom Purwokerto</span>
+                <span class="lang-en">SMK Nurusalaf Kemiri & Telkom University Purwokerto</span>
+              </span>
+            </div>
+            <span class="award-pill">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <circle cx="12" cy="8" r="6"></circle>
+                <path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11"></path>
+              </svg>
+              <span>Gold Medalist</span>
+            </span>
+          </div>
+          <p class="timeline-desc">
+            <span class="lang-id">
+              Meraih <strong>Juara 1 (Medali Emas)</strong> seleksi LKS IT Network System Administration (NSA) Kabupaten Purworejo di SMK Nurusalaf Kemiri, lalu melaju mewakili kontingen daerah ke ajang <strong>LKS Dikmen XXXIV Provinsi Jawa Tengah</strong> di Universitas Telkom Purwokerto. Bersaing dengan 32 peserta terbaik se-Jateng menggunakan <strong>Debian 13</strong> dan dinilai dengan standar internasional <em>WorldSkills CIS Software Scale</em> oleh panel juri juara dunia (Korsel & Lyon 2024), membukukan skor resmi <strong>698 poin</strong> (hanya terpaut 2 poin dari <em>Medallion for Excellence</em>).
+            </span>
+            <span class="lang-en">
+              Awarded <strong>1st Place (Gold Medal)</strong> at the Purworejo Regency LKS IT Network System Administration (NSA) competition at SMK Nurusalaf Kemiri, advancing to represent the regency at the <strong>34th Central Java Provincial LKS</strong> at Telkom University Purwokerto. Competed against 32 top regional contenders on <strong>Debian 13</strong> evaluated under the international <em>WorldSkills CIS Software Scale</em> by a world-champion jury panel (South Korea & Lyon 2024), earning an official score of <strong>698 points</strong> (just 2 points shy of the <em>Medallion for Excellence</em>).
+            </span>
+          </p>
+          <ul class="timeline-bullets">
+            <li>
+              <span class="lang-id">
+                <strong>LKS Kabupaten Purworejo (Sesi 1 — Linux Debian 12):</strong> Konfigurasi server DNS internal BIND9 (forward/reverse zone <code>smkbisa.id</code>), klaster High Availability Web via Keepalived VRRP (Virtual IP) dan HAProxy round-robin load balancer ke 2 node backend Nginx (port 8080), serta firewall nftables NAT forwarding.
+              </span>
+              <span class="lang-en">
+                <strong>Purworejo Regency LKS (Session 1 — Linux Debian 12):</strong> Configured internal BIND9 DNS (forward/reverse zones for <code>smkbisa.id</code>), High Availability Web cluster via Keepalived VRRP (Virtual IP) and HAProxy round-robin load balancer to 2 backend Nginx nodes (port 8080), and nftables NAT forwarding.
+              </span>
+            </li>
+            <li>
+              <span class="lang-id">
+                <strong>LKS Kabupaten Purworejo (Sesi 1 — Windows Server 2022):</strong> Membangun domain controller Active Directory (AD DS <code>smk.id</code>), struktur OU & user provisioning, Enterprise Root CA (AD CS), software RAID volume (NTFS drive R:\), File Server quota (100MB/50MB) & file screening (.bat/.ps1), web server IIS dengan sertifikat SSL, DHCP Server, serta routing RRAS + NAT.
+              </span>
+              <span class="lang-en">
+                <strong>Purworejo Regency LKS (Session 1 — Windows Server 2022):</strong> Deployed Active Directory domain controller (AD DS <code>smk.id</code>), OU hierarchy & user provisioning, Enterprise Root CA (AD CS), software RAID volume (NTFS drive R:\), File Server quotas & screening (.bat/.ps1), SSL-secured IIS web server, DHCP server, and RRAS NAT routing.
+              </span>
+            </li>
+            <li>
+              <span class="lang-id">
+                <strong>LKS Kabupaten Purworejo (Sesi 2 — Cisco Network Infrastructure):</strong> Menyelesaikan konfigurasi switching VLAN, manajemen switch, inter-VLAN routing, trunking, dan security pada Cisco Packet Tracer; meraih skor 96% pada activity engine PKA dan diverifikasi 100% valid tanpa kesalahan oleh dewan juri pada audit manual.
+              </span>
+              <span class="lang-en">
+                <strong>Purworejo Regency LKS (Session 2 — Cisco Network Infrastructure):</strong> Fully implemented VLAN switching, switch management, inter-VLAN routing, trunking, and security on Cisco Packet Tracer; scored 96% on the automated PKA engine and verified 100% valid with zero configuration flaws during manual judge review.
+              </span>
+            </li>
+            <li>
+              <span class="lang-id">
+                <strong>LKS Provinsi Jawa Tengah XXXIV (Tahap Finalis):</strong> Melaju mewakili daerah bertanding di Universitas Telkom Purwokerto bersama 32 peserta terbaik se-Jateng menggunakan <strong>Debian 13</strong>. Dinilai langsung oleh dewan juri juara dunia WorldSkills Lyon 2024 dengan skor resmi <strong>698 poin</strong> (WorldSkills CIS Software Scale).
+              </span>
+              <span class="lang-en">
+                <strong>Central Java XXXIV Provincial LKS (Finalist Stage):</strong> Advanced as regency representative to compete at Telkom University Purwokerto against 32 top regional contenders running <strong>Debian 13</strong>. Evaluated directly by WorldSkills Lyon 2024 champion jury panel, achieving an official score of <strong>698 points</strong> (WorldSkills CIS Software Scale).
+              </span>
+            </li>
+          </ul>
+          <div class="timeline-tags">
+            <span class="timeline-tag">Cisco PT (96% / 100% Juri)</span>
+            <span class="timeline-tag">Debian 12 & 13</span>
+            <span class="timeline-tag">Windows Server 2022</span>
+            <span class="timeline-tag">HAProxy & Keepalived VRRP</span>
+            <span class="timeline-tag">Active Directory & AD CS</span>
+            <span class="timeline-tag">Software RAID & Quota</span>
+            <span class="timeline-tag">IIS & Nginx</span>
+            <span class="timeline-tag">BIND9 DNS</span>
+            <span class="timeline-tag">WorldSkills CIS (698 Poin)</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Item 2: PERISAI Temon Projects (Juli 2026) -->
+      <div class="timeline-item reveal-on-scroll reveal-delay-2">
+        <div class="timeline-dot-wrapper">
+          <div class="timeline-dot"></div>
+          <div class="timeline-line"></div>
+        </div>
+        <div class="editorial-card timeline-card">
+          <div class="timeline-card-header">
+            <div>
+              <span class="timeline-period font-mono">
+                <span class="lang-id">Juli 2026</span>
+                <span class="lang-en">July 2026</span>
+              </span>
+              <h3 class="timeline-role">
+                <span class="lang-id">Lead Developer — Platform PERISAI & PERISAI AYOM</span>
+                <span class="lang-en">Lead Developer — PERISAI & PERISAI AYOM Platforms</span>
+              </h3>
+              <span class="timeline-org">
+                <span class="lang-id">Pemerintah Kapanewon Temon, Kulon Progo</span>
+                <span class="lang-en">Kapanewon Temon Government, Kulon Progo</span>
+              </span>
+            </div>
+          </div>
+          <p class="timeline-desc">
+            <span class="lang-id">
+              Merancang dan mengimplementasikan sistem pengaduan publik terpadu dan pelaporan perlindungan perempuan & anak. Mengintegrasikan <strong>Google Gemini 2.0 Flash</strong> untuk auto-triage laporan dalam 1–3 detik, notifikasi email resi, pemetaan GIS 15 Kalurahan, dan Row Level Security (RLS) PostgreSQL.
+            </span>
+            <span class="lang-en">
+              Architected and deployed integrated public complaint and anonymous reporting platforms. Integrated <strong>Google Gemini 2.0 Flash</strong> for 1–3 second auto-triage, instant email dispatch, 15-village GIS mapping, and Supabase PostgreSQL Row Level Security (RLS).
+            </span>
+          </p>
+          <div class="timeline-tags">
+            <span class="timeline-tag">Next.js 16</span>
+            <span class="timeline-tag">Google Gemini AI</span>
+            <span class="timeline-tag">Supabase PostgreSQL</span>
+            <span class="timeline-tag">Leaflet GIS</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Item 3: PKL UPTD BLK Kebumen (Nov 2025 — Des 2025) -->
+      <div class="timeline-item reveal-on-scroll reveal-delay-3">
+        <div class="timeline-dot-wrapper">
+          <div class="timeline-dot"></div>
+          <div class="timeline-line"></div>
+        </div>
+        <div class="editorial-card timeline-card">
+          <div class="timeline-card-header">
+            <div>
+              <span class="timeline-badge font-mono">Network & Server</span>
+              <span class="timeline-period font-mono">
+                <span class="lang-id">Nov 2025 — Des 2025</span>
+                <span class="lang-en">Nov 2025 — Dec 2025</span>
+              </span>
+              <h3 class="timeline-role">
+                <span class="lang-id">Peserta Praktik Kerja Lapangan (Network & Server)</span>
+                <span class="lang-en">Internship Participant (Network & Server)</span>
+              </h3>
+              <span class="timeline-org">UPTD Balai Latihan Kerja (BLK) Kebumen</span>
+            </div>
+          </div>
+          <ul class="timeline-bullets">
+            <li>
+              <span class="lang-id">Konfigurasi jaringan LAN, WLAN, dan Hotspot menggunakan MikroTik RouterOS.</span>
+              <span class="lang-en">Configured LAN, WLAN, and Hotspot networks using MikroTik RouterOS.</span>
+            </li>
+            <li>
+              <span class="lang-id">Implementasi static routing menggunakan Cisco Packet Tracer.</span>
+              <span class="lang-en">Implemented static routing using Cisco Packet Tracer.</span>
+            </li>
+            <li>
+              <span class="lang-id">Instalasi Debian 12 pada VMware dan konfigurasi web server lokal (Nginx).</span>
+              <span class="lang-en">Installed Debian 12 on VMware and configured local web servers (Nginx).</span>
+            </li>
+            <li>
+              <span class="lang-id">Implementasi firewall MikroTik serta deployment CMS PrestaShop pada server lokal.</span>
+              <span class="lang-en">Implemented MikroTik firewall rules and deployed PrestaShop CMS on local server.</span>
+            </li>
+          </ul>
+          <div class="timeline-tags">
+            <span class="timeline-tag">MikroTik RouterOS</span>
+            <span class="timeline-tag">Debian 12</span>
+            <span class="timeline-tag">Cisco PT</span>
+            <span class="timeline-tag">Nginx Web Server</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Item 4: PKL Fazza Computer (Sep 2025 — Nov 2025) -->
+      <div class="timeline-item reveal-on-scroll reveal-delay-4">
+        <div class="timeline-dot-wrapper">
+          <div class="timeline-dot"></div>
+          <div class="timeline-line"></div>
+        </div>
+        <div class="editorial-card timeline-card">
+          <div class="timeline-card-header">
+            <div>
+              <span class="timeline-badge font-mono">FTTH & ISP Network</span>
+              <span class="timeline-period font-mono">
+                <span class="lang-id">Sep 2025 — Nov 2025</span>
+                <span class="lang-en">Sep 2025 — Nov 2025</span>
+              </span>
+              <h3 class="timeline-role">
+                <span class="lang-id">Peserta Praktik Kerja Lapangan (FTTH & Network)</span>
+                <span class="lang-en">Internship Participant (FTTH & Network)</span>
+              </h3>
+              <span class="timeline-org">Fazza Computer</span>
+            </div>
+          </div>
+          <ul class="timeline-bullets">
+            <li>
+              <span class="lang-id">Instalasi jaringan Fiber To The Home (FTTH) untuk pelanggan baru.</span>
+              <span class="lang-en">Installed Fiber To The Home (FTTH) network connections for new subscribers.</span>
+            </li>
+            <li>
+              <span class="lang-id">Konfigurasi dasar dan pengujian perangkat Optical Network Terminal (ONT).</span>
+              <span class="lang-en">Performed baseline configuration and testing of Optical Network Terminal (ONT) devices.</span>
+            </li>
+            <li>
+              <span class="lang-id">Troubleshooting dasar dan pemeliharaan perangkat jaringan pelanggan.</span>
+              <span class="lang-en">Troubleshot and maintained customer-premises network equipment and cabling.</span>
+            </li>
+          </ul>
+          <div class="timeline-tags">
+            <span class="timeline-tag">FTTH Fiber Optic</span>
+            <span class="timeline-tag">ONT Configuration</span>
+            <span class="timeline-tag">Network Troubleshooting</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Item 5: PKL IMC Computer (Feb 2025 — Apr 2025) -->
+      <div class="timeline-item reveal-on-scroll reveal-delay-4">
+        <div class="timeline-dot-wrapper">
+          <div class="timeline-dot"></div>
+          <div class="timeline-line hidden-line"></div>
+        </div>
+        <div class="editorial-card timeline-card">
+          <div class="timeline-card-header">
+            <div>
+              <span class="timeline-badge font-mono">PC & Network Hardware</span>
+              <span class="timeline-period font-mono">
+                <span class="lang-id">Feb 2025 — Apr 2025</span>
+                <span class="lang-en">Feb 2025 — Apr 2025</span>
+              </span>
+              <h3 class="timeline-role">
+                <span class="lang-id">Peserta Praktik Kerja Lapangan (PC & Network)</span>
+                <span class="lang-en">Internship Participant (PC & Network)</span>
+              </h3>
+              <span class="timeline-org">IMC Computer (Izzan Mediatek Computindo)</span>
+            </div>
+          </div>
+          <ul class="timeline-bullets">
+            <li>
+              <span class="lang-id">Instalasi sistem operasi Windows pada komputer dan laptop.</span>
+              <span class="lang-en">Installed Windows operating systems on desktops and laptops.</span>
+            </li>
+            <li>
+              <span class="lang-id">Perakitan komputer serta pemeriksaan fungsi hardware dan software.</span>
+              <span class="lang-en">Assembled custom computers and verified hardware/software functionality.</span>
+            </li>
+            <li>
+              <span class="lang-id">Troubleshooting dasar dan pemeliharaan perangkat komputer.</span>
+              <span class="lang-en">Handled computer troubleshooting, component maintenance, and diagnostics.</span>
+            </li>
+          </ul>
+          <div class="timeline-tags">
+            <span class="timeline-tag">PC Assembly</span>
+            <span class="timeline-tag">Windows OS Installation</span>
+            <span class="timeline-tag">Hardware Diagnostics</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .experience-section {
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .timeline-container {
+    max-width: 860px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .timeline-item {
+    display: flex;
+    gap: clamp(14px, 3vw, 24px);
+  }
+
+  .timeline-dot-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 24px;
+    flex-shrink: 0;
+  }
+
+  .timeline-dot {
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: var(--color-foreground);
+    border: 3px solid var(--bg-main);
+    box-shadow: 0 0 0 1px var(--color-border);
+    margin-top: 24px;
+    flex-shrink: 0;
+  }
+
+  .timeline-dot.gold {
+    background: #EAB308;
+    box-shadow: 0 0 0 2px rgba(234, 179, 8, 0.3);
+  }
+
+  .timeline-line {
+    width: 2px;
+    flex: 1;
+    background: var(--color-border);
+    margin: 6px 0;
+  }
+
+  .hidden-line {
+    display: none;
+  }
+
+  .timeline-card {
+    flex: 1;
+    padding: clamp(18px, 3vw, 26px);
+    margin-bottom: 24px;
+  }
+
+  .highlight-border {
+    border-color: rgba(234, 179, 8, 0.4);
+  }
+
+  .timeline-card-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 12px;
+    flex-wrap: wrap;
+  }
+
+  .timeline-period {
+    font-size: 0.8125rem;
+    font-weight: 700;
+    color: var(--color-accent);
+    display: block;
+    margin-bottom: 2px;
+  }
+
+  .timeline-role {
+    margin: 0;
+    font-size: 1.15rem;
+  }
+
+  .timeline-org {
+    font-size: 0.875rem;
+    color: var(--color-subtle);
+    display: block;
+    margin-top: 2px;
+  }
+
+  .award-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    padding: 3px 10px;
+    border-radius: 9999px;
+    background: rgba(234, 179, 8, 0.12);
+    color: #CA8A04;
+    border: 1px solid rgba(234, 179, 8, 0.3);
+  }
+
+  .timeline-badge {
+    font-size: 0.72rem;
+    font-weight: 700;
+    color: var(--color-primary);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    display: inline-block;
+    margin-bottom: 4px;
+  }
+
+  .timeline-desc {
+    font-size: 0.9375rem;
+    line-height: 1.6;
+    margin-bottom: 0;
+    color: var(--color-muted);
+  }
+
+  .timeline-desc strong {
+    color: var(--color-foreground);
+  }
+
+  .timeline-bullets {
+    list-style: none;
+    padding: 0;
+    margin: 12px 0 0 0;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    font-size: 0.9375rem;
+    line-height: 1.6;
+    color: var(--color-muted);
+  }
+
+  .timeline-bullets li {
+    position: relative;
+    padding-left: 20px;
+  }
+
+  .timeline-bullets li::before {
+    content: '▹';
+    position: absolute;
+    left: 0;
+    top: 0;
+    color: var(--color-accent);
+    font-weight: 700;
+  }
+
+  .timeline-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 16px;
+    padding-top: 14px;
+    border-top: 1px solid var(--color-border);
+  }
+
+  .timeline-tag {
+    font-size: 0.75rem;
+    font-family: var(--font-mono, monospace);
+    padding: 3px 9px;
+    border-radius: 6px;
+    background: var(--bg-surface);
+    color: var(--color-subtle);
+    border: 1px solid var(--color-border);
+  }
+</style>

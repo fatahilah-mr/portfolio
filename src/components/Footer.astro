@@ -1,35 +1,81 @@
 ---
+// src/components/Footer.astro
+// Clean, Anti-Slop Footer with Navigation Anchors & Admin Link
+interface Props {
+  lang?: 'en' | 'id';
+}
+
+import siteConfig from '../data/config.json';
+
+const { lang = 'id' } = Astro.props;
+const homeUrl = lang === 'en' ? '/en' : '/';
 ---
 
 <footer class="portfolio-footer">
   <div class="container footer-content">
     <div class="footer-top">
       <div class="footer-brand">
-        <span class="font-heading text-xl">Fatahilah Miftahul Rahman</span>
-        <p class="footer-tagline" data-i18n="footer.tagline">IT Network System Administration & Web Development</p>
+        <span class="footer-name">FATAHILAH<span class="brand-accent">.MR</span></span>
+        <p class="footer-tagline">
+          <span class="lang-id">Infrastruktur Jaringan Enterprise & Rekayasa Web Modern</span>
+          <span class="lang-en">Enterprise Network Infrastructure & Modern Web Engineering</span>
+        </p>
       </div>
-      <div class="footer-links">
-        <a href="https://github.com/fatahilah-mr" target="_blank" rel="noopener noreferrer" class="footer-icon-btn github" aria-label="GitHub Repository" title="GitHub">
-          <svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor" aria-hidden="true"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>
+
+      <!-- Quick Section Jumps -->
+      <nav class="footer-nav" aria-label="Footer Navigasi">
+        <a href={`${homeUrl}#hero`} class="footer-nav-link">
+          <span class="lang-id">Ringkasan</span>
+          <span class="lang-en">Overview</span>
         </a>
-        <a href="https://www.linkedin.com/in/fatahilah-mr" target="_blank" rel="noopener noreferrer" class="footer-icon-btn linkedin" aria-label="LinkedIn Profile" title="LinkedIn">
-          <svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor" aria-hidden="true"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>
+        <a href={`${homeUrl}#about`} class="footer-nav-link">
+          <span class="lang-id">Tentang</span>
+          <span class="lang-en">About</span>
         </a>
-        <a href="/contact" class="footer-icon-btn contact" aria-label="Halaman Kontak" title="Kontak">
-          <svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor" aria-hidden="true"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
+        <a href={`${homeUrl}#skills`} class="footer-nav-link">
+          <span class="lang-id">Keahlian</span>
+          <span class="lang-en">Skills</span>
+        </a>
+        <a href={`${homeUrl}#experience`} class="footer-nav-link">
+          <span class="lang-id">Pengalaman</span>
+          <span class="lang-en">Experience</span>
+        </a>
+        <a href={`${homeUrl}#projects`} class="footer-nav-link">
+          <span class="lang-id">Proyek</span>
+          <span class="lang-en">Projects</span>
+        </a>
+        <a href={`${homeUrl}#certificates`} class="footer-nav-link">
+          <span class="lang-id">Sertifikat</span>
+          <span class="lang-en">Certificates</span>
+        </a>
+        <a href={`${homeUrl}#contact`} class="footer-nav-link">
+          <span class="lang-id">Kontak</span>
+          <span class="lang-en">Contact</span>
+        </a>
+        <a href="/admin" class="footer-nav-link admin-link" title="CMS Admin Panel">CMS Admin</a>
+      </nav>
+
+      <!-- Social Links -->
+      <div class="footer-socials">
+        <a href={siteConfig.github_url} target="_blank" rel="noopener noreferrer" class="social-icon-btn" aria-label="GitHub">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>
+        </a>
+        <a href={siteConfig.linkedin_url} target="_blank" rel="noopener noreferrer" class="social-icon-btn" aria-label="LinkedIn">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>
         </a>
       </div>
     </div>
-    
+
     <div class="footer-bottom">
-      <p class="copyright text-sm" data-i18n="footer.copyright">
-        © 2026 Fatahilah Miftahul Rahman. Dibangun dengan Astro &amp; Vanilla CSS.
+      <p class="copyright">
+        <span class="lang-id">© 2026 Fatahilah Miftahul Rahman. Hak Cipta Dilindungi.</span>
+        <span class="lang-en">© 2026 Fatahilah Miftahul Rahman. All Rights Reserved.</span>
       </p>
-      <div class="tech-badge" style="display: flex; gap: 8px; flex-wrap: wrap;">
-        <span class="badge">Astro v5</span>
-        <span class="badge">Vanilla CSS</span>
-        <span class="badge">Google Sheets</span>
-        <span class="badge">Cloudflare</span>
+      <div class="tech-stack-pills">
+        <span class="stack-pill">Astro 5</span>
+        <span class="stack-pill">Cloudflare D1</span>
+        <span class="stack-pill">Pages Functions</span>
+        <span class="stack-pill">Anti-Slop Clean CSS</span>
       </div>
     </div>
   </div>
@@ -37,11 +83,10 @@
 
 <style>
   .portfolio-footer {
-    border-top: 1px solid var(--color-border);
     background-color: var(--bg-surface);
+    border-top: 1px solid var(--color-border);
+    padding: clamp(36px, 6vw, 56px) 0 32px 0;
     margin-top: auto;
-    padding: 48px 0 32px;
-    transition: background-color 0.3s ease, border-color 0.3s ease;
   }
 
   .footer-content {
@@ -52,85 +97,114 @@
 
   .footer-top {
     display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    align-items: center;
-    gap: 20px;
-  }
-
-  .footer-brand {
-    display: flex;
     flex-direction: column;
-    gap: 4px;
+    gap: 24px;
+    align-items: flex-start;
   }
 
-  .text-xl {
-    font-size: 1.25rem;
-    font-weight: 700;
+  @media (min-width: 860px) {
+    .footer-top {
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: center;
+    }
+  }
+
+  .footer-name {
+    font-size: 1.15rem;
+    font-weight: 800;
+    color: var(--color-foreground);
+  }
+
+  .brand-accent {
+    color: var(--color-accent);
   }
 
   .footer-tagline {
-    font-size: 0.9rem;
+    font-size: 0.875rem;
     color: var(--color-muted);
+    margin: 4px 0 0 0;
   }
 
-  .footer-links {
+  .footer-nav {
     display: flex;
-    align-items: center;
-    gap: 14px;
+    flex-wrap: wrap;
+    gap: 16px;
   }
 
-  .footer-icon-btn {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 44px;
-    height: 44px;
-    border-radius: 12px;
+  .footer-nav-link {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--color-muted);
+    transition: color 0.15s ease;
+  }
+
+  .footer-nav-link:hover {
+    color: var(--color-foreground);
+  }
+
+  .admin-link {
+    color: var(--color-accent);
+  }
+
+  .footer-socials {
+    display: flex;
+    gap: 10px;
+  }
+
+  .social-icon-btn {
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
     background: var(--bg-card);
     border: 1px solid var(--color-border);
     color: var(--color-muted);
-    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.15s ease;
   }
 
-  .footer-icon-btn:hover {
-    color: var(--color-primary);
-    border-color: var(--color-primary);
-    background: var(--bg-surface);
-    transform: translateY(-3px);
-    box-shadow: 0 4px 16px var(--color-primary-glow);
-  }
-
-  .footer-icon-btn.github:hover {
+  .social-icon-btn:hover {
     color: var(--color-foreground);
-    border-color: #8b949e;
-    box-shadow: 0 4px 16px rgba(139, 148, 158, 0.25);
-  }
-
-  .footer-icon-btn.linkedin:hover {
-    color: #0a66c2;
-    border-color: #0a66c2;
-    box-shadow: 0 4px 16px rgba(10, 102, 194, 0.35);
-  }
-
-  .footer-icon-btn.contact:hover {
-    color: var(--color-primary);
-    border-color: var(--color-primary);
-    box-shadow: 0 4px 16px var(--color-primary-glow);
+    border-color: var(--color-border-hover);
+    transform: translateY(-2px);
   }
 
   .footer-bottom {
     display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    align-items: center;
+    flex-direction: column;
     gap: 16px;
     padding-top: 24px;
-    border-top: 1px dashed var(--color-border);
+    border-top: 1px solid var(--color-border);
+    font-size: 0.8125rem;
+    color: var(--color-subtle);
   }
 
-  .text-sm {
-    font-size: 0.85rem;
+  @media (min-width: 680px) {
+    .footer-bottom {
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: center;
+    }
+  }
+
+  .copyright {
+    margin: 0;
+  }
+
+  .tech-stack-pills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  .stack-pill {
+    padding: 2px 8px;
+    border-radius: 4px;
+    background: var(--bg-card);
+    border: 1px solid var(--color-border);
+    font-size: 0.75rem;
+    font-family: 'JetBrains Mono', monospace;
   }
 </style>

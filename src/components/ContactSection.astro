@@ -1,0 +1,245 @@
+---
+// src/components/ContactSection.astro
+// Direct Action Contact Cards: Email, LinkedIn, GitHub (Zero WhatsApp Public Exposure for Security)
+import siteConfig from '../data/config.json';
+---
+
+<section id="contact" class="section-padding contact-section">
+  <div class="container">
+    <div class="section-header">
+      <span class="section-tag">
+        <span class="lang-id">Hubungi Saya</span>
+        <span class="lang-en">Get In Touch</span>
+      </span>
+      <h2 class="section-title">
+        <span class="lang-id">Mari Berkolaborasi & Berdiskusi</span>
+        <span class="lang-en">Let's Connect & Collaborate</span>
+      </h2>
+      <p class="section-subtitle">
+        <span class="lang-id">
+          Terbuka untuk peluang profesional, proyek implementasi infrastruktur jaringan, serta riset rekayasa web modern.
+        </span>
+        <span class="lang-en">
+          Open for professional opportunities, network infrastructure engineering projects, and modern web development initiatives.
+        </span>
+      </p>
+    </div>
+
+    <div class="contact-grid">
+      <!-- Card 1: Official Email -->
+      <div class="editorial-card contact-card">
+        <div class="contact-card-icon" aria-hidden="true">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect width="20" height="16" x="2" y="4" rx="2"></rect>
+            <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"></path>
+          </svg>
+        </div>
+        <div class="contact-card-body">
+          <span class="contact-type">
+            <span class="lang-id">Email Resmi</span>
+            <span class="lang-en">Official Email</span>
+          </span>
+          <h3 class="contact-value font-mono">{siteConfig.email}</h3>
+          <p class="contact-desc">
+            <span class="lang-id">Saluran tercepat untuk penawaran kerja, kolaborasi teknis, dan surat resmi.</span>
+            <span class="lang-en">Direct channel for job offers, technical inquiries, and formal proposals.</span>
+          </p>
+          <div class="contact-actions">
+            <a href={`mailto:${siteConfig.email}`} class="btn btn-primary btn-sm">
+              <span class="lang-id">Kirim Email</span>
+              <span class="lang-en">Send Email</span>
+            </a>
+            <button id="copy-email-btn" class="btn btn-secondary btn-sm" data-email={siteConfig.email}>
+              <span class="copy-text-default">
+                <span class="lang-id">Salin Email</span>
+                <span class="lang-en">Copy Email</span>
+              </span>
+              <span class="copy-text-success hidden">
+                <span class="lang-id">✓ Tersalin!</span>
+                <span class="lang-en">✓ Copied!</span>
+              </span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 2: LinkedIn Profile -->
+      <div class="editorial-card contact-card">
+        <div class="contact-card-icon" aria-hidden="true">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path>
+            <rect width="4" height="12" x="2" y="9"></rect>
+            <circle cx="4" cy="4" r="2"></circle>
+          </svg>
+        </div>
+        <div class="contact-card-body">
+          <span class="contact-type">
+            <span class="lang-id">Jejaring Profesional</span>
+            <span class="lang-en">Professional Network</span>
+          </span>
+          <h3 class="contact-value">{siteConfig.name}</h3>
+          <p class="contact-desc">
+            <span class="lang-id">Terhubung untuk rekrutmen profesional, validasi sertifikasi, dan jejaring industri.</span>
+            <span class="lang-en">Connect for professional recruitment, certificate verification, and industry networking.</span>
+          </p>
+          <div class="contact-actions">
+            <a href={siteConfig.linkedin_url} target="_blank" rel="noopener noreferrer" class="btn btn-secondary btn-sm">
+              <span class="lang-id">Buka LinkedIn</span>
+              <span class="lang-en">View LinkedIn</span>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M7 17 17 7M7 7h10v10"/>
+              </svg>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 3: GitHub Profile -->
+      <div class="editorial-card contact-card">
+        <div class="contact-card-icon" aria-hidden="true">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+            <path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/>
+          </svg>
+        </div>
+        <div class="contact-card-body">
+          <span class="contact-type">
+            <span class="lang-id">Repositori Terbuka</span>
+            <span class="lang-en">Open Source Repositories</span>
+          </span>
+          <h3 class="contact-value font-mono">@{siteConfig.github_url.split('/').filter(Boolean).pop()}</h3>
+          <p class="contact-desc">
+            <span class="lang-id">Eksplorasi kode sumber terbuka, konfigurasi laboratorium, dan repositori proyek.</span>
+            <span class="lang-en">Explore open-source code repositories, lab configurations, and project commits.</span>
+          </p>
+          <div class="contact-actions">
+            <a href={siteConfig.github_url} target="_blank" rel="noopener noreferrer" class="btn btn-secondary btn-sm">
+              <span class="lang-id">Buka GitHub</span>
+              <span class="lang-en">View GitHub</span>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M7 17 17 7M7 7h10v10"/>
+              </svg>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .contact-section {
+    background: var(--bg-surface);
+  }
+
+  .contact-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 20px;
+    max-width: 1000px;
+    margin: 0 auto;
+  }
+
+  @media (min-width: 860px) {
+    .contact-grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  .contact-card {
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%;
+    transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  .contact-card:hover {
+    border-color: var(--color-border-hover, var(--color-accent));
+    transform: translateY(-2px);
+  }
+
+  .contact-card-icon {
+    width: 44px;
+    height: 44px;
+    border-radius: 10px;
+    background: var(--bg-surface-elevated, var(--bg-surface));
+    border: 1px solid var(--color-border);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--color-foreground);
+    margin-bottom: 16px;
+    transition: all 0.2s ease;
+  }
+
+  .contact-card:hover .contact-card-icon {
+    border-color: var(--color-accent);
+    color: var(--color-accent);
+    background: rgba(14, 165, 233, 0.08);
+  }
+
+  .contact-card-body {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    justify-content: space-between;
+  }
+
+  .contact-type {
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--color-subtle);
+    display: block;
+    margin-bottom: 6px;
+  }
+
+  .contact-value {
+    font-size: 1.05rem;
+    margin: 0 0 10px 0;
+    word-break: break-all;
+  }
+
+  .contact-desc {
+    font-size: 0.875rem;
+    line-height: 1.5;
+    color: var(--color-muted);
+    margin-bottom: 20px;
+    flex: 1;
+  }
+
+  .contact-actions {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+</style>
+
+<script is:inline>
+  (function initEmailCopy() {
+    const copyBtn = document.getElementById('copy-email-btn');
+    if (!copyBtn) return;
+
+    copyBtn.addEventListener('click', async () => {
+      const email = copyBtn.getAttribute('data-email') || 'fatahilah@protonmail.com';
+      try {
+        await navigator.clipboard.writeText(email);
+        const defSpan = copyBtn.querySelector('.copy-text-default');
+        const sucSpan = copyBtn.querySelector('.copy-text-success');
+
+        defSpan?.classList.add('hidden');
+        sucSpan?.classList.remove('hidden');
+
+        setTimeout(() => {
+          defSpan?.classList.remove('hidden');
+          sucSpan?.classList.add('hidden');
+        }, 2200);
+      } catch (err) {
+        console.warn('Clipboard write failed:', err);
+      }
+    });
+  })();
+</script>

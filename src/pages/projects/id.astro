@@ -1,0 +1,20 @@
+---
+// src/pages/projects/id.astro
+// Legacy Indonesian Route -> Permanent 301 Redirect to /projects
+---
+
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="refresh" content="0;url=/projects" />
+  <link rel="canonical" href="https://fatahmr.my.id/projects" />
+  <title>Mengarahkan ke Katalog Proyek | Fatahilah Miftahul Rahman</title>
+  <script is:inline>
+    window.location.replace('/projects');
+  </script>
+</head>
+<body>
+  <p>Mengarahkan ke <a href="/projects">Katalog Proyek</a>...</p>
+</body>
+</html>

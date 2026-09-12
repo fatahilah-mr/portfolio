@@ -1,0 +1,244 @@
+---
+// src/components/AboutSection.astro
+// Clean, informative About section highlighting engineering discipline & background
+---
+
+<section id="about" class="section-padding about-section">
+  <div class="container">
+    <div class="section-header reveal-on-scroll">
+      <span class="section-tag">
+        <span class="lang-id">Tentang Saya</span>
+        <span class="lang-en">About Me</span>
+      </span>
+      <h2 class="section-title">
+        <span class="lang-id">Dedikasi Pada Keandalan Sistem & Rekayasa Web</span>
+        <span class="lang-en">Dedicated to System Reliability & Modern Web Engineering</span>
+      </h2>
+      <p class="section-subtitle">
+        <span class="lang-id">
+          Menggabungkan ketelitian konfigurasi jaringan fisik enterprise dengan fleksibilitas pengembangan aplikasi berbasis cloud modern.
+        </span>
+        <span class="lang-en">
+          Bridging the rigor of enterprise physical network administration with the agility of modern cloud application development.
+        </span>
+      </p>
+    </div>
+
+    <div class="about-grid">
+      <!-- Main Narrative Card -->
+      <div class="editorial-card narrative-card reveal-on-scroll reveal-delay-1">
+        <h3 class="narrative-heading">
+          <span class="lang-id">Profil & Latar Belakang</span>
+          <span class="lang-en">Background & Discipline</span>
+        </h3>
+        
+        <p class="narrative-text">
+          <span class="lang-id">
+            Saya adalah lulusan <strong>SMK Patriot Pituruh</strong> jurusan <strong>Teknik Komputer & Jaringan (TKJ) (2026)</strong> dengan reputasi kompetitif di bidang <em>IT Network System Administration</em>. Berhasil meraih <strong>Juara 1 LKS Tingkat Kabupaten Purworejo 2026</strong> dan mewakili daerah pada <strong>LKS Provinsi Jawa Tengah ke-XXXIV</strong>.
+          </span>
+          <span class="lang-en">
+            I am a graduate of <strong>SMK Patriot Pituruh</strong> majoring in <strong>Computer & Network Engineering (2026)</strong> with a competitive track record in <em>IT Network System Administration</em>. Secured <strong>1st Place in the 2026 Purworejo Regency LKS</strong> and represented the region at the <strong>34th Central Java Provincial LKS</strong>.
+          </span>
+        </p>
+
+        <p class="narrative-text">
+          <span class="lang-id">
+            Di luar ranah jaringan fisik dan administrasi server Linux/Windows, saya aktif merancang platform web produksi publik — seperti sistem pelaporan terintegrasi triase AI <strong>PERISAI</strong> dan <strong>PERISAI AYOM</strong> untuk instansi pemerintahan Kapanewon Temon. Pendekatan saya berlandaskan prinsip: arsitektur bersih, keamanan ketat, performa tinggi, dan tanpa kompromi pada kualitas.
+          </span>
+          <span class="lang-en">
+            Beyond physical networking and Linux/Windows server administration, I actively build production web systems — such as the AI-triaged public reporting platforms <strong>PERISAI</strong> and <strong>PERISAI AYOM</strong> for Kapanewon Temon local government. My engineering approach centers on clean architectures, strict security, blazing speed, and zero compromise on quality.
+          </span>
+        </p>
+
+        <div class="narrative-footer">
+          <div class="identity-badge">
+            <span class="badge-label">
+              <span class="lang-id">Sekolah:</span>
+              <span class="lang-en">Alma Mater:</span>
+            </span>
+            <span class="badge-val">SMK Patriot Pituruh</span>
+          </div>
+          <div class="identity-badge">
+            <span class="badge-label">
+              <span class="lang-id">Kompetensi:</span>
+              <span class="lang-en">Specialization:</span>
+            </span>
+            <span class="badge-val">Teknik Komputer & Jaringan (TKJ)</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- 3 Key Pillars Column -->
+      <div class="pillars-col">
+        <div class="editorial-card pillar-card reveal-on-scroll reveal-delay-2">
+          <div class="pillar-icon" aria-hidden="true">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="16" y="16" width="6" height="6" rx="1"></rect>
+              <rect x="2" y="16" width="6" height="6" rx="1"></rect>
+              <rect x="9" y="2" width="6" height="6" rx="1"></rect>
+              <path d="M5 16v-3a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v3"></path>
+              <path d="M12 12V8"></path>
+            </svg>
+          </div>
+          <div class="pillar-content">
+            <h4>
+              <span class="lang-id">Jaringan Enterprise & Routing</span>
+              <span class="lang-en">Enterprise Networking & Routing</span>
+            </h4>
+            <p>
+              <span class="lang-id">Desain topologi multi-lantai, VLAN segmentation, MikroTik firewall NAT, QoS bandwidth management, dan routing dinamis Cisco.</span>
+              <span class="lang-en">Multi-floor topology design, VLAN segmentation, MikroTik firewall NAT, QoS bandwidth control, and dynamic Cisco routing.</span>
+            </p>
+          </div>
+        </div>
+
+        <div class="editorial-card pillar-card reveal-on-scroll reveal-delay-3">
+          <div class="pillar-icon" aria-hidden="true">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect width="20" height="8" x="2" y="2" rx="2" ry="2"></rect>
+              <rect width="20" height="8" x="2" y="14" rx="2" ry="2"></rect>
+              <line x1="6" x2="6.01" y1="6" y2="6"></line>
+              <line x1="6" x2="6.01" y1="18" y2="18"></line>
+            </svg>
+          </div>
+          <div class="pillar-content">
+            <h4>
+              <span class="lang-id">Server Linux & Infrastruktur</span>
+              <span class="lang-en">Linux Servers & Infrastructure</span>
+            </h4>
+            <p>
+              <span class="lang-id">Penerapan Debian 12 & 13 GNU/Linux, HAProxy load balancer, Keepalived VRRP, Windows Server 2022 (AD DS & Software RAID), DNS BIND9, Nginx, dan Proxmox VE.</span>
+              <span class="lang-en">Deploying Debian 12 & 13 GNU/Linux, HAProxy load balancing, Keepalived VRRP, Windows Server 2022 (AD DS & Software RAID), BIND9 DNS, Nginx, and Proxmox VE.</span>
+            </p>
+          </div>
+        </div>
+
+        <div class="editorial-card pillar-card reveal-on-scroll reveal-delay-4">
+          <div class="pillar-icon" aria-hidden="true">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="m18 16 4-4-4-4"></path>
+              <path d="m6 8-4 4 4 4"></path>
+              <path d="m14.5 4-5 16"></path>
+            </svg>
+          </div>
+          <div class="pillar-content">
+            <h4>
+              <span class="lang-id">Pengembangan Web & Edge Cloud</span>
+              <span class="lang-en">Modern Web & Edge Cloud</span>
+            </h4>
+            <p>
+              <span class="lang-id">Membangun antarmuka ultra-cepat dengan Astro 5, React, Next.js, database terisolasi Cloudflare D1 / Supabase PostgreSQL, dan triase AI Gemini.</span>
+              <span class="lang-en">Building high-speed web apps with Astro 5, React, Next.js, Cloudflare D1 / Supabase PostgreSQL, and Gemini Flash AI triage.</span>
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .about-section {
+    background: var(--bg-main);
+  }
+
+  .about-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 32px;
+  }
+
+  @media (min-width: 900px) {
+    .about-grid {
+      grid-template-columns: 1.1fr 1fr;
+      align-items: start;
+    }
+  }
+
+  .narrative-card {
+    padding: clamp(24px, 4vw, 36px);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+
+  .narrative-heading {
+    margin-bottom: 20px;
+    font-size: 1.4rem;
+  }
+
+  .narrative-text {
+    font-size: 1rem;
+    line-height: 1.7;
+    color: var(--color-muted);
+    margin-bottom: 16px;
+  }
+
+  .narrative-text strong {
+    color: var(--color-foreground);
+  }
+
+  .narrative-footer {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    margin-top: 24px;
+    padding-top: 20px;
+    border-top: 1px solid var(--color-border);
+  }
+
+  .identity-badge {
+    display: flex;
+    flex-direction: column;
+    font-size: 0.8125rem;
+  }
+
+  .badge-label {
+    color: var(--color-subtle);
+    font-weight: 500;
+  }
+
+  .badge-val {
+    color: var(--color-foreground);
+    font-weight: 700;
+  }
+
+  .pillars-col {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .pillar-card {
+    padding: 20px;
+    display: flex;
+    gap: 16px;
+    align-items: flex-start;
+  }
+
+  .pillar-icon {
+    width: 44px;
+    height: 44px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--bg-surface);
+    border-radius: 10px;
+    border: 1px solid var(--color-border);
+    flex-shrink: 0;
+    color: var(--color-accent);
+  }
+
+  .pillar-content h4 {
+    margin-top: 0;
+    margin-bottom: 6px;
+    font-size: 1.05rem;
+  }
+
+  .pillar-content p {
+    font-size: 0.875rem;
+    line-height: 1.55;
+    margin-bottom: 0;
+    color: var(--color-muted);
+  }
+</style>

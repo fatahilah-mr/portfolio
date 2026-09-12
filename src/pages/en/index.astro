@@ -1,0 +1,39 @@
+---
+// src/pages/en/index.astro
+// English Home Page - Semi-SPA with 7 Core Sections
+import Layout from '../../layouts/Layout.astro';
+import Hero from '../../components/Hero.astro';
+import AboutSection from '../../components/AboutSection.astro';
+import SkillsSection from '../../components/SkillsSection.astro';
+import ExperienceSection from '../../components/ExperienceSection.astro';
+import FeaturedProjectsCarousel from '../../components/FeaturedProjectsCarousel.astro';
+import FeaturedCertificatesCarousel from '../../components/FeaturedCertificatesCarousel.astro';
+import ContactSection from '../../components/ContactSection.astro';
+---
+
+<Layout 
+  title="Official Portfolio | Fatahilah Miftahul Rahman" 
+  description="Official portfolio of Fatahilah Miftahul Rahman - 1st Place Winner LKS IT Network System Administration 2026. Demonstrating enterprise network infrastructure, Linux servers, production web apps, and verified credentials."
+  lang="en"
+>
+  <!-- 1. Hero Section -->
+  <Hero lang="en" />
+
+  <!-- 2. About Section -->
+  <AboutSection lang="en" />
+
+  <!-- 3. Skills Section -->
+  <SkillsSection lang="en" />
+
+  <!-- 4. Experience & Awards Section -->
+  <ExperienceSection lang="en" />
+
+  <!-- 5. Featured Projects (3D Centered Carousel) -->
+  <FeaturedProjectsCarousel lang="en" />
+
+  <!-- 6. Featured Certificates (3D Centered Carousel) -->
+  <FeaturedCertificatesCarousel lang="en" />
+
+  <!-- 7. Contact Section -->
+  <ContactSection lang="en" />
+</Layout>

@@ -1,0 +1,235 @@
+---
+// src/components/SkillsSection.astro
+// Clean, categorized technical competencies without arbitrary percentage bars
+---
+
+<section id="skills" class="section-padding skills-section">
+  <div class="container">
+    <div class="section-header reveal-on-scroll">
+      <span class="section-tag">
+        <span class="lang-id">Keahlian Teknis</span>
+        <span class="lang-en">Technical Skills</span>
+      </span>
+      <h2 class="section-title">
+        <span class="lang-id">Kompetensi Teruji & Alat Kerja</span>
+        <span class="lang-en">Verified Competencies & Toolkit</span>
+      </h2>
+      <p class="section-subtitle">
+        <span class="lang-id">
+          Keahlian praktis yang diaplikasikan langsung pada kompetisi LKS, laboratorium teknis, dan implementasi web produksi.
+        </span>
+        <span class="lang-en">
+          Practical skills demonstrated in competitive LKS environments, technical labs, and production deployments.
+        </span>
+      </p>
+    </div>
+
+    <div class="skills-grid">
+      <!-- Domain 1: Enterprise Networking -->
+      <div class="editorial-card skill-group-card reveal-on-scroll reveal-delay-1">
+        <div class="skill-group-header">
+          <span class="group-icon" aria-hidden="true">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="16" y="16" width="6" height="6" rx="1"/>
+              <rect x="2" y="16" width="6" height="6" rx="1"/>
+              <rect x="9" y="2" width="6" height="6" rx="1"/>
+              <path d="M5 16v-3a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v3"/>
+              <path d="M12 12V8"/>
+            </svg>
+          </span>
+          <div>
+            <h3 class="group-title">
+              <span class="lang-id">Jaringan & Switching</span>
+              <span class="lang-en">Networking & Switching</span>
+            </h3>
+            <span class="group-desc">Cisco, MikroTik, Fiber Optic, Packet Tracer, Winbox</span>
+          </div>
+        </div>
+        <ul class="skill-tags-list">
+          <li class="skill-tag-item">VLAN (802.1Q) Segmentation</li>
+          <li class="skill-tag-item">Inter-VLAN Routing</li>
+          <li class="skill-tag-item">MikroTik Firewall Filter & NAT</li>
+          <li class="skill-tag-item">DHCP Server & Relay</li>
+          <li class="skill-tag-item">DNS Server & Cache</li>
+          <li class="skill-tag-item">WLAN Hotspot & User Profile</li>
+          <li class="skill-tag-item">Bandwidth Queue (Simple & Tree)</li>
+          <li class="skill-tag-item">Cisco Router Management</li>
+          <li class="skill-tag-item">FTTH & Fiber Optic Splicing</li>
+        </ul>
+      </div>
+
+      <!-- Domain 2: Systems & Server Administration -->
+      <div class="editorial-card skill-group-card reveal-on-scroll reveal-delay-2">
+        <div class="skill-group-header">
+          <span class="group-icon" aria-hidden="true">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect width="20" height="8" x="2" y="2" rx="2" ry="2"/>
+              <rect width="20" height="8" x="2" y="14" rx="2" ry="2"/>
+              <line x1="6" x2="6.01" y1="6" y2="6"/>
+              <line x1="6" x2="6.01" y1="18" y2="18"/>
+            </svg>
+          </span>
+          <div>
+            <h3 class="group-title">
+              <span class="lang-id">Administrasi Server</span>
+              <span class="lang-en">Server Administration</span>
+            </h3>
+            <span class="group-desc">Debian 12 & 13, Windows Server, HAProxy, Proxmox</span>
+          </div>
+        </div>
+        <ul class="skill-tags-list">
+          <li class="skill-tag-item">Debian 12 & 13 GNU/Linux</li>
+          <li class="skill-tag-item">Windows Server 2022 & AD DS</li>
+          <li class="skill-tag-item">HAProxy & Keepalived VRRP</li>
+          <li class="skill-tag-item">Active Directory & Group Policy</li>
+          <li class="skill-tag-item">Software RAID & Disk Quotas</li>
+          <li class="skill-tag-item">IIS & Nginx Web Services</li>
+          <li class="skill-tag-item">BIND9 DNS Server</li>
+          <li class="skill-tag-item">Proxmox VE & Multi-VM Labs</li>
+        </ul>
+      </div>
+
+      <!-- Domain 3: Modern Web & Cloud -->
+      <div class="editorial-card skill-group-card reveal-on-scroll reveal-delay-3">
+        <div class="skill-group-header">
+          <span class="group-icon" aria-hidden="true">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="m18 16 4-4-4-4"/>
+              <path d="m6 8-4 4 4 4"/>
+              <path d="m14.5 4-5 16"/>
+            </svg>
+          </span>
+          <div>
+            <h3 class="group-title">
+              <span class="lang-id">Web Modern & Edge Cloud</span>
+              <span class="lang-en">Modern Web & Edge Cloud</span>
+            </h3>
+            <span class="group-desc">Astro 5, Next.js, Cloudflare, Supabase</span>
+          </div>
+        </div>
+        <ul class="skill-tags-list">
+          <li class="skill-tag-item">Astro 5 Islands Architecture</li>
+          <li class="skill-tag-item">Next.js 16 & React 19</li>
+          <li class="skill-tag-item">Tailwind CSS & Vanilla CSS</li>
+          <li class="skill-tag-item">Cloudflare Pages & Functions</li>
+          <li class="skill-tag-item">Cloudflare D1 SQLite Database</li>
+          <li class="skill-tag-item">Supabase PostgreSQL & RLS</li>
+          <li class="skill-tag-item">RESTful APIs & Webhooks</li>
+          <li class="skill-tag-item">Structured Data & SEO (JSON-LD)</li>
+        </ul>
+      </div>
+
+      <!-- Domain 4: AI & Automated Workflows -->
+      <div class="editorial-card skill-group-card reveal-on-scroll reveal-delay-4">
+        <div class="skill-group-header">
+          <span class="group-icon" aria-hidden="true">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 8V4H8"/>
+              <rect width="16" height="12" x="4" y="8" rx="2"/>
+              <path d="M2 14h2"/>
+              <path d="M20 14h2"/>
+              <path d="M15 13v2"/>
+              <path d="M9 13v2"/>
+            </svg>
+          </span>
+          <div>
+            <h3 class="group-title">
+              <span class="lang-id">Otomatisasi & AI Workflow</span>
+              <span class="lang-en">Automation & AI Workflow</span>
+            </h3>
+            <span class="group-desc">Gemini Flash, Prompting, Python, Git</span>
+          </div>
+        </div>
+        <ul class="skill-tags-list">
+          <li class="skill-tag-item">Google Gemini Flash AI Triage</li>
+          <li class="skill-tag-item">Prompt Engineering Berkualitas</li>
+          <li class="skill-tag-item">Python Scripting & Data Parsing</li>
+          <li class="skill-tag-item">Git & GitHub Version Control</li>
+          <li class="skill-tag-item">CI/CD Pipeline Deployment</li>
+          <li class="skill-tag-item">Telegram Bot & ntfy Push Alerts</li>
+          <li class="skill-tag-item">Log Monitoring & Diagnostic</li>
+          <li class="skill-tag-item">AI Agentic Integration</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .skills-section {
+    background: var(--bg-surface);
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .skills-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+
+  @media (min-width: 680px) {
+    .skills-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  .skill-group-card {
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+
+  .skill-group-header {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 20px;
+  }
+
+  .group-icon {
+    font-size: 1.5rem;
+    padding: 10px;
+    background: var(--bg-surface);
+    border: 1px solid var(--color-border);
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .group-title {
+    margin: 0;
+    font-size: 1.15rem;
+  }
+
+  .group-desc {
+    font-size: 0.8rem;
+    color: var(--color-subtle);
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  .skill-tags-list {
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .skill-tag-item {
+    font-size: 0.8125rem;
+    font-weight: 500;
+    padding: 4px 10px;
+    border-radius: 6px;
+    background: var(--bg-main);
+    color: var(--color-muted);
+    border: 1px solid var(--color-border);
+    transition: all 0.15s ease;
+  }
+
+  .skill-tag-item:hover {
+    color: var(--color-foreground);
+    border-color: var(--color-border-hover);
+    transform: translateY(-1px);
+  }
+</style>

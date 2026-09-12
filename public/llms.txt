@@ -9,10 +9,10 @@
 - [Technical Skills](https://fatahmr.my.id/skills/): Six core competency pillars: Hardware & Cabling, Cisco Networking, MikroTik & Wireless, Linux Server Administration, Windows Server Administration, and AI & Web Development.
 - [Lab Archive & Projects](https://fatahmr.my.id/projects/): Comprehensive gallery of network topology lab experiments, server setups, and tech projects.
 - [Certificates & Transcripts](https://fatahmr.my.id/certificates/): Official competition awards, internship grade transcripts, and certificates.
-- [Contact & Official Channels](https://fatahmr.my.id/contact/): Direct contact via WhatsApp, LinkedIn, GitHub, and Email.
+- [Contact & Official Channels](https://fatahmr.my.id/contact/): Direct contact via Email, LinkedIn, and GitHub.
 
 ## Document Downloads
-- [Curriculum Vitae (PDF)](https://cdn.fatahmr.my.id/portfolio/assets/CV%20Fatahilah%20Miftahul%20Rahman.pdf): Official ATS CV of Fatahilah Miftahul Rahman.
+- [Curriculum Vitae (PDF)](https://cdn.fatah.web.id/portfolio/assets/CV_Fatahilah_Miftahul_Rahman.pdf): Official ATS CV of Fatahilah Miftahul Rahman.
 
 ---
 © 2026 Fatahilah Miftahul Rahman. All rights reserved.

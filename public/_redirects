@@ -1,0 +1,38 @@
+# Cloudflare Pages 301 Redirects for Legacy Multi-Page Routes into Semi-SPA Anchors
+/about /#about 301
+/skills /#skills 301
+/experience /#experience 301
+/contact /#contact 301
+
+# Legacy Indonesian Anchors & Direct Routes to Root
+/id / 301
+/id/ / 301
+/about/id /#about 301
+/skills/id /#skills 301
+/experience/id /#experience 301
+/contact/id /#contact 301
+
+# Catalog Aliases & Legacy ID Paths to Root Catalogs
+/projects/id /projects 301
+/projects/id/ /projects 301
+/project /projects 301
+/project/id /projects 301
+/id/projects /projects 301
+/id/project /projects 301
+
+/certificates/id /certificates 301
+/certificates/id/ /certificates 301
+/certificate /certificates 301
+/certificate/id /certificates 301
+/sertifikat /certificates 301
+/sertifikat/id /certificates 301
+/id/certificates /certificates 301
+/id/sertifikat /certificates 301
+
+# English Aliases & Direct Anchor Shortcuts
+/en/about /en#about 301
+/en/skills /en#skills 301
+/en/experience /en#experience 301
+/en/contact /en#contact 301
+/en/project /en/projects 301
+/en/certificate /en/certificates 301
