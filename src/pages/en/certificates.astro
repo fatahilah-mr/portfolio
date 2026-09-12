@@ -70,7 +70,7 @@ const filterCategories = [
 
       <!-- Grid with Uniform A4 Ratio -->
       <div class="certs-grid" id="certs-grid">
-        {initialCerts.map((cert) => (
+        {initialCerts.map((cert, index) => (
           <article 
             class="editorial-card cert-catalog-card" 
             data-cert={JSON.stringify(cert)}
@@ -83,12 +83,13 @@ const filterCategories = [
               aria-label={`Open certificate for ${cert.nama_sertifikat}`}
             >
               <img 
-                src={cert.url_gambar_depan || cert.link_gambar} 
+                src={index < 2 ? (cert.url_gambar_depan || cert.link_gambar) : "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 848'%3E%3C/svg%3E"}
+                data-src={index < 2 ? undefined : (cert.url_gambar_depan || cert.link_gambar)}
                 alt={cert.nama_sertifikat} 
-                loading="lazy" 
-                decoding="async" 
                 width="1200" 
                 height="848"
+                fetchpriority={index === 0 ? "high" : undefined}
+                class={`cert-card-img ${index < 2 ? 'is-loaded' : 'cert-lazy'}`}
               />
               <div class="thumbnail-hover-overlay">
                 <span class="overlay-text">
@@ -264,13 +265,41 @@ const filterCategories = [
     height: 100%;
     object-fit: contain;
     display: block;
-    transform: translateZ(0);
-    backface-visibility: hidden;
-    transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
   }
 
-  .cert-thumbnail-wrap:hover img {
-    transform: scale(1.025);
+  .cert-thumbnail-wrap img.cert-lazy {
+    opacity: 0;
+    transition: opacity 0.35s ease-out;
+  }
+
+  .cert-thumbnail-wrap img.is-loaded {
+    opacity: 1;
+  }
+
+  /* One-time skeleton shimmer for unloaded thumbnails before first scroll entry */
+  .cert-thumbnail-wrap:has(img.cert-lazy) {
+    background: linear-gradient(
+      90deg,
+      var(--bg-surface) 0%,
+      var(--bg-card) 50%,
+      var(--bg-surface) 100%
+    );
+    background-size: 200% 100%;
+    animation: certSkeletonShimmer 1.8s ease-in-out infinite;
+  }
+
+  @keyframes certSkeletonShimmer {
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .cert-thumbnail-wrap img {
+      transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.35s ease-out;
+    }
+    .cert-thumbnail-wrap:hover img {
+      transform: scale(1.025);
+    }
   }
 
   .thumbnail-hover-overlay {
@@ -458,6 +487,60 @@ const filterCategories = [
       return true;
     }
 
+    // One-Shot Lazy Loading Engine: Only triggers once per page load, never re-triggers or unloads on scroll
+    function loadSingleImage(img) {
+      const targetSrc = img.getAttribute('data-src');
+      if (!targetSrc) return;
+      
+      const preloader = new Image();
+      preloader.onload = () => {
+        img.src = targetSrc;
+        img.removeAttribute('data-src');
+        img.classList.remove('cert-lazy');
+        img.classList.add('is-loaded');
+      };
+      preloader.onerror = () => {
+        img.src = targetSrc;
+        img.classList.remove('cert-lazy');
+        img.classList.add('is-loaded');
+      };
+      preloader.src = targetSrc;
+    }
+
+    const lazyImages = Array.from(document.querySelectorAll('img.cert-lazy'));
+    if ('IntersectionObserver' in window) {
+      const certObserver = new IntersectionObserver((entries, observer) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            const img = entry.target;
+            loadSingleImage(img);
+            // CRUCIAL: Immediately disconnect from observer so scrolling back never evaluates again!
+            observer.unobserve(img);
+          }
+        });
+      }, {
+        // High lookahead margin (500px) pre-loads before reaching viewport, eliminating blank boxes
+        rootMargin: '500px 0px 500px 0px',
+        threshold: 0.01
+      });
+
+      lazyImages.forEach(img => certObserver.observe(img));
+    } else {
+      // Fallback: load immediately if IntersectionObserver is unsupported
+      lazyImages.forEach(img => loadSingleImage(img));
+    }
+
+    function ensureVisibleImagesLoaded() {
+      cards.forEach(card => {
+        if (!card.classList.contains('hidden')) {
+          const lazyImg = card.querySelector('img.cert-lazy');
+          if (lazyImg) {
+            loadSingleImage(lazyImg);
+          }
+        }
+      });
+    }
+
     function applyFilter() {
       let visibleCount = 0;
 
@@ -477,6 +560,7 @@ const filterCategories = [
       });
 
       noResults?.classList.toggle('hidden', visibleCount > 0);
+      ensureVisibleImagesLoaded();
     }
 
     filterPills.forEach(pill => {
@@ -524,9 +608,16 @@ const filterCategories = [
             const dbData = certMap.get(String(curData.id));
             if (dbData) {
               const newSrc = dbData.url_gambar_depan || dbData.link_gambar;
-              if (newSrc && newSrc !== (curData.url_gambar_depan || curData.link_gambar)) {
+              const currentSrc = curData.url_gambar_depan || curData.link_gambar;
+              if (newSrc && newSrc !== currentSrc) {
                 const img = card.querySelector('img');
-                if (img) img.src = newSrc;
+                if (img) {
+                  if (img.classList.contains('cert-lazy')) {
+                    img.setAttribute('data-src', newSrc);
+                  } else {
+                    img.src = newSrc;
+                  }
+                }
               }
               card.setAttribute('data-cert', JSON.stringify({ ...curData, ...dbData }));
             }

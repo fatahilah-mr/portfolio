@@ -424,9 +424,12 @@ textarea:focus-visible,
   height: 100%;
   object-fit: cover;
   display: block;
-  transform: translateZ(0);
-  backface-visibility: hidden;
-  transition: transform 0.3s ease;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .aspect-16-10 img {
+    transition: transform 0.3s ease;
+  }
 }
 
 /* ISO A4 Landscape (1.414:1) aspect ratio container for Certificates */
@@ -445,9 +448,13 @@ textarea:focus-visible,
   height: 100%;
   object-fit: contain;
   display: block;
-  transform: translateZ(0);
-  backface-visibility: hidden;
-  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .aspect-a4-landscape img,
+  .aspect-a4 img {
+    transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  }
 }
 
 /* ==========================================================================

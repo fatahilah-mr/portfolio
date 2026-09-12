@@ -996,6 +996,35 @@ const projectsCollection = defineCollection({
 
 ---
 
+### Session Entry: `2026-09-12` (Phase 57: One-Shot Lazy Loading & Scroll Performance Architecture)
+- **Objective:**
+  - Resolve issue reported by user where certificate cards continually re-rendered and lagged on scroll, with off-screen cards flashing white or re-evaluating lazy loading on mobile.
+- **Root Cause Analysis:**
+  1. *Native `loading="lazy"` Purge Heuristics:* Native browser `loading="lazy"` on mobile Chromium allows the browser to aggressively discard the decoded in-memory bitmaps of off-screen images under mobile memory limits. As the user scrolled back and forth, Chrome continually purged and re-decoded large (2526x1785) image bitmaps, resulting in blank white placeholder frames and scroll lag.
+  2. *GPU Layer VRAM Exhaustion:* Hardcoded `transform: translateZ(0)` and `backface-visibility: hidden` created 20 simultaneous hardware composited GPU textures. Mobile GPU drivers evicted off-screen textures, forcing re-rasterization on every scroll event.
+  3. *Premature Dynamic Sync Mutation:* Certificate ID 2 had an `url_gambar_depan` mismatch in Cloudflare D1 (`cdn.fatahmr.my.id`), triggering `img.src` mutation at runtime during scroll.
+- **Architectural Solutions & Code Changes:**
+  1. *One-Shot Lazy Loading Engine:*
+     - Above-the-fold cards (first 2 on mobile) render with genuine `src` and `class="cert-card-img is-loaded"`, plus `fetchpriority="high"` on card 1. Zero `loading="lazy"`.
+     - Below-the-fold cards render with a 0-byte transparent SVG placeholder preserving the exact 1.415:1 ratio with zero layout shift (CLS), and `data-src={certSrc}` with `class="cert-card-img cert-lazy"`.
+     - A custom `IntersectionObserver` with an eager 500px `rootMargin` pre-loads images before they reach the viewport.
+     - **One-Shot Disconnect Guarantee:** As soon as an image intersects, `observer.unobserve(img)` is called immediately. The observer completely detaches from that image. Once loaded, the browser treats it as a standard in-memory page asset that NEVER unloads, re-triggers, or re-renders during scrolling. Lazy loading will only occur again on full page refresh or reopening.
+  2. *GPU Layer Demotion for 60fps Scroll:*
+     - Removed `transform: translateZ(0)` and `backface-visibility: hidden` from static image rules in `global.css`, `certificates.astro`, and `en/certificates.astro`.
+     - Scoped `transform: scale(1.025)` exclusively inside `@media (hover: hover) and (pointer: fine)`.
+  3. *Database D1 Row 2 Synchronization:*
+     - Updated Certificate ID 2 in Cloudflare D1 `port_certificates` to direct CDN `cdn.fatah.web.id` matching static JSON, preventing runtime DOM re-writes.
+  4. *Filtered Visibility Safety:*
+     - Added `ensureVisibleImagesLoaded()` in `applyFilter()` to ensure any card revealed by filtering or searching is loaded cleanly.
+- **Verification & Testing:**
+  - Automated CDP mobile test (Xiaomi 390x844 DPR 3) confirmed:
+    - Initial state: exactly 2 cards loaded, 18 waiting.
+    - Scrolled state: cards preload 500px ahead, receive `is-loaded`, and unobserve.
+    - Scrolled back to top: all previously loaded cards remain 100% loaded (`loaded: 11`, 0 unloads), zero blank white boxes, verified via screenshots (`oneshot_mobile_initial.png`, `oneshot_mobile_scrolled.png`, `oneshot_mobile_back_top.png`).
+  - Static Compilation: `npm run build` compiled 15 pages in 8.58s with 0 errors.
+
+---
+
 ## 📋 12. Backlog & Next Actions
 
 - [x] Create clean working branch `dev` and purge old `rebuild` branch
@@ -1019,5 +1048,6 @@ const projectsCollection = defineCollection({
 - [x] Ground all experience & PKL timeline data against authentic records from branch `public`
 - [x] Fix certificate catalog aspect ratio cropping and mobile/desktop layout harmonization
 - [x] Comprehensive cross-section fact audit, skill alignment & filter polish
+- [x] One-shot lazy loading & scroll performance architecture (anti-render loop)
 - [ ] Merge `dev` to `public` when user approves final release to `https://fatahmr.my.id`
 
