@@ -24,18 +24,6 @@
     "sort_order": 2
   },
   {
-    "id": "3",
-    "nama_sertifikat": "Sertifikat PKL UPTD BLK Kebumen",
-    "penerbit": "Dinas Tenaga Kerja Kabupaten Kebumen",
-    "tahun": "2025",
-    "tipe": "vertical",
-    "tombol_transkrip": "ada",
-    "url_gambar_depan": "https://cdn.fatah.web.id/portfolio/assets/certificates/PKL-UPTD-BLK-Kebumen-1.webp",
-    "url_gambar_belakang": "https://cdn.fatah.web.id/portfolio/assets/certificates/PKL-UPTD-BLK-Kebumen-2.webp",
-    "is_featured": 0,
-    "sort_order": 6
-  },
-  {
     "id": "4",
     "nama_sertifikat": "Sertifikat PKL IMC Computer",
     "penerbit": "Izzan Mediatek Computindo",
@@ -46,6 +34,18 @@
     "url_gambar_belakang": "https://cdn.fatah.web.id/portfolio/assets/certificates/PKL-IMC-Computer-2.webp",
     "is_featured": 1,
     "sort_order": 3
+  },
+  {
+    "id": "3",
+    "nama_sertifikat": "Sertifikat PKL UPTD BLK Kebumen",
+    "penerbit": "Dinas Tenaga Kerja Kabupaten Kebumen",
+    "tahun": "2025",
+    "tipe": "vertical",
+    "tombol_transkrip": "ada",
+    "url_gambar_depan": "https://cdn.fatah.web.id/portfolio/assets/certificates/PKL-UPTD-BLK-Kebumen-1.webp",
+    "url_gambar_belakang": "https://cdn.fatah.web.id/portfolio/assets/certificates/PKL-UPTD-BLK-Kebumen-2.webp",
+    "is_featured": 0,
+    "sort_order": 6
   },
   {
     "id": "5",

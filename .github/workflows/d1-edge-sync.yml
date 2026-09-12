@@ -1,0 +1,71 @@
+name: 🔄 D1 to Static Edge GitOps Sync (03:00 WIB)
+
+on:
+  schedule:
+    # 20:00 UTC = 03:00 WIB (Jam sepi setiap hari)
+    - cron: '0 20 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    name: Sync D1 to Static JSON
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 📥 Checkout Repository (dev branch)
+        uses: actions/checkout@v4
+        with:
+          ref: dev
+          fetch-depth: 0
+
+      - name: 🔧 Setup Node.js 24
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: 'npm'
+
+      - name: 📦 Install Dependencies
+        run: npm ci
+
+      - name: ⚡ Execute D1 to Static Sync Engine
+        id: sync_step
+        run: |
+          node scripts/sync-d1-to-static.mjs
+        env:
+          API_BASE_URL: 'https://preview.fmr.web.id'
+
+      - name: 🔍 Check for File Differences
+        id: check_diff
+        run: |
+          if ! git diff --quiet src/data/; then
+            echo "has_changes=true" >> $GITHUB_OUTPUT
+            echo "Changes detected in src/data/!"
+          else
+            echo "has_changes=false" >> $GITHUB_OUTPUT
+            echo "No changes detected. Data is already up to date."
+          fi
+
+      - name: 🚀 Commit & Push to dev Branch
+        if: steps.check_diff.outputs.has_changes == 'true'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add src/data/
+          git commit -m "chore(sync): automated D1 to static JSON sync [skip ci]"
+          git push origin dev
+
+      - name: 📲 Send Push Notification on Update
+        if: steps.check_diff.outputs.has_changes == 'true'
+        run: |
+          COMMIT_SHA=$(git rev-parse --short HEAD)
+          MSG="Layanan: Portfolio Website
+          Domain/Host: preview.fmr.web.id
+          Kategori/Target: Scheduled D1 Edge Sync
+          Tindakan/Status: Sinkronisasi data jam 03:00 WIB selesai. Commit $COMMIT_SHA dibuat, Cloudflare Pages sedang melakukan build di edge.
+          Waktu: $(date -u '+%Y-%m-%d %H:%M:%S UTC')"
+
+          # Kirim ke ntfy jika tersedia
+          curl -s -d "$MSG" -H "Title: [Portfolio | Edge Sync] 🔄 Sinkronisasi 03:00 WIB Sukses" https://ntfy.fmr.web.id/agent || true

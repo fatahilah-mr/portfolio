@@ -1037,6 +1037,29 @@ const projectsCollection = defineCollection({
   - Static Compilation: `npm run build` compiled 15 pages in 9.15s with 0 errors.
   - Workspace Grep: 0 remaining active instances of `cdn.fatahmr.my.id` across the repository.
 
+### Phase 59 — Automated D1-to-Static CI/CD GitOps Edge Pipeline (2026-09-12)
+- **Problem & Objective:**
+  - When changes occur in Cloudflare D1 (via CMS Admin or direct D1 SQL), static SSG build files (`projects.json`, `certificates.json`, `config.json`) could fall out of sync unless manually committed.
+  - The user requested a complete automated CI/CD pipeline: off-peak scheduled check at 03:00 WIB, full CMS data scope, and an on-demand trigger in the CMS Admin panel.
+- **Architectural Implementation:**
+  1. *Core Sync Engine (`scripts/sync-d1-to-static.mjs`):*
+     - Connects to API endpoints/D1, normalizes data schemas, and performs SHA-256 hash comparison against existing local static files.
+     - **Idempotent Hash Guard:** If D1 data is identical to local files, the engine halts instantly as a no-op (0 CPU, 0 commits, 0 build minutes used).
+  2. *Protected On-Demand Sync API (`functions/api/admin/sync.js`):*
+     - Authenticated admin endpoint (`POST /api/admin/sync`).
+     - Directly queries Cloudflare D1 (`env.DB`), constructs new git tree payload, and pushes an atomic commit to GitHub branch `dev` using GitHub API with `env.GITHUB_TOKEN`.
+     - Automatically dispatches real-time Telegram and ntfy push notifications.
+  3. *CMS Admin On-Demand Trigger UI (`src/pages/admin.astro`):*
+     - Added dedicated "Sinkronisasi Data ke Static Edge (CI/CD GitOps)" card in Tab Pengaturan with status indicators, safe confirmation dialog, active loading state, and Sonner toast feedback.
+  4. *Scheduled Off-Peak CI/CD Workflow (`.github/workflows/d1-edge-sync.yml`):*
+     - Scheduled cron at `0 20 * * *` (03:00 WIB daily) and manual `workflow_dispatch`.
+     - Runs the sync engine; commits and pushes to `dev` if delta detected, triggering Cloudflare Pages edge build automatically.
+  5. *Cloudflare Environment Configuration:*
+     - Configured `GITHUB_TOKEN` secret in Cloudflare Pages `portfolio-preview` deployment configs via Cloudflare API.
+- **Verification & Build:**
+  - Static Compilation: `npm run build` compiled 15 pages in 9.08s with 0 errors.
+  - Engine Test: Verified sync engine idempotency (no-op on unchanged data) and delta detection.
+
 ---
 
 ## 📋 12. Backlog & Next Actions
@@ -1064,6 +1087,8 @@ const projectsCollection = defineCollection({
 - [x] Comprehensive cross-section fact audit, skill alignment & filter polish
 - [x] One-shot lazy loading & scroll performance architecture (anti-render loop)
 - [x] Migrate all legacy CDN references from `cdn.fatahmr.my.id` to `cdn.fatah.web.id`
+- [x] Automated D1-to-Static CI/CD GitOps Edge Pipeline (03:00 WIB Cron & On-Demand CMS Trigger)
 - [ ] Merge `dev` to `public` when user approves final release to `https://fatahmr.my.id`
+
 
 

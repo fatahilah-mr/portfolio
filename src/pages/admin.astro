@@ -425,6 +425,40 @@ import '../styles/admin.css';
           <h4 style="margin: 0 0 0.5rem; font-size: 0.9rem; color: var(--admin-text-title);">Hasil Pengujian Notifikasi Real-Time</h4>
           <div id="notify-test-content" style="font-family: var(--admin-font-mono); font-size: 0.8rem; color: var(--admin-text-sub);"></div>
         </div>
+
+        <!-- CI/CD GITOPS EDGE SYNC CARD -->
+        <div class="admin-card-surface" style="margin-top: 1.5rem; border-left: 3px solid #6366f1;">
+          <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 1rem;">
+            <div style="max-width: 620px;">
+              <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 6px;">
+                <span style="display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: #22c55e;"></span>
+                <strong style="color: var(--admin-text-title); font-size: 0.95rem;">Sinkronisasi Data ke Static Edge (CI/CD GitOps)</strong>
+              </div>
+              <p style="color: var(--admin-text-sub); font-size: 0.82rem; margin: 0 0 8px; line-height: 1.5;">
+                Otomatisasi terjadwal berjalan setiap hari pukul <strong>03:00 WIB</strong> (jam sepi). Anda juga dapat memicu sinkronisasi on-demand sekarang: data D1 (Proyek, Sertifikat, & Konfigurasi) akan di-commit ke branch <code>dev</code> di GitHub dan memicu <em>Cloudflare Pages edge build</em> otomatis.
+              </p>
+              <div id="sync-status-indicator" style="font-size: 0.76rem; color: var(--admin-text-muted); font-family: var(--admin-font-mono);">
+                Status: Siap (Jadwal otomatis aktif pukul 03:00 WIB)
+              </div>
+            </div>
+
+            <div style="display: flex; flex-direction: column; align-items: flex-end; gap: 0.5rem;">
+              <button type="button" id="trigger-sync-btn" class="btn-solid-primary" style="background: #4f46e5; border-color: #4338ca;">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M21 12a9 9 0 0 0-9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/>
+                  <path d="M3 3v5h5"/>
+                  <path d="M3 12a9 9 0 0 0 9 9 9.75 9.75 0 0 0 6.74-2.74L21 16"/>
+                  <path d="M16 21h5v-5"/>
+                </svg>
+                Sinkronkan ke Statis & Rebuild Sekarang
+              </button>
+              <span style="font-size: 0.72rem; color: var(--admin-text-muted);">Aksi aman: Guard SHA-256 mencegah commit sampah</span>
+            </div>
+          </div>
+
+          <div id="sync-result-box" class="hidden" style="margin-top: 1rem; padding: 0.75rem; background: var(--admin-bg); border: 1px solid var(--admin-border); border-radius: 6px; font-family: var(--admin-font-mono); font-size: 0.78rem; color: var(--admin-text-sub);">
+          </div>
+        </div>
       </section>
     </div>
   </div>
@@ -1445,6 +1479,90 @@ import '../styles/admin.css';
                 <polygon points="5 3 19 12 5 21 5 3"/>
               </svg>
               Kirim Uji Coba Notifikasi
+            `;
+          }
+        }
+      });
+
+      // CI/CD GitOps Edge Sync Handler
+      document.getElementById('trigger-sync-btn')?.addEventListener('click', async () => {
+        const syncBtn = document.getElementById('trigger-sync-btn');
+        const syncResultBox = document.getElementById('sync-result-box');
+        const syncIndicator = document.getElementById('sync-status-indicator');
+
+        if (!confirm('Apakah Anda yakin ingin menyinkronkan data Cloudflare D1 ke repositori Git dan memicu build Cloudflare Pages di edge?')) {
+          return;
+        }
+
+        if (syncBtn) {
+          syncBtn.disabled = true;
+          syncBtn.innerHTML = `
+            <span class="spinner" style="width: 12px; height: 12px; border-width: 2px; display: inline-block;"></span>
+            Menyinkronkan ke Git & Memicu Edge Build...
+          `;
+        }
+
+        showToast('info', 'Memeriksa perubahan data D1 & menghubungkan ke GitHub API...');
+        if (syncIndicator) syncIndicator.textContent = 'Status: Memproses sinkronisasi D1 ke Git...';
+
+        try {
+          const res = await fetch('/api/admin/sync', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' }
+          });
+
+          const data = await res.json();
+
+          if (!res.ok) {
+            throw new Error(data.error || 'Gagal menyinkronkan data');
+          }
+
+          syncResultBox?.classList.remove('hidden');
+          if (data.changed) {
+            showToast('success', `Berhasil! Commit ${data.commit_sha.slice(0, 7)} dibuat. Cloudflare Pages sedang melakukan build di edge.`);
+            if (syncIndicator) {
+              syncIndicator.innerHTML = `Status: <span style="color: #22c55e;">● Terakhir sinkron: ${new Date().toLocaleTimeString('id-ID')} WIB (Commit: ${data.commit_sha.slice(0, 7)})</span>`;
+            }
+            if (syncResultBox) {
+              syncResultBox.innerHTML = `
+                <div style="color: #22c55e; font-weight: 600; margin-bottom: 4px;">✅ Sinkronisasi Selesai & Build Edge Dipicu!</div>
+                <div>Commit SHA: <strong>${data.commit_sha}</strong></div>
+                <div>File Diperbarui: ${data.files_updated ? data.files_updated.join(', ') : 'src/data/*.json'}</div>
+                <div style="margin-top: 4px; color: var(--admin-text-muted);">Cloudflare Pages otomatis mengompilasi dan menyebarkan versi terbaru ke seluruh CDN dunia dalam 1-2 menit.</div>
+              `;
+            }
+          } else {
+            showToast('info', 'Data D1 sudah identik dengan Git. Tidak diperlukan build ulang.');
+            if (syncIndicator) {
+              syncIndicator.innerHTML = `Status: <span style="color: #6366f1;">● Data D1 & Git identik (Pemeriksaan: ${new Date().toLocaleTimeString('id-ID')} WIB)</span>`;
+            }
+            if (syncResultBox) {
+              syncResultBox.innerHTML = `
+                <div style="color: #6366f1; font-weight: 600;">✨ Data Sudah Sinkron</div>
+                <div style="color: var(--admin-text-sub); margin-top: 2px;">Data di Cloudflare D1 tidak memiliki perubahan dibandingkan file statis di repositori. Guard SHA-256 mencegah commit sampah dan menghemat kuota build.</div>
+              `;
+            }
+          }
+        } catch (err) {
+          showToast('error', `Gagal sinkronisasi: ${err.message}`);
+          if (syncIndicator) {
+            syncIndicator.innerHTML = `Status: <span style="color: #ef4444;">● Gagal: ${err.message}</span>`;
+          }
+          syncResultBox?.classList.remove('hidden');
+          if (syncResultBox) {
+            syncResultBox.innerHTML = `<span style="color: #ef4444;">❌ Kesalahan: ${err.message}</span>`;
+          }
+        } finally {
+          if (syncBtn) {
+            syncBtn.disabled = false;
+            syncBtn.innerHTML = `
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 12a9 9 0 0 0-9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/>
+                <path d="M3 3v5h5"/>
+                <path d="M3 12a9 9 0 0 0 9 9 9.75 9.75 0 0 0 6.74-2.74L21 16"/>
+                <path d="M16 21h5v-5"/>
+              </svg>
+              Sinkronkan ke Statis & Rebuild Sekarang
             `;
           }
         }

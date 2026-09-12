@@ -1,18 +1,5 @@
 [
   {
-    "id": "1",
-    "judul": "fmr.blog | Platform Blog & Galeri Proyek Interaktif",
-    "english_title": "fmr.blog | Interactive Blog & Project Portfolio Hub",
-    "kategori": "Website",
-    "deskripsi": "fmr.blog adalah platform blog teknis dan galeri portofolio interaktif berkinerja tinggi berbasis Astro 5 Islands Architecture dan React 19. Dilengkapi pencarian live, penyaring tag, komentar Giscus, dan optimasi SEO terstruktur yang di-host pada Cloudflare Pages.",
-    "english_desc": "fmr.blog is a high-performance personal blog and interactive portfolio hub built with Astro 5 Islands Architecture and React 19. It features live search, category tag filtering, Giscus comments, and rich JSON-LD SEO schemas deployed on Cloudflare Pages.",
-    "link_dokumentasi": "https://blog.fatah.web.id/projects/fmr-blogid/",
-    "link_gambar": "https://cdn.fatah.web.id/portfolio/assets/projects/web-blog/web-blog-01.webp",
-    "tags": [],
-    "is_featured": 0,
-    "sort_order": 4
-  },
-  {
     "id": "2",
     "judul": "Portal Respons Cepat & Integrasi Sosial Temon",
     "english_title": "PERISAI: Rapid Response & Social Portal of Temon",
@@ -39,19 +26,6 @@
     "sort_order": 2
   },
   {
-    "id": "4",
-    "judul": "Portofolio Interaktif & Galeri Lab IT",
-    "english_title": "Interactive Portfolio & IT Lab Gallery",
-    "kategori": "Website",
-    "deskripsi": "Portofolio pribadi dan galeri lab IT berbasis Astro 5 (Zero-JS) dan Vanilla CSS untuk menyajikan kualifikasi Juara 1 LKS IT Network Admin 2026. Terintegrasi dengan Cloudflare D1 SQLite Database sebagai Headless CMS, panel admin terproteksi, fitur dwibahasa instan, serta mengantongi skor PageSpeed 100/100 di Cloudflare Pages.",
-    "english_desc": "A personal portfolio and IT lab gallery showcasing 2026 LKS IT Network Admin Gold Medalist credentials. Built with Astro 5 Zero-JS and Vanilla CSS, it is powered by Cloudflare D1 SQLite as a headless database, protected admin CMS, instant bilingual switching, and achieves a 100/100 PageSpeed score on Cloudflare Pages.",
-    "link_dokumentasi": "https://blog.fatah.web.id/projects/fatahilah-portfolioid/",
-    "link_gambar": "https://cdn.fatah.web.id/portfolio/assets/projects/web-portfolio-fatahilah/web-portfolio-fatahilah-01.webp",
-    "tags": [],
-    "is_featured": 0,
-    "sort_order": 7
-  },
-  {
     "id": "5",
     "judul": "FATAH | Gateway Link Hub & Personal Portal",
     "english_title": "FATAH | Gateway Link Hub & Personal Portal",
@@ -63,6 +37,32 @@
     "tags": [],
     "is_featured": 1,
     "sort_order": 3
+  },
+  {
+    "id": "1",
+    "judul": "fmr.blog | Platform Blog & Galeri Proyek Interaktif",
+    "english_title": "fmr.blog | Interactive Blog & Project Portfolio Hub",
+    "kategori": "Website",
+    "deskripsi": "fmr.blog adalah platform blog teknis dan galeri portofolio interaktif berkinerja tinggi berbasis Astro 5 Islands Architecture dan React 19. Dilengkapi pencarian live, penyaring tag, komentar Giscus, dan optimasi SEO terstruktur yang di-host pada Cloudflare Pages.",
+    "english_desc": "fmr.blog is a high-performance personal blog and interactive portfolio hub built with Astro 5 Islands Architecture and React 19. It features live search, category tag filtering, Giscus comments, and rich JSON-LD SEO schemas deployed on Cloudflare Pages.",
+    "link_dokumentasi": "https://blog.fatah.web.id/projects/fmr-blogid/",
+    "link_gambar": "https://cdn.fatah.web.id/portfolio/assets/projects/web-blog/web-blog-01.webp",
+    "tags": [],
+    "is_featured": 1,
+    "sort_order": 4
+  },
+  {
+    "id": "4",
+    "judul": "Portofolio Interaktif & Galeri Lab IT",
+    "english_title": "Interactive Portfolio & IT Lab Gallery",
+    "kategori": "Website",
+    "deskripsi": "Portofolio pribadi dan galeri lab IT berbasis Astro 5 (Zero-JS) dan Vanilla CSS untuk menyajikan kualifikasi Juara 1 LKS IT Network Admin 2026. Terintegrasi dengan Cloudflare D1 SQLite Database sebagai Headless CMS, panel admin terproteksi, fitur dwibahasa instan, serta mengantongi skor PageSpeed 100/100 di Cloudflare Pages.",
+    "english_desc": "A personal portfolio and IT lab gallery showcasing 2026 LKS IT Network Admin Gold Medalist credentials. Built with Astro 5 Zero-JS and Vanilla CSS, it is powered by Cloudflare D1 SQLite as a headless database, protected admin CMS, instant bilingual switching, and achieves a 100/100 PageSpeed score on Cloudflare Pages.",
+    "link_dokumentasi": "https://blog.fatah.web.id/projects/fatahilah-portfolioid/",
+    "link_gambar": "https://cdn.fatah.web.id/portfolio/assets/projects/web-portfolio-fatahilah/web-portfolio-fatahilah-01.webp",
+    "tags": [],
+    "is_featured": 0,
+    "sort_order": 7
   },
   {
     "id": "6",
