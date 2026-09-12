@@ -10,12 +10,14 @@ export interface Props {
   title: string;
   description?: string;
   lang?: 'en' | 'id';
+  image?: string;
 }
 
 const { 
   title, 
   description = "Portofolio resmi Fatahilah Miftahul Rahman - Juara 1 LKS IT Network System Administration Purworejo 2026. Menampilkan keahlian infrastruktur jaringan enterprise, administrasi server Linux, proyek web produksi publik, dan kredensial terverifikasi.",
-  lang = 'id'
+  lang = 'id',
+  image = "https://cdn.fmr.web.id/og-image-fatahmr.my.id.png"
 } = Astro.props;
 
 // Determine target URLs for hreflang & SEO
@@ -69,14 +71,14 @@ const formattedTitle = title.includes('Fatahilah Miftahul Rahman') ? title : `${
   <meta property="og:url" content={Astro.url} />
   <meta property="og:title" content={formattedTitle} />
   <meta property="og:description" content={description} />
-  <meta property="og:image" content="https://cdn.fatah.web.id/portfolio/assets/profile.webp" />
+  <meta property="og:image" content={image} />
 
   <!-- Twitter -->
   <meta property="twitter:card" content="summary_large_image" />
   <meta property="twitter:url" content={Astro.url} />
   <meta property="twitter:title" content={formattedTitle} />
   <meta property="twitter:description" content={description} />
-  <meta property="twitter:image" content="https://cdn.fatah.web.id/portfolio/assets/profile.webp" />
+  <meta property="twitter:image" content={image} />
 
   <!-- Schema.org JSON-LD -->
   <script type="application/ld+json" set:html={JSON.stringify({
