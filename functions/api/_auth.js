@@ -92,7 +92,7 @@ export async function getAdminSession(request, env) {
   const token = cookies['admin_session'];
   if (!token) return null;
 
-  const secret = env.AUTH_SECRET || 'fatahilah-staging-auth-secret-key-32chars-secure';
+  const secret = env.AUTH_SECRET;
   return await verifySessionToken(token, secret);
 }
 

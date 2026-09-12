@@ -53,12 +53,6 @@ import '../styles/admin.css';
             </svg>
             Masuk dengan GitHub
           </a>
-          <a href="/api/auth/dev-login" class="btn-solid-secondary" style="padding: 0.75rem 1rem;">
-            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
-            </svg>
-            Masuk Instan (Mode Staging / Review)
-          </a>
         </div>
 
         <div style="margin-top: 1.5rem;">
@@ -654,11 +648,11 @@ import '../styles/admin.css';
         const errType = urlParams.get('error');
         if (errType === 'oauth_unconfigured') {
           if (loginErrorMsg) {
-            loginErrorMsg.innerHTML = '<strong>GitHub OAuth Belum Dikonfigurasi</strong><br>Aplikasi GitHub OAuth resmi belum didaftarkan untuk domain ini. Silakan gunakan tombol <strong>Masuk Instan (Mode Staging / Review)</strong> di bawah untuk langsung mengelola CMS di ' + window.location.hostname + '.';
+            loginErrorMsg.innerHTML = '<strong>GitHub OAuth Belum Dikonfigurasi</strong><br>Aplikasi GitHub OAuth belum dikonfigurasi (<code>GITHUB_CLIENT_ID</code> / <code>GITHUB_CLIENT_SECRET</code> belum disetel di Cloudflare Pages).';
           }
         } else if (errType === 'bad_verification_code' || errType.toLowerCase().includes('incorrect or expired')) {
           if (loginErrorMsg) {
-            loginErrorMsg.innerHTML = '<strong>Kode Otorisasi Kedaluwarsa / Terputus</strong><br>Kode verifikasi GitHub telah kedaluwarsa atau terputus saat peringatan browser muncul. Silakan klik tombol <strong>Masuk dengan GitHub</strong> di bawah untuk otorisasi ulang, atau gunakan <strong>Masuk Instan (Mode Staging / Review)</strong>.';
+            loginErrorMsg.innerHTML = '<strong>Kode Otorisasi Kedaluwarsa</strong><br>Sesi verifikasi GitHub telah kedaluwarsa. Silakan klik tombol <strong>Masuk dengan GitHub</strong> untuk mencoba kembali.';
           }
         } else if (errType === 'redirect_uri_mismatch' || errType.toLowerCase().includes('redirect_uri')) {
           if (loginErrorMsg) {
@@ -666,7 +660,7 @@ import '../styles/admin.css';
           }
         } else {
           if (loginErrorMsg) {
-            loginErrorMsg.innerHTML = `<strong>Otorisasi Gagal:</strong> ${errType}.<br>Silakan coba klik <strong>Masuk dengan GitHub</strong> lagi atau gunakan <strong>Masuk Instan (Mode Staging / Review)</strong>.`;
+            loginErrorMsg.innerHTML = `<strong>Otorisasi Gagal:</strong> ${errType}.<br>Silakan coba klik <strong>Masuk dengan GitHub</strong> kembali.`;
           }
         }
       }
