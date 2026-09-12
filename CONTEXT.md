@@ -1060,6 +1060,27 @@ const projectsCollection = defineCollection({
   - Static Compilation: `npm run build` compiled 15 pages in 9.08s with 0 errors.
   - Engine Test: Verified sync engine idempotency (no-op on unchanged data) and delta detection.
 
+### Phase 60 — Quality & Best Practice Audit, Single-Source Dynamic Configuration & Anti-Slop Polish (2026-09-12)
+- **Problem & Objective:**
+  - Full site audit per user command `/goal lakukan semua hal dengan best practicenya, jangan mencari jalan pintas.`
+  - Eliminate hardcoded data assumptions, fix factual typos, remove amateur emoji slop from the admin dashboard, and verify live edge deployments.
+- **Architectural & Data Polish:**
+  1. *Factual Accuracy Fix:* Fixed typo in Project ID 9 english title from `MicroTik` to official `MikroTik` in both Cloudflare D1 (`port_projects`) and `src/data/projects.json`.
+  2. *Single Source of Truth Configuration:*
+     - Refactored `src/components/ContactSection.astro` and `src/components/Footer.astro` to dynamically import and bind to `src/data/config.json` (`siteConfig.email`, `siteConfig.github_url`, `siteConfig.linkedin_url`) instead of hardcoding text strings.
+  3. *Dynamic CMS-Driven Showcase:*
+     - Refactored `FeaturedProjectsCarousel.astro` and `FeaturedCertificatesCarousel.astro` to dynamically filter by `is_featured === 1` and sort by `sort_order` from data instead of static array lookup.
+     - Fixed dynamic certificate image sync property in `FeaturedCertificatesCarousel.astro` (`url_gambar_depan` instead of nonexistent `link_gambar`).
+  4. *Anti-Slop Clean UI & Accessibility:*
+     - Replaced emojis (`✅`, `✨`, `❌`) and plain text `✕` in `src/pages/admin.astro` with clean Lucide SVG icons and design system CSS variable tokens (`var(--admin-success)`, `var(--admin-accent-blue)`, `var(--admin-danger)`).
+     - Added explicit accessible `aria-label` attributes on modal close buttons.
+- **Verification & Deployment:**
+  - Local Build: `npm run build` compiled 15 pages in 9.19s with 0 errors and 0 warnings.
+  - Pushed commit `d07aa89` to branch `dev`.
+  - Cloudflare Pages deployment `66ad69ac` built and deployed live across worldwide CDN nodes with status `success`.
+  - Verified live endpoints (`/`, `/projects`, `/certificates`, `/admin`, `/api/auth/login`) and captured headless Chrome CDP screenshots (`verified_live_home_desktop.png`, `verified_live_home_mobile.png`, `verified_live_projects_catalog.png`, `verified_live_certs_catalog.png`, `verified_live_admin_light.png`).
+  - Dispatched push notification via `notify-all`.
+
 ---
 
 ## 📋 12. Backlog & Next Actions
@@ -1088,7 +1109,9 @@ const projectsCollection = defineCollection({
 - [x] One-shot lazy loading & scroll performance architecture (anti-render loop)
 - [x] Migrate all legacy CDN references from `cdn.fatahmr.my.id` to `cdn.fatah.web.id`
 - [x] Automated D1-to-Static CI/CD GitOps Edge Pipeline (03:00 WIB Cron & On-Demand CMS Trigger)
+- [x] Comprehensive Best Practice & Anti-Slop Quality Audit across all sections and Admin CMS
 - [ ] Merge `dev` to `public` when user approves final release to `https://fatahmr.my.id`
+
 
 
 
