@@ -366,13 +366,13 @@ textarea:focus-visible,
 .carousel-card.prev {
   z-index: 20;
   transform: translateX(-42%) scale(0.86) rotateY(12deg) translateZ(-60px);
-  opacity: 0.72;
+  opacity: 0.88;
 }
 
 .carousel-card.next {
   z-index: 20;
   transform: translateX(42%) scale(0.86) rotateY(-12deg) translateZ(-60px);
-  opacity: 0.72;
+  opacity: 0.88;
 }
 
 @media (max-width: 640px) {
@@ -407,6 +407,7 @@ textarea:focus-visible,
   z-index: 10;
   transform: translateX(0) scale(0.7) translateZ(-120px);
   opacity: 0;
+  visibility: hidden;
   pointer-events: none;
 }
 
@@ -546,7 +547,10 @@ textarea:focus-visible,
   align-items: center;
   justify-content: center;
   gap: 16px;
-  margin-top: 24px;
+  margin-top: 28px;
+  min-height: 44px;
+  position: relative;
+  z-index: 40;
 }
 
 .carousel-arrow-btn {
@@ -572,24 +576,56 @@ textarea:focus-visible,
 .carousel-dots {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 6px;
+  min-height: 36px;
 }
 
 .carousel-dot {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  border-radius: 50%;
+  transition: transform 0.15s ease;
+}
+
+.carousel-dot::after {
+  content: '';
+  display: block;
   width: 8px;
   height: 8px;
   border-radius: 50%;
   background: var(--color-border);
-  border: none;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  padding: 0;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.carousel-dot.active {
+.carousel-dot.active::after {
   width: 24px;
   border-radius: 9999px;
   background: var(--color-primary);
+}
+
+.carousel-dot:hover::after {
+  background: var(--color-border-hover);
+}
+
+.carousel-dot.active:hover::after {
+  background: var(--color-primary);
+}
+
+.carousel-dot:focus-visible {
+  outline: none;
+}
+
+.carousel-dot:focus-visible::after {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
 }
 
 /* ==========================================================================

@@ -312,9 +312,16 @@ const categories = [
     font-weight: 700;
     padding: 2px 8px;
     border-radius: 9999px;
-    background: rgba(234, 179, 8, 0.12);
-    color: #CA8A04;
-    border: 1px solid rgba(234, 179, 8, 0.3);
+    background: rgba(202, 138, 4, 0.12);
+    color: #854D0E;
+    border: 1px solid rgba(202, 138, 4, 0.28);
+  }
+
+  :global([data-theme="dark"]) .featured-badge,
+  :global(.dark) .featured-badge {
+    color: #FACC15;
+    background: rgba(250, 204, 21, 0.12);
+    border-color: rgba(250, 204, 21, 0.25);
   }
 
   .card-title {
