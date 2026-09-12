@@ -67,7 +67,8 @@ const featuredCerts = (() => {
       <div class="carousel-viewport" id="cert-carousel-viewport" role="region" aria-label="Galeri Sertifikat Pilihan">
         {featuredCerts.map((cert, idx) => {
           let posClass = 'hidden-card';
-          if (idx === 0) posClass = 'active';
+          let isHidden = true;
+          if (idx === 0) { posClass = 'active'; isHidden = false; }
           else if (idx === 1) posClass = 'next';
           else if (idx === 2) posClass = 'prev';
 
@@ -77,7 +78,8 @@ const featuredCerts = (() => {
               data-index={idx}
               data-cert={JSON.stringify(cert)}
               role="button"
-              tabindex="0"
+              tabindex={idx === 0 ? "0" : "-1"}
+              aria-hidden={isHidden ? "true" : "false"}
               aria-label={`Lihat sertifikat ${cert.nama_sertifikat}`}
             >
               <!-- Aspect Ratio ISO A4 Landscape (1.414:1) -->
@@ -147,6 +149,22 @@ const featuredCerts = (() => {
     border-bottom: 1px solid var(--color-border);
   }
 
+  #cert-carousel-viewport {
+    height: 560px;
+  }
+
+  @media (max-width: 768px) {
+    #cert-carousel-viewport {
+      height: 420px;
+    }
+  }
+
+  @media (max-width: 480px) {
+    #cert-carousel-viewport {
+      height: 320px;
+    }
+  }
+
   .carousel-card-footer {
     padding: 14px 18px;
     background: var(--bg-card);
@@ -176,7 +194,7 @@ const featuredCerts = (() => {
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.04em;
-    color: var(--color-accent);
+    color: #1D4ED8;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -184,12 +202,23 @@ const featuredCerts = (() => {
     min-width: 0;
   }
 
+  :global([data-theme="dark"]) .footer-issuer,
+  :global(.dark) .footer-issuer {
+    color: #60A5FA;
+  }
+
   .footer-year {
     font-size: 0.75rem;
-    color: var(--color-subtle);
+    font-weight: 600;
+    color: #374151;
     white-space: nowrap;
     line-height: 1;
     flex-shrink: 0;
+  }
+
+  :global([data-theme="dark"]) .footer-year,
+  :global(.dark) .footer-year {
+    color: #9CA3AF;
   }
 
   .footer-title {
@@ -332,12 +361,20 @@ const featuredCerts = (() => {
 
         if (diff === 0) {
           card.classList.add('active');
+          card.setAttribute('tabindex', '0');
+          card.setAttribute('aria-hidden', 'false');
         } else if (diff === 1) {
           card.classList.add('next');
+          card.setAttribute('tabindex', '-1');
+          card.setAttribute('aria-hidden', 'true');
         } else if (diff === cards.length - 1) {
           card.classList.add('prev');
+          card.setAttribute('tabindex', '-1');
+          card.setAttribute('aria-hidden', 'true');
         } else {
           card.classList.add('hidden-card');
+          card.setAttribute('tabindex', '-1');
+          card.setAttribute('aria-hidden', 'true');
         }
       });
 
@@ -400,7 +437,8 @@ const featuredCerts = (() => {
 
       viewport.innerHTML = items.map((cert, idx) => {
         let posClass = 'hidden-card';
-        if (idx === 0) posClass = 'active';
+        let isHidden = true;
+        if (idx === 0) { posClass = 'active'; isHidden = false; }
         else if (idx === 1) posClass = 'next';
         else if (idx === items.length - 1 && items.length > 2) posClass = 'prev';
 
@@ -415,7 +453,8 @@ const featuredCerts = (() => {
             class="carousel-card ${posClass}" 
             data-index="${idx}"
             role="button"
-            tabindex="0"
+            tabindex="${idx === 0 ? '0' : '-1'}"
+            aria-hidden="${isHidden ? 'true' : 'false'}"
             aria-label="Lihat sertifikat ${nama}"
           >
             <div class="aspect-a4-landscape">
