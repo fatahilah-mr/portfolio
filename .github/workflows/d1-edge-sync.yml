@@ -15,10 +15,10 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: 📥 Checkout Repository (dev branch)
+      - name: 📥 Checkout Repository
         uses: actions/checkout@v4
         with:
-          ref: dev
+          ref: ${{ github.ref_name }}
           fetch-depth: 0
 
       - name: 🔧 Setup Node.js 24
@@ -35,7 +35,7 @@ jobs:
         run: |
           node scripts/sync-d1-to-static.mjs
         env:
-          API_BASE_URL: 'https://preview.fmr.web.id'
+          API_BASE_URL: ${{ github.ref_name == 'public' && 'https://fatahmr.my.id' || 'https://preview.fmr.web.id' }}
 
       - name: 🔍 Check for File Differences
         id: check_diff
@@ -48,21 +48,22 @@ jobs:
             echo "No changes detected. Data is already up to date."
           fi
 
-      - name: 🚀 Commit & Push to dev Branch
+      - name: 🚀 Commit & Push to Current Branch
         if: steps.check_diff.outputs.has_changes == 'true'
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add src/data/
           git commit -m "chore(sync): automated D1 to static JSON sync [skip ci]"
-          git push origin dev
+          git push origin ${{ github.ref_name }}
 
       - name: 📲 Send Push Notification on Update
         if: steps.check_diff.outputs.has_changes == 'true'
         run: |
           COMMIT_SHA=$(git rev-parse --short HEAD)
+          DOMAIN_LABEL="${{ github.ref_name == 'public' && 'fatahmr.my.id' || 'preview.fmr.web.id' }}"
           MSG="Layanan: Portfolio Website
-          Domain/Host: preview.fmr.web.id
+          Domain/Host: $DOMAIN_LABEL
           Kategori/Target: Scheduled D1 Edge Sync
           Tindakan/Status: Sinkronisasi data jam 03:00 WIB selesai. Commit $COMMIT_SHA dibuat, Cloudflare Pages sedang melakukan build di edge.
           Waktu: $(date -u '+%Y-%m-%d %H:%M:%S UTC')"

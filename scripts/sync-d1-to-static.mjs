@@ -13,7 +13,7 @@ const __dirname = path.dirname(__filename);
 const rootDir = path.resolve(__dirname, '..');
 const dataDir = path.join(rootDir, 'src', 'data');
 
-const API_BASE = process.env.API_BASE_URL || 'https://preview.fmr.web.id';
+const API_BASE = process.env.API_BASE_URL || 'https://fatahmr.my.id';
 
 function sha256(content) {
   return crypto.createHash('sha256').update(content).digest('hex');

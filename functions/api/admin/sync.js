@@ -5,7 +5,12 @@ import { getAdminSession } from '../_auth.js';
 import { sendNotification } from '../_notify.js';
 
 const GITHUB_REPO = 'fatahilah-mr/portfolio';
-const GITHUB_BRANCH = 'dev';
+
+function getTargetBranch(request, env) {
+  if (env.GITHUB_BRANCH) return env.GITHUB_BRANCH;
+  const url = new URL(request.url);
+  return (url.hostname.includes('preview') || url.hostname.includes('dev')) ? 'dev' : 'public';
+}
 
 function normalizeProjects(rawProjects) {
   return rawProjects.map(p => {
@@ -91,6 +96,8 @@ export async function onRequest(context) {
     });
   }
 
+  const targetBranch = getTargetBranch(request, env);
+
   if (!env.DB) {
     return new Response(JSON.stringify({ error: 'Database binding DB is missing' }), {
       status: 500,
@@ -119,7 +126,7 @@ export async function onRequest(context) {
         total_certificates: d1Data.certificates.length,
         config_short_name: d1Data.config.short_name,
         target_repo: GITHUB_REPO,
-        target_branch: GITHUB_BRANCH
+        target_branch: targetBranch
       }), {
         status: 200,
         headers: { 'Content-Type': 'application/json', 'Cache-Control': 'no-store' }
@@ -149,7 +156,7 @@ export async function onRequest(context) {
       };
 
       // 1. Get current branch ref
-      const refRes = await fetch(`https://api.github.com/repos/${GITHUB_REPO}/git/ref/heads/${GITHUB_BRANCH}`, {
+      const refRes = await fetch(`https://api.github.com/repos/${GITHUB_REPO}/git/ref/heads/${targetBranch}`, {
         headers: ghHeaders
       });
       if (!refRes.ok) {
@@ -238,7 +245,7 @@ export async function onRequest(context) {
       const newCommitSha = newCommitData.sha;
 
       // 6. Update branch ref
-      const updateRefRes = await fetch(`https://api.github.com/repos/${GITHUB_REPO}/git/refs/heads/${GITHUB_BRANCH}`, {
+      const updateRefRes = await fetch(`https://api.github.com/repos/${GITHUB_REPO}/git/refs/heads/${targetBranch}`, {
         method: 'PATCH',
         headers: ghHeaders,
         body: JSON.stringify({ sha: newCommitSha })

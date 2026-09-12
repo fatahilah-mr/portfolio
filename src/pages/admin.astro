@@ -654,7 +654,7 @@ import '../styles/admin.css';
         const errType = urlParams.get('error');
         if (errType === 'oauth_unconfigured') {
           if (loginErrorMsg) {
-            loginErrorMsg.innerHTML = '<strong>GitHub OAuth Belum Dikonfigurasi</strong><br>Aplikasi GitHub OAuth resmi belum didaftarkan untuk domain ini. Silakan gunakan tombol <strong>Masuk Instan (Mode Staging / Review)</strong> di bawah untuk langsung mengelola CMS di preview.fmr.web.id.';
+            loginErrorMsg.innerHTML = '<strong>GitHub OAuth Belum Dikonfigurasi</strong><br>Aplikasi GitHub OAuth resmi belum didaftarkan untuk domain ini. Silakan gunakan tombol <strong>Masuk Instan (Mode Staging / Review)</strong> di bawah untuk langsung mengelola CMS di ' + window.location.hostname + '.';
           }
         } else if (errType === 'bad_verification_code' || errType.toLowerCase().includes('incorrect or expired')) {
           if (loginErrorMsg) {
@@ -662,7 +662,7 @@ import '../styles/admin.css';
           }
         } else if (errType === 'redirect_uri_mismatch' || errType.toLowerCase().includes('redirect_uri')) {
           if (loginErrorMsg) {
-            loginErrorMsg.innerHTML = '<strong>Redirect URI Mismatch</strong><br>Callback URL di aplikasi GitHub OAuth belum cocok. Pastikan di GitHub Developer Settings Authorization callback URL diatur ke <code>https://preview.fmr.web.id/api/auth/callback</code>.';
+            loginErrorMsg.innerHTML = '<strong>Redirect URI Mismatch</strong><br>Callback URL di aplikasi GitHub OAuth belum cocok. Pastikan di GitHub Developer Settings Authorization callback URL diatur ke <code>' + window.location.origin + '/api/auth/callback</code>.';
           }
         } else {
           if (loginErrorMsg) {
@@ -1466,7 +1466,7 @@ import '../styles/admin.css';
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
-              title: '[Portfolio | preview.fmr.web.id] Uji Coba Notifikasi Admin CMS',
+              title: '[Portfolio | ' + window.location.hostname + '] Uji Coba Notifikasi Admin CMS',
               message: `Pesan pengujian dikirim dari panel CMS admin portofolio pada ${new Date().toLocaleString('id-ID')}. Koneksi Telegram & ntfy berjalan optimal!`,
               tags: ['white_check_mark', 'bell']
             })
