@@ -7,15 +7,20 @@ export async function onRequest(context) {
   const { request, env } = context;
   const url = new URL(request.url);
 
+  // 1. Permanently disabled on production domain
+  if (url.hostname === 'fatahmr.my.id' || url.hostname.endsWith('.fatahmr.my.id')) {
+    return new Response(JSON.stringify({ error: 'Endpoint not found' }), {
+      status: 404,
+      headers: { 'Content-Type': 'application/json' }
+    });
+  }
+
+  // 2. Only allowed on localhost OR when DEV_LOGIN_ENABLED is explicitly 'true'
   const isLocalhost = url.hostname === 'localhost' || url.hostname === '127.0.0.1';
-  const isStagingHost = url.hostname.includes('preview.fmr.web.id') || url.hostname.includes('pages.dev');
   const isDevFlagActive = String(env.DEV_LOGIN_ENABLED || '').toLowerCase() === 'true';
 
-  // Strictly block if accessed from final production domain (fatahmr.my.id) without explicit dev flag
-  const isAllowed = isLocalhost || (isStagingHost && url.hostname !== 'fatahmr.my.id') || isDevFlagActive;
-
-  if (!isAllowed) {
-    return new Response(JSON.stringify({ error: 'Dev login is strictly disabled on production domain (fatahmr.my.id)' }), {
+  if (!isLocalhost && !isDevFlagActive) {
+    return new Response(JSON.stringify({ error: 'Dev login is disabled on this environment.' }), {
       status: 403,
       headers: { 'Content-Type': 'application/json' }
     });

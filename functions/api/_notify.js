@@ -75,33 +75,65 @@ export async function sendNotification(env, { title, message, priority = 'defaul
     };
   }
 
+function isValidNotificationUrl(urlString) {
+  if (!urlString || typeof urlString !== 'string') return false;
+  try {
+    const parsed = new URL(urlString);
+    if (parsed.protocol !== 'https:' && !(parsed.protocol === 'http:' && parsed.hostname === 'localhost')) {
+      return false;
+    }
+    const host = parsed.hostname.toLowerCase();
+    // Block loopback, private ranges, link-local, and cloud metadata IPs
+    if (
+      host === '127.0.0.1' ||
+      host === '0.0.0.0' ||
+      host === '::1' ||
+      host === '169.254.169.254' ||
+      host.startsWith('10.') ||
+      host.startsWith('192.168.') ||
+      /^172\.(1[6-9]|2[0-9]|3[0-1])\./.test(host) ||
+      host.endsWith('.local') ||
+      host.endsWith('.internal')
+    ) {
+      return false;
+    }
+    return true;
+  } catch {
+    return false;
+  }
+}
+
   // 2. Dispatch ntfy
   if (config.ntfyServer && config.ntfyTopic) {
-    try {
-      const ntfyUrl = `${config.ntfyServer}/${config.ntfyTopic}`;
-      const headers = {
-        'Title': title,
-        'Priority': priority,
-        'Tags': tags.join(',')
-      };
-      if (config.ntfyUsername && config.ntfyPassword) {
-        const creds = btoa(`${config.ntfyUsername}:${config.ntfyPassword}`);
-        headers['Authorization'] = `Basic ${creds}`;
-      } else if (config.ntfyToken) {
-        headers['Authorization'] = `Bearer ${config.ntfyToken}`;
-      }
+    if (!isValidNotificationUrl(config.ntfyServer)) {
+      results.ntfy = { success: false, info: 'Invalid or restricted ntfy server URL (SSRF guard)' };
+    } else {
+      try {
+        const ntfyUrl = `${config.ntfyServer}/${encodeURIComponent(config.ntfyTopic)}`;
+        const headers = {
+          'Title': title,
+          'Priority': priority,
+          'Tags': tags.join(',')
+        };
+        if (config.ntfyUsername && config.ntfyPassword) {
+          const creds = btoa(`${config.ntfyUsername}:${config.ntfyPassword}`);
+          headers['Authorization'] = `Basic ${creds}`;
+        } else if (config.ntfyToken) {
+          headers['Authorization'] = `Bearer ${config.ntfyToken}`;
+        }
 
-      const ntfyRes = await fetch(ntfyUrl, {
-        method: 'POST',
-        headers,
-        body: message
-      });
-      results.ntfy = {
-        success: ntfyRes.ok,
-        info: ntfyRes.ok ? 'Sent successfully' : `HTTP ${ntfyRes.status}`
-      };
-    } catch (err) {
-      results.ntfy = { success: false, info: err.message };
+        const ntfyRes = await fetch(ntfyUrl, {
+          method: 'POST',
+          headers,
+          body: message
+        });
+        results.ntfy = {
+          success: ntfyRes.ok,
+          info: ntfyRes.ok ? 'Sent successfully' : `HTTP ${ntfyRes.status}`
+        };
+      } catch (err) {
+        results.ntfy = { success: false, info: err.message };
+      }
     }
   } else {
     results.ntfy = { success: false, info: 'Missing ntfy server or topic' };

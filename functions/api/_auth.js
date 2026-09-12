@@ -7,10 +7,13 @@ const SESSION_MAX_AGE = 7 * 24 * 60 * 60; // 7 days in seconds
 
 // Helper to get secret key buffer
 async function getCryptoKey(secret) {
+  if (!secret) {
+    throw new Error('AUTH_SECRET is required but missing.');
+  }
   const enc = new TextEncoder();
   return await crypto.subtle.importKey(
     'raw',
-    enc.encode(secret || 'dev-local-secret-key-change-in-prod-fatahmr'),
+    enc.encode(secret),
     { name: 'HMAC', hash: 'SHA-256' },
     false,
     ['sign', 'verify']
@@ -35,6 +38,7 @@ function hexToUint8Array(hex) {
 
 // Create signed session token: username:expiry:signature
 export async function createSessionToken(username, secret) {
+  if (!secret) throw new Error('AUTH_SECRET is required to sign session token.');
   const expiry = Math.floor(Date.now() / 1000) + SESSION_MAX_AGE;
   const payload = `${username.toLowerCase()}:${expiry}`;
   const key = await getCryptoKey(secret);
@@ -45,7 +49,7 @@ export async function createSessionToken(username, secret) {
 
 // Verify session token
 export async function verifySessionToken(token, secret) {
-  if (!token || typeof token !== 'string') return null;
+  if (!token || typeof token !== 'string' || !secret) return null;
   const parts = token.split(':');
   if (parts.length !== 3) return null;
 
@@ -88,7 +92,11 @@ export async function getAdminSession(request, env) {
   const token = cookies['admin_session'];
   if (!token) return null;
 
-  const secret = env.AUTH_SECRET || 'dev-local-secret-key-change-in-prod-fatahmr';
+  const secret = env.AUTH_SECRET;
+  if (!secret) {
+    console.error('AUTH_SECRET is not configured on Cloudflare environment.');
+    return null;
+  }
   return await verifySessionToken(token, secret);
 }
 
@@ -100,4 +108,13 @@ export function buildSessionCookie(token, maxAge = SESSION_MAX_AGE) {
 // Build Clear-Cookie header string
 export function buildClearCookie() {
   return `admin_session=; Path=/; Max-Age=0; HttpOnly; Secure; SameSite=Lax; Expires=Thu, 01 Jan 1970 00:00:00 GMT`;
+}
+
+// OAuth State Cookie Helpers for CSRF Protection (RFC 6749 Section 10.12)
+export function buildOAuthStateCookie(state) {
+  return `oauth_state=${state}; Path=/api/auth; Max-Age=300; HttpOnly; Secure; SameSite=Lax`;
+}
+
+export function buildClearOAuthStateCookie() {
+  return `oauth_state=; Path=/api/auth; Max-Age=0; HttpOnly; Secure; SameSite=Lax; Expires=Thu, 01 Jan 1970 00:00:00 GMT`;
 }
