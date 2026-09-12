@@ -1192,3 +1192,30 @@ const projectsCollection = defineCollection({
 - **Verification:**
   - Live headers on `preview.fmr.web.id` verified via `curl -sI`: all 8 security headers present with A+ grade compliance.
   - OAuth login redirect and state cookie generation verified live with real HTTP 302 responses.
+
+### Phase 64 — Production Domain Migration & Instant Dev-Login Decommissioning (2026-09-12)
+- **Problem & Objectives:**
+  - Complete official migration to primary production domain `https://fatahmr.my.id`.
+  - User explicitly ordered the complete removal of "Masuk Instan (Mode Staging / Review)" bypass to eliminate any abuse surface or heuristic detection risk, strictly allowing authentication only via GitHub OAuth 2.0.
+  - Configure dedicated production GitHub OAuth App (Client ID: `Ov23lijqnzFiqsnlP5QS`, Secret: `8e52e1...`) with authorization callback `https://fatahmr.my.id/api/auth/callback`.
+- **Architectural Implementation:**
+  1. *Decommissioning of Instant Dev-Login:*
+     - Deleted `functions/api/auth/dev-login.js` permanently from the repository.
+     - Removed "Masuk Instan" button and lightning bolt icon from `src/pages/admin.astro`.
+     - Purged all dev-login guidance from login error banners; replaced with clean, direct re-authorization instructions.
+     - Removed fallback staging auth secret from `functions/api/_auth.js` (`getAdminSession` strictly enforces `env.AUTH_SECRET`).
+  2. *Production Secrets & Environment Binding:*
+     - Generated 64-character HMAC-SHA256 `AUTH_SECRET` (`1fd2830cc091fea07a4301ed8850cd1a4305a8dd8b06181dcd2b7fc86873fb1c`).
+     - Stored production secrets in local `.env` with `chmod 600` permissions (strictly gitignored).
+     - Injected production secrets into Cloudflare Pages `portfolio-new` (`fatahmr.my.id`) via Cloudflare API (`execute` MCP tool) as `secret_text`: `AUTH_SECRET`, `DEV_LOGIN_ENABLED=false`, `GITHUB_CLIENT_ID`, `GITHUB_CLIENT_SECRET`, `GITHUB_TOKEN`.
+     - Verified D1 binding `DB` (`f71f7c73-a7b9-4166-bfd1-d4bcc84caef8`) remains active.
+  3. *Production Merge & Deployment:*
+     - Executed git merge of `dev` into `public` (`--no-ff`, commit `edf353f8a7d153c617c4cec5ffe1e96f61b6711c`).
+     - Pushed release to `origin public`.
+     - Cloudflare Pages deployment `a8a89df3-3fb0-49e6-8ce6-50032a8f8db8` automatically built and deployed in 30 seconds (`latest_stage: "deploy" -> "success"`).
+- **Post-Migration Live Verification (Smoke Tests):**
+  - `https://fatahmr.my.id/`: HTTP/2 200 OK with strict enterprise headers (`Strict-Transport-Security: max-age=63072000; includeSubDomains; preload`, `X-Frame-Options: DENY`, `X-Content-Type-Options: nosniff`, CSP).
+  - `https://fatahmr.my.id/admin`: Admin login card rendered in Light Clean Minimalist style with zero dev-login references.
+  - `https://fatahmr.my.id/api/auth/login`: HTTP/2 302 redirecting to `https://github.com/login/oauth/authorize` with `client_id=Ov23lijqnzFiqsnlP5QS`, `redirect_uri=https%3A%2F%2Ffatahmr.my.id%2Fapi%2Fauth%2Fcallback`, and secure `oauth_state` cookie.
+  - `https://fatahmr.my.id/api/auth/dev-login`: HTTP/2 404 Not Found confirmed.
+
