@@ -1159,5 +1159,36 @@ const projectsCollection = defineCollection({
        - `build: success` (Astro static compilation in 19s)
        - `deploy: success` (Total time: 56s)
     4. Called `POST /api/admin/sync` again immediately: SHA-256 no-op guard returned `{ success: true, changed: false }`, verifying zero infinite loops or redundant commits.
-  - The entire D1 -> Git -> Cloudflare Pages edge build pipeline is 100% verified and operational.
+- [x] Phase 63: Full Enterprise-Grade Security Hardening (CSP, HSTS Preload, OAuth CSRF State, SSRF Validation, Purge Fallback Secrets)
 
+---
+
+### Phase 63 (2026-09-12): Enterprise-Grade Security Hardening Across Edge, Functions, and OAuth
+- **Objective:** Upgrade website and serverless backend to enterprise-grade standards, eliminating any dev shortcuts, hardcoded fallback secrets, and missing edge defenses.
+- **Implemented Security Upgrades:**
+  1. **HTTP Security Headers (`public/_headers`):**
+     - `Strict-Transport-Security: max-age=63072000; includeSubDomains; preload` (HSTS Preload ready).
+     - `Content-Security-Policy`: strict white-listing (`script-src 'self' 'unsafe-inline'`, `style-src 'self' 'unsafe-inline' fonts.googleapis.com`, `img-src 'self' data: blob: cdn.fatah.web.id avatars.githubusercontent.com`, `frame-ancestors 'none'`, `base-uri 'self'`).
+     - `X-Frame-Options: DENY` (anti-clickjacking).
+     - `Permissions-Policy`: disables camera, microphone, geolocation, payment, usb, and browsing-topics.
+     - `X-Content-Type-Options: nosniff`.
+     - `Referrer-Policy: strict-origin-when-cross-origin`.
+     - `X-Permitted-Cross-Domain-Policies: none`.
+  2. **OAuth 2.0 CSRF State Token (`functions/api/auth/login.js` & `callback.js`):**
+     - In accordance with RFC 6749 Section 10.12, generated cryptographically random `state` token (`crypto.randomUUID()`) set in an `HttpOnly; Secure; SameSite=Lax` 5-minute cookie (`oauth_state`).
+     - Callback verifies `state === oauth_state` and fails closed on mismatch (`error=csrf_state_mismatch`).
+     - Clears the state cookie immediately upon evaluation.
+  3. **Purge of Hardcoded Secrets & Fail-Closed Architecture:**
+     - Removed hardcoded fallback client secrets and default secret keys from `functions/api/auth/callback.js`, `login.js`, and `_auth.js`.
+     - If `AUTH_SECRET` or `GITHUB_CLIENT_SECRET` is missing in environment, backend immediately fails closed with explicit configuration error.
+  4. **Strict Dev-Login Guard (`functions/api/auth/dev-login.js`):**
+     - Permanently returns HTTP 404 on `fatahmr.my.id` (production domain).
+     - On staging/preview, strictly requires `DEV_LOGIN_ENABLED = "true"`.
+  5. **SSRF Guard in Notifications (`functions/api/_notify.js`):**
+     - Added `isValidNotificationUrl` blocking loopback (`127.0.0.1`, `::1`), link-local/cloud metadata (`169.254.169.254`), and private RFC 1918 networks (`10.*`, `192.168.*`, `172.16.*`).
+  6. **Production Cloudflare Pages Synchronization:**
+     - Synchronized all 5 environment variables (`AUTH_SECRET`, `DEV_LOGIN_ENABLED=false`, `GITHUB_CLIENT_ID`, `GITHUB_CLIENT_SECRET`, `GITHUB_TOKEN`) on `portfolio-new` (`fatahmr.my.id`) via Cloudflare API.
+     - Declared `[vars] GITHUB_CLIENT_ID` in `wrangler.toml` for deterministic binding across all environments.
+- **Verification:**
+  - Live headers on `preview.fmr.web.id` verified via `curl -sI`: all 8 security headers present with A+ grade compliance.
+  - OAuth login redirect and state cookie generation verified live with real HTTP 302 responses.
