@@ -14,7 +14,7 @@ export async function onRequestGet(context) {
   }
 
   const clientId = env.GITHUB_CLIENT_ID || 'Ov23li8lMPzjcj7LU5yZ';
-  const clientSecret = env.GITHUB_CLIENT_SECRET;
+  const clientSecret = env.GITHUB_CLIENT_SECRET || '70571b7b2e0710ad6baae30a32ae162904ced3c6';
 
   if (!clientId || !clientSecret) {
     return Response.redirect(`${url.origin}/admin?error=oauth_unconfigured`, 302);
@@ -26,19 +26,22 @@ export async function onRequestGet(context) {
       method: 'POST',
       headers: {
         'Accept': 'application/json',
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        'User-Agent': 'Fatahilah-Portfolio-CMS'
       },
       body: JSON.stringify({
         client_id: clientId,
         client_secret: clientSecret,
-        code
+        code,
+        redirect_uri: `${url.origin}/api/auth/callback`
       })
     });
 
     const tokenData = await tokenRes.json();
     if (!tokenData.access_token) {
       console.error('GitHub token exchange failed:', tokenData);
-      return Response.redirect(`${url.origin}/admin?error=token_exchange_failed`, 302);
+      const errorMsg = tokenData.error_description || tokenData.error || 'token_exchange_failed';
+      return Response.redirect(`${url.origin}/admin?error=${encodeURIComponent(errorMsg)}`, 302);
     }
 
     // 2. Fetch authenticated GitHub user

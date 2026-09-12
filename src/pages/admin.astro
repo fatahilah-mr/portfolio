@@ -319,7 +319,7 @@ import '../styles/admin.css';
                 <div class="form-group-solid">
                   <label>Telegram Bot Token</label>
                   <div style="display: flex; gap: 6px;">
-                    <input type="password" id="notify-tele-token" class="form-control-solid" style="font-family: var(--admin-font-mono);" placeholder="123456789:ABCdefGHIjkl..." />
+                    <input type="text" id="notify-tele-token" class="form-control-solid masked-field" style="font-family: var(--admin-font-mono); -webkit-text-security: disc;" placeholder="123456789:ABCdefGHIjkl..." autocomplete="off" />
                     <button type="button" class="btn-icon-subtle toggle-pass-btn" data-target="notify-tele-token" title="Lihat/Sembunyikan Token">
                       <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/>
@@ -373,7 +373,7 @@ import '../styles/admin.css';
                   <div class="form-group-solid">
                     <label>ntfy Password (HTTP Basic Auth)</label>
                     <div style="display: flex; gap: 6px;">
-                      <input type="password" id="notify-ntfy-pass" class="form-control-solid" style="font-family: var(--admin-font-mono);" placeholder="••••••••" autocomplete="new-password" />
+                      <input type="text" id="notify-ntfy-pass" class="form-control-solid masked-field" style="font-family: var(--admin-font-mono); -webkit-text-security: disc;" placeholder="••••••••" autocomplete="off" />
                       <button type="button" class="btn-icon-subtle toggle-pass-btn" data-target="notify-ntfy-pass" title="Lihat/Sembunyikan Password">
                         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                           <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/>
@@ -387,7 +387,7 @@ import '../styles/admin.css';
                 <div class="form-group-solid">
                   <label>ntfy Access Token (Alternatif Bearer Auth)</label>
                   <div style="display: flex; gap: 6px;">
-                    <input type="password" id="notify-ntfy-token" class="form-control-solid" style="font-family: var(--admin-font-mono);" placeholder="tk_..." />
+                    <input type="text" id="notify-ntfy-token" class="form-control-solid masked-field" style="font-family: var(--admin-font-mono); -webkit-text-security: disc;" placeholder="tk_..." autocomplete="off" />
                     <button type="button" class="btn-icon-subtle toggle-pass-btn" data-target="notify-ntfy-token" title="Lihat/Sembunyikan Token">
                       <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/>
@@ -656,8 +656,18 @@ import '../styles/admin.css';
           if (loginErrorMsg) {
             loginErrorMsg.innerHTML = '<strong>GitHub OAuth Belum Dikonfigurasi</strong><br>Aplikasi GitHub OAuth resmi belum didaftarkan untuk domain ini. Silakan gunakan tombol <strong>Masuk Instan (Mode Staging / Review)</strong> di bawah untuk langsung mengelola CMS di preview.fmr.web.id.';
           }
+        } else if (errType === 'bad_verification_code' || errType.toLowerCase().includes('incorrect or expired')) {
+          if (loginErrorMsg) {
+            loginErrorMsg.innerHTML = '<strong>Kode Otorisasi Kedaluwarsa / Terputus</strong><br>Kode verifikasi GitHub telah kedaluwarsa atau terputus saat peringatan browser muncul. Silakan klik tombol <strong>Masuk dengan GitHub</strong> di bawah untuk otorisasi ulang, atau gunakan <strong>Masuk Instan (Mode Staging / Review)</strong>.';
+          }
+        } else if (errType === 'redirect_uri_mismatch' || errType.toLowerCase().includes('redirect_uri')) {
+          if (loginErrorMsg) {
+            loginErrorMsg.innerHTML = '<strong>Redirect URI Mismatch</strong><br>Callback URL di aplikasi GitHub OAuth belum cocok. Pastikan di GitHub Developer Settings Authorization callback URL diatur ke <code>https://preview.fmr.web.id/api/auth/callback</code>.';
+          }
         } else {
-          if (loginErrorMsg) loginErrorMsg.textContent = `Login gagal: ${errType}`;
+          if (loginErrorMsg) {
+            loginErrorMsg.innerHTML = `<strong>Otorisasi Gagal:</strong> ${errType}.<br>Silakan coba klik <strong>Masuk dengan GitHub</strong> lagi atau gunakan <strong>Masuk Instan (Mode Staging / Review)</strong>.`;
+          }
         }
       }
 
@@ -710,7 +720,12 @@ import '../styles/admin.css';
           const targetId = btn.getAttribute('data-target');
           const input = document.getElementById(targetId);
           if (input) {
-            input.type = input.type === 'password' ? 'text' : 'password';
+            if (input.classList.contains('masked-field')) {
+              const isHidden = input.style.webkitTextSecurity !== 'none';
+              input.style.webkitTextSecurity = isHidden ? 'none' : 'disc';
+            } else {
+              input.type = input.type === 'password' ? 'text' : 'password';
+            }
           }
         });
       });

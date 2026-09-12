@@ -751,6 +751,10 @@ body.admin-body {
   transition: border-color 0.15s ease, box-shadow 0.15s ease;
 }
 
+.masked-field {
+  -webkit-text-security: disc;
+}
+
 .form-control-solid:focus {
   border-color: #0f172a;
   box-shadow: 0 0 0 3px rgba(15, 23, 42, 0.08);
