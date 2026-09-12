@@ -3,8 +3,14 @@
 
 import { ALLOWED_ADMIN, createSessionToken, buildSessionCookie, buildClearOAuthStateCookie } from '../_auth.js';
 
-export async function onRequestGet(context) {
+export async function onRequest(context) {
   const { request, env } = context;
+  if (request.method !== 'GET' && request.method !== 'HEAD') {
+    return new Response(JSON.stringify({ error: `Method ${request.method} Not Allowed` }), {
+      status: 405,
+      headers: { 'Content-Type': 'application/json' }
+    });
+  }
   const url = new URL(request.url);
   const code = url.searchParams.get('code');
   const state = url.searchParams.get('state');
