@@ -620,6 +620,17 @@ const filterCategories = [
                   }
                 }
               }
+              const tagsEl = card.querySelector('.card-tags');
+              const isFeat = Boolean(dbData.is_featured);
+              const existingBadge = tagsEl?.querySelector('.featured-badge');
+              if (isFeat && !existingBadge && tagsEl) {
+                const badge = document.createElement('span');
+                badge.className = 'featured-badge';
+                badge.textContent = 'Featured ★';
+                tagsEl.prepend(badge);
+              } else if (!isFeat && existingBadge) {
+                existingBadge.remove();
+              }
               card.setAttribute('data-cert', JSON.stringify({ ...curData, ...dbData }));
             }
           } catch (_) {}
