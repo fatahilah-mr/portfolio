@@ -227,7 +227,7 @@ export async function onRequest(context) {
 
       // 5. Create new commit
       const newCommitPayload = {
-        message: 'chore(sync): automated D1 to static JSON sync [skip ci]',
+        message: 'chore(sync): automated D1 to static JSON sync',
         tree: newTreeSha,
         parents: [latestCommitSha]
       };
