@@ -388,7 +388,7 @@ const featuredCerts = (() => {
       if (!isVisible || cards.length <= 1) return;
       autoPlayTimer = setInterval(() => {
         updateCarousel(currentIndex + 1);
-      }, 4000);
+      }, 3500);
     }
 
     function stopAutoPlay() {
@@ -518,7 +518,7 @@ const featuredCerts = (() => {
       clearTimeout(scrollDebounceTimer);
       scrollDebounceTimer = setTimeout(() => {
         if (isVisible) startAutoPlay();
-      }, 1500);
+      }, 750);
     }, { passive: true });
 
     // Viewport IntersectionObserver: Only run autoplay when visible in viewport

@@ -347,7 +347,7 @@ textarea:focus-visible,
   box-shadow: var(--shadow-md);
   overflow: hidden;
   cursor: pointer;
-  transition: transform 0.45s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.45s ease, box-shadow 0.45s ease;
+  transition: transform 1.25s cubic-bezier(0.25, 1, 0.5, 1), opacity 1.25s ease, box-shadow 1.25s ease;
   transform-style: preserve-3d;
   backface-visibility: hidden;
   -webkit-backface-visibility: hidden;

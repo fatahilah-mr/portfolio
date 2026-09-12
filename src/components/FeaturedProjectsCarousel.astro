@@ -353,7 +353,7 @@ const featuredProjects = (() => {
       if (!isVisible || cards.length <= 1) return;
       autoPlayTimer = setInterval(() => {
         updateCarousel(currentIndex + 1);
-      }, 3500);
+      }, 3000);
     }
 
     function stopAutoPlay() {
@@ -479,7 +479,7 @@ const featuredProjects = (() => {
       clearTimeout(scrollDebounceTimer);
       scrollDebounceTimer = setTimeout(() => {
         if (isVisible) startAutoPlay();
-      }, 1500);
+      }, 750);
     }, { passive: true });
 
     // Viewport IntersectionObserver: Only run autoplay when visible in viewport
