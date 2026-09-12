@@ -13,14 +13,11 @@ export async function onRequestGet(context) {
     return Response.redirect(`${url.origin}/admin?error=${encodeURIComponent(error || 'missing_code')}`, 302);
   }
 
-  const clientId = env.GITHUB_CLIENT_ID;
+  const clientId = env.GITHUB_CLIENT_ID || 'Ov23li8lMPzjcj7LU5yZ';
   const clientSecret = env.GITHUB_CLIENT_SECRET;
 
   if (!clientId || !clientSecret) {
-    return new Response(
-      JSON.stringify({ error: 'GitHub OAuth credentials not configured on server' }),
-      { status: 500, headers: { 'Content-Type': 'application/json' } }
-    );
+    return Response.redirect(`${url.origin}/admin?error=oauth_unconfigured`, 302);
   }
 
   try {

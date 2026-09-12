@@ -3,7 +3,7 @@
 
 export async function onRequestGet(context) {
   const { request, env } = context;
-  const clientId = env.GITHUB_CLIENT_ID;
+  const clientId = env.GITHUB_CLIENT_ID || 'Ov23li8lMPzjcj7LU5yZ';
 
   const url = new URL(request.url);
 
