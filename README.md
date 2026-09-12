@@ -34,7 +34,7 @@ This repository contains the source code for the personal portfolio of Fatahilah
 This portfolio is meticulously engineered for maximum speed and efficiency. Below are the real-world PageSpeed Insights results demonstrating top-tier performance:
 
 <div align="center">
-  <img src="https://cdn.fatahmr.my.id/portfolio/assets/pagespeedtest-18-july-2026.webp" alt="Google PageSpeed Insights Perfect Score" style="border-radius: 12px; max-width: 100%; box-shadow: 0 4px 14px rgba(0,0,0,0.1);">
+  <img src="https://cdn.fatah.web.id/portfolio/assets/pagespeedtest-18-july-2026.webp" alt="Google PageSpeed Insights Perfect Score" style="border-radius: 12px; max-width: 100%; box-shadow: 0 4px 14px rgba(0,0,0,0.1);">
 </div>
 
 ## Architecture

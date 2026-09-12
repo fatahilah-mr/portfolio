@@ -1023,6 +1023,20 @@ const projectsCollection = defineCollection({
     - Scrolled back to top: all previously loaded cards remain 100% loaded (`loaded: 11`, 0 unloads), zero blank white boxes, verified via screenshots (`oneshot_mobile_initial.png`, `oneshot_mobile_scrolled.png`, `oneshot_mobile_back_top.png`).
   - Static Compilation: `npm run build` compiled 15 pages in 8.58s with 0 errors.
 
+### Phase 58 — Legacy CDN URL Migration (`cdn.fatahmr.my.id` to `cdn.fatah.web.id`) (2026-09-12)
+- **Problem & Objective:**
+  - The user requested migrating all asset/image references from the deprecated legacy domain `cdn.fatahmr.my.id` to the active CDN domain `cdn.fatah.web.id`.
+- **Audit & Implementation:**
+  - Audited all files across the portfolio workspace and verified live Cloudflare D1 databases.
+  - Updated `Database Input Sertifikat Web Portofolio.csv`: Certificate ID 2 front image URL updated to `https://cdn.fatah.web.id/portfolio/assets/certificates/sertifikat-peserta-lks-provinsi.webp`.
+  - Updated `Database Projects Fatahilah.csv`: Project 10 PDF viewer URL updated to `https://docs.google.com/viewer?url=https://cdn.fatah.web.id/portfolio/assets/projects/FinalProject_Fatahilah.M.R.pdf`.
+  - Updated `README.md`: PageSpeed Insights score banner updated to `https://cdn.fatah.web.id/portfolio/assets/pagespeedtest-18-july-2026.webp`.
+  - Updated `scripts/seed.sql`: Project 10 documentation viewer and Certificate ID 2 image URLs updated to `cdn.fatah.web.id`.
+  - Audited live Cloudflare D1 `port_certificates` and `port_projects` endpoints (`https://preview.fmr.web.id/api/certificates` & `/api/projects`) — verified 100% of rows are already on `cdn.fatah.web.id`.
+- **Verification & Build:**
+  - Static Compilation: `npm run build` compiled 15 pages in 9.15s with 0 errors.
+  - Workspace Grep: 0 remaining active instances of `cdn.fatahmr.my.id` across the repository.
+
 ---
 
 ## 📋 12. Backlog & Next Actions
@@ -1049,5 +1063,7 @@ const projectsCollection = defineCollection({
 - [x] Fix certificate catalog aspect ratio cropping and mobile/desktop layout harmonization
 - [x] Comprehensive cross-section fact audit, skill alignment & filter polish
 - [x] One-shot lazy loading & scroll performance architecture (anti-render loop)
+- [x] Migrate all legacy CDN references from `cdn.fatahmr.my.id` to `cdn.fatah.web.id`
 - [ ] Merge `dev` to `public` when user approves final release to `https://fatahmr.my.id`
+
 
