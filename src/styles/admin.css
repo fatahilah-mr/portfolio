@@ -1,5 +1,11 @@
 /* src/styles/admin.css - Modern Light Clean Minimalist Dashboard (Vercel & Apple Editorial Style) */
 
+/* Self-Hosted SubsetFonts (Zero Network Latency) */
+@import '@fontsource/jetbrains-mono/latin-400.css';
+@import '@fontsource/jetbrains-mono/latin-500.css';
+@import '@fontsource/jetbrains-mono/latin-600.css';
+@import '@fontsource/jetbrains-mono/latin-700.css';
+
 :root {
   /* Canvas & Surfaces */
   --admin-bg: #f8fafc;                 /* Ultra-clean slate-50 canvas */

@@ -3,6 +3,12 @@
    Apple & Vercel Clean Aesthetic | Anti-Slop | High Performance Vanilla CSS
    ========================================================================== */
 
+/* Self-Hosted SubsetFonts (Zero Network Latency, 100% Privacy) */
+@import '@fontsource/jetbrains-mono/latin-400.css';
+@import '@fontsource/jetbrains-mono/latin-500.css';
+@import '@fontsource/jetbrains-mono/latin-600.css';
+@import '@fontsource/jetbrains-mono/latin-700.css';
+
 :root,
 [data-theme="light"] {
   /* Light Mode (Modern Editorial Paper & Crisp Precision) */
