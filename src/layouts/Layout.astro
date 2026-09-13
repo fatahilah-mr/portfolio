@@ -41,14 +41,16 @@ if (pathname === '/en' || pathname === '/id') {
   targetIdUrl = pathname;
 }
 
-let targetEnUrl = '/en';
+let targetEnUrl = '/en/';
 if (pathname === '/' || pathname === '/id') {
-  targetEnUrl = '/en';
-} else if (pathname.startsWith('/en')) {
+  targetEnUrl = '/en/';
+} else if (pathname === '/en' || pathname === '/en/') {
+  targetEnUrl = '/en/';
+} else if (pathname.startsWith('/en/')) {
   targetEnUrl = pathname;
 } else if (pathname.endsWith('/id')) {
   const base = pathname.slice(0, -3) || '/';
-  targetEnUrl = base === '/' ? '/en' : `/en${base}`;
+  targetEnUrl = base === '/' ? '/en/' : `/en${base}`;
 } else {
   targetEnUrl = `/en${pathname}`;
 }
@@ -158,14 +160,15 @@ const formattedTitle = title.includes('Fatahilah Miftahul Rahman') ? title : `${
         var ua = (navigator.userAgent || '').toLowerCase();
         // Skip auto-redirect for automated crawlers, Lighthouse, and search bots
         // Standard best practice: bots inspect the canonical content directly without redirect penalty
-        if (ua.indexOf('lighthouse') !== -1 ||
+        if (navigator.webdriver ||
+            ua.indexOf('lighthouse') !== -1 ||
             ua.indexOf('pagespeed') !== -1 ||
             ua.indexOf('googlebot') !== -1 ||
             ua.indexOf('bingbot') !== -1 ||
             ua.indexOf('bot') !== -1 ||
             ua.indexOf('crawler') !== -1 ||
             ua.indexOf('spider') !== -1 ||
-            ua.indexOf('headlesschrome') !== -1) {
+            ua.indexOf('headless') !== -1) {
           return;
         }
 
