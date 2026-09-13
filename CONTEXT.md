@@ -1263,4 +1263,19 @@ const projectsCollection = defineCollection({
     - **Performance: 96**
     - Metrics: FCP **1.7s**, LCP **2.6s**, TBT **0 ms**, CLS **0.000**, Speed Index **2.2s**.
 
+### Phase 66 — Self-Hosted Font Subsetting (@fontsource/jetbrains-mono) & GitHub Dependabot Automation (2026-09-13)
+- **Objectives:**
+  - Eliminate external Google Fonts network latency (DNS lookup, TLS handshake, HTTP/2 connection establishment to `fonts.googleapis.com` and `fonts.gstatic.com`).
+  - Deploy local font asset caching through Cloudflare Pages edge (`dist/_astro/*.woff2` with `Cache-Control: public, max-age=31536000, immutable`).
+  - Configure GitHub Dependabot (`.github/dependabot.yml`) for automated weekly dependency updates targeting `dev`, allowing seamless 1-click web/mobile merges.
+- **Architectural Implementation:**
+  1. *Self-Hosted Font Subsetting via `@fontsource/jetbrains-mono`*:
+     - Installed `@fontsource/jetbrains-mono` and imported Latin subsets (`latin-400.css`, `latin-500.css`, `latin-600.css`, `latin-700.css`) in `src/styles/global.css` and `src/styles/admin.css`.
+     - Completely removed external Google Fonts preconnects, preloads, and async injector scripts from `src/layouts/Layout.astro` and `src/pages/admin.astro`.
+     - Subsets are packaged directly into `dist/_astro/` as hashed `.woff2` files (21–22 KB each), inheriting long-term immutable caching.
+  2. *GitHub Dependabot Automation (`.github/dependabot.yml`)*:
+     - Configured weekly npm update schedule checking every Monday at 03:00 WIB.
+     - Directed PRs to branch `dev` with a limit of 5 open PRs, labeled `dependencies` and `automated`.
+     - Full rollback capability verified: can be reverted anytime by deleting `.github/dependabot.yml` or via `git revert`.
+
 
