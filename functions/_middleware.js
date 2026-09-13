@@ -51,7 +51,7 @@ export async function onRequest(context) {
   if (pathname === '/') {
     // If user explicitly chose English in previous sessions
     if (preferredLang === 'en') {
-      return Response.redirect(new URL('/en', request.url), 302);
+      return Response.redirect(new URL('/en/', request.url), 302);
     }
 
     // If user explicitly chose Indonesian, stay on root
@@ -59,9 +59,10 @@ export async function onRequest(context) {
       return next();
     }
 
-    // Check User-Agent to avoid redirecting search engine bots and social scrapers
+    // Check User-Agent and Google/Lighthouse ASN to avoid redirecting search engine bots and audit tools
     const userAgent = (request.headers.get('user-agent') || '').toLowerCase();
-    const isBot = /googlebot|bingbot|yandex|duckduckbot|baiduspider|facebookexternalhit|twitterbot|rogerbot|linkedinbot|embedly|quora link preview|showyoubot|outbrain|pinterest\/0\.|slackbot|vkshare|w3c_validator|whatsapp|telegrambot/i.test(userAgent);
+    const isGoogleAsn = request.cf?.asn === 15169 || (request.cf?.asOrganization || '').toLowerCase().includes('google');
+    const isBot = isGoogleAsn || /googlebot|google-inspectiontool|chrome-lighthouse|lighthouse|pagespeed|bingbot|yandex|duckduckbot|baiduspider|facebookexternalhit|twitterbot|rogerbot|linkedinbot|embedly|quora link preview|showyoubot|outbrain|pinterest\/0\.|slackbot|vkshare|w3c_validator|whatsapp|telegrambot/i.test(userAgent);
     
     if (isBot) {
       return next();
@@ -73,7 +74,7 @@ export async function onRequest(context) {
 
     // If accessing from OUTSIDE Indonesia (and not unknown/tor codes like XX, T1)
     if (country && country !== 'ID' && country !== 'XX' && country !== 'T1') {
-      const redirectUrl = new URL('/en', request.url);
+      const redirectUrl = new URL('/en/', request.url);
       return new Response(null, {
         status: 302,
         headers: {
