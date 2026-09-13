@@ -47,51 +47,17 @@ export async function onRequest(context) {
     }
   }
 
-  // 4. Root Path ('/') Logic: Region Auto-Detection + Language Preference
+  // 4. Root Path ('/') Logic: Language Preference Handling (Zero-Redirect on first load)
   if (pathname === '/') {
-    // If user explicitly chose English in previous sessions
+    // Only redirect if user previously explicitly selected English
     if (preferredLang === 'en') {
-      return Response.redirect(new URL('/en/', request.url), 302);
+      const userAgent = (request.headers.get('user-agent') || '').toLowerCase();
+      const isBot = /googlebot|google-inspectiontool|chrome-lighthouse|lighthouse|pagespeed|bingbot|yandex|duckduckbot|baiduspider|facebookexternalhit|twitterbot|rogerbot|linkedinbot|embedly|quora link preview|showyoubot|outbrain|pinterest\/0\.|slackbot|vkshare|w3c_validator|whatsapp|telegrambot/i.test(userAgent);
+      if (!isBot) {
+        return Response.redirect(new URL('/en/', request.url), 302);
+      }
     }
-
-    // If user explicitly chose Indonesian, stay on root
-    if (preferredLang === 'id') {
-      return next();
-    }
-
-    // Check User-Agent and Google/Lighthouse ASN to avoid redirecting search engine bots and audit tools
-    const userAgent = (request.headers.get('user-agent') || '').toLowerCase();
-    const isGoogleAsn = request.cf?.asn === 15169 || (request.cf?.asOrganization || '').toLowerCase().includes('google');
-    const isBot = isGoogleAsn || /googlebot|google-inspectiontool|chrome-lighthouse|lighthouse|pagespeed|bingbot|yandex|duckduckbot|baiduspider|facebookexternalhit|twitterbot|rogerbot|linkedinbot|embedly|quora link preview|showyoubot|outbrain|pinterest\/0\.|slackbot|vkshare|w3c_validator|whatsapp|telegrambot/i.test(userAgent);
-    
-    if (isBot) {
-      return next();
-    }
-
-    // Cloudflare Edge Country Detection
-    // request.cf.country provides ISO 3166-1 alpha-2 country code (e.g. ID, US, SG, GB)
-    const country = (request.cf?.country || request.headers.get('cf-ipcountry') || '').toUpperCase().trim();
-
-    // If accessing from OUTSIDE Indonesia (and not unknown/tor codes like XX, T1)
-    if (country && country !== 'ID' && country !== 'XX' && country !== 'T1') {
-      const redirectUrl = new URL('/en/', request.url);
-      return new Response(null, {
-        status: 302,
-        headers: {
-          'Location': redirectUrl.toString(),
-          'Set-Cookie': 'preferred_lang=en; Path=/; Max-Age=31536000; SameSite=Lax',
-        },
-      });
-    }
-
-    // If accessing from Indonesia without prior preference, stamp Indonesian preference
-    if (country === 'ID') {
-      const response = await next();
-      // Clone response to attach Set-Cookie header if not already set
-      const newResponse = new Response(response.body, response);
-      newResponse.headers.append('Set-Cookie', 'preferred_lang=id; Path=/; Max-Age=31536000; SameSite=Lax');
-      return newResponse;
-    }
+    return next();
   }
 
   // 5. English Root ('/en') Handling: Record preference if user explicitly visits English version
