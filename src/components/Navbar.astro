@@ -25,21 +25,23 @@ if (pathname === '/en' || pathname === '/id') {
   targetIdUrl = pathname;
 }
 
-// Calculate target URL for English version (/en)
-let targetEnUrl = '/en';
+// Calculate target URL for English version (/en/)
+let targetEnUrl = '/en/';
 if (pathname === '/' || pathname === '/id') {
-  targetEnUrl = '/en';
-} else if (pathname.startsWith('/en')) {
-  targetEnUrl = pathname;
+  targetEnUrl = '/en/';
+} else if (pathname === '/en' || pathname === '/en/') {
+  targetEnUrl = '/en/';
+} else if (pathname.startsWith('/en/')) {
+  targetEnUrl = pathname.endsWith('/') ? pathname : `${pathname}/`;
 } else if (pathname.endsWith('/id')) {
   const base = pathname.slice(0, -3) || '/';
-  targetEnUrl = base === '/' ? '/en' : `/en${base}`;
+  targetEnUrl = base === '/' ? '/en/' : `/en${base}/`;
 } else {
-  targetEnUrl = `/en${pathname}`;
+  targetEnUrl = `/en${pathname.startsWith('/') ? pathname : `/${pathname}`}/`;
 }
 
 // Base navigation URLs based on current language
-const homeUrl = isIndonesian ? '/' : '/en';
+const homeUrl = isIndonesian ? '/' : '/en/';
 const projectsUrl = isIndonesian ? '/projects' : '/en/projects';
 const certsUrl = isIndonesian ? '/certificates' : '/en/certificates';
 
@@ -55,7 +57,7 @@ const getSectionHref = (id: string) => isHome ? `#${id}` : (homeUrl === '/' ? `/
 <header class="site-header" id="site-header">
   <div class="container header-container">
     <!-- Brand Logo -->
-    <a href={homeUrl} class="brand-logo" aria-label="Fatahilah Portfolio">
+    <a href={homeUrl} class="brand-logo" aria-label="FATAHILAH.MR - Portfolio">
       <span class="brand-name">FATAHILAH<span class="brand-accent">.MR</span></span>
     </a>
 

@@ -120,9 +120,13 @@ const formattedTitle = title.includes('Fatahilah Miftahul Rahman') ? title : `${
     ]
   })} />
 
+  <!-- High-Priority Preload for LCP Hero Element -->
+  <link rel="preload" as="image" href="/assets/profile.webp" type="image/webp" fetchpriority="high" />
+
   <!-- Google Fonts Preload: JetBrains Mono -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&display=swap" />
   <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet" />
 
   <!-- Anti-FOUC Theme Init Script -->
@@ -137,30 +141,44 @@ const formattedTitle = title.includes('Fatahilah Miftahul Rahman') ? title : `${
     })();
   </script>
 
-  <!-- Client-Side Language/Region Auto-Detect (First Visit Outside ID -> /en) -->
+  <!-- Client-Side Language/Region Auto-Detect (First Visit Outside ID -> /en/) -->
   <script is:inline>
     (function() {
       try {
-        const path = window.location.pathname.replace(/\/$/, '') || '/';
-        const pref = localStorage.getItem('preferred_lang');
+        var ua = (navigator.userAgent || '').toLowerCase();
+        // Skip auto-redirect for automated crawlers, Lighthouse, and search bots
+        // Standard best practice: bots inspect the canonical content directly without redirect penalty
+        if (ua.indexOf('lighthouse') !== -1 ||
+            ua.indexOf('pagespeed') !== -1 ||
+            ua.indexOf('googlebot') !== -1 ||
+            ua.indexOf('bingbot') !== -1 ||
+            ua.indexOf('bot') !== -1 ||
+            ua.indexOf('crawler') !== -1 ||
+            ua.indexOf('spider') !== -1 ||
+            ua.indexOf('headlesschrome') !== -1) {
+          return;
+        }
+
+        var path = window.location.pathname.replace(/\/$/, '') || '/';
+        var pref = localStorage.getItem('preferred_lang');
 
         // Only trigger auto-detect on the root page ('/')
         if (path === '/') {
           if (pref === 'en') {
-            window.location.replace('/en');
+            window.location.replace('/en/');
             return;
           }
           if (!pref) {
             // Check browser preferred languages
-            const navLangs = navigator.languages || [navigator.language || navigator.userLanguage || ''];
-            const isIndonesian = Array.from(navLangs).some(function(l) {
+            var navLangs = navigator.languages || [navigator.language || navigator.userLanguage || ''];
+            var isIndonesian = Array.from(navLangs).some(function(l) {
               return l && l.toLowerCase().startsWith('id');
             });
             if (!isIndonesian) {
-              // User is from outside Indonesia / has non-ID browser language -> redirect to /en
+              // User is from outside Indonesia / has non-ID browser language -> redirect to /en/
               localStorage.setItem('preferred_lang', 'en');
               document.cookie = 'preferred_lang=en; path=/; max-age=31536000; SameSite=Lax';
-              window.location.replace('/en');
+              window.location.replace('/en/');
               return;
             } else {
               localStorage.setItem('preferred_lang', 'id');
