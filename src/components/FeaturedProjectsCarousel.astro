@@ -540,56 +540,64 @@ const featuredProjects = (() => {
     // Initial state
     updateCarousel(0);
 
-    // Live D1 dynamic sync
-    fetch('/api/projects')
-      .then(res => res.ok ? res.json() : null)
-      .then(dbProjects => {
-        if (!Array.isArray(dbProjects) || dbProjects.length === 0) return;
+    // Live D1 dynamic sync deferred after idle (0 contention with critical rendering path)
+    function syncLiveProjects() {
+      fetch('/api/projects')
+        .then(res => res.ok ? res.json() : null)
+        .then(dbProjects => {
+          if (!Array.isArray(dbProjects) || dbProjects.length === 0) return;
 
-        const freshFeatured = dbProjects
-          .filter(p => Number(p.is_featured) === 1 || p.is_featured === true)
-          .sort((a, b) => (Number(a.sort_order) || 0) - (Number(b.sort_order) || 0));
+          const freshFeatured = dbProjects
+            .filter(p => Number(p.is_featured) === 1 || p.is_featured === true)
+            .sort((a, b) => (Number(a.sort_order) || 0) - (Number(b.sort_order) || 0));
 
-        const targetItems = freshFeatured.length > 0 ? freshFeatured : dbProjects.slice(0, 3);
+          const targetItems = freshFeatured.length > 0 ? freshFeatured : dbProjects.slice(0, 3);
 
-        const currentCardIds = cards.map(c => {
-          try {
-            return String(JSON.parse(c.getAttribute('data-project') || '{}').id);
-          } catch (_) {
-            return '';
-          }
-        });
-        const targetIds = targetItems.map(p => String(p.id));
-
-        const isExactMatch = currentCardIds.length === targetIds.length &&
-          currentCardIds.every((id, idx) => id === targetIds[idx]);
-
-        if (!isExactMatch) {
-          rehydrateCards(targetItems);
-        } else {
-          const projectMap = new Map(targetItems.map(p => [String(p.id), p]));
-          cards.forEach(card => {
+          const currentCardIds = cards.map(c => {
             try {
-              const curData = JSON.parse(card.getAttribute('data-project') || '{}');
-              const dbData = projectMap.get(String(curData.id));
-              if (dbData) {
-                if (dbData.link_gambar && dbData.link_gambar !== curData.link_gambar) {
-                  const img = card.querySelector('img');
-                  if (img) img.src = dbData.link_gambar;
-                }
-                const titleId = card.querySelector('.footer-title .lang-id');
-                const titleEn = card.querySelector('.footer-title .lang-en');
-                if (titleId && dbData.judul) titleId.textContent = dbData.judul;
-                if (titleEn) titleEn.textContent = dbData.english_title || dbData.judul || '';
-                const catEl = card.querySelector('.footer-category');
-                if (catEl && dbData.kategori) catEl.textContent = dbData.kategori;
-
-                card.setAttribute('data-project', JSON.stringify({ ...curData, ...dbData }));
-              }
-            } catch (_) {}
+              return String(JSON.parse(c.getAttribute('data-project') || '{}').id);
+            } catch (_) {
+              return '';
+            }
           });
-        }
-      })
-      .catch(() => {});
+          const targetIds = targetItems.map(p => String(p.id));
+
+          const isExactMatch = currentCardIds.length === targetIds.length &&
+            currentCardIds.every((id, idx) => id === targetIds[idx]);
+
+          if (!isExactMatch) {
+            rehydrateCards(targetItems);
+          } else {
+            const projectMap = new Map(targetItems.map(p => [String(p.id), p]));
+            cards.forEach(card => {
+              try {
+                const curData = JSON.parse(card.getAttribute('data-project') || '{}');
+                const dbData = projectMap.get(String(curData.id));
+                if (dbData) {
+                  if (dbData.link_gambar && dbData.link_gambar !== curData.link_gambar) {
+                    const img = card.querySelector('img');
+                    if (img) img.src = dbData.link_gambar;
+                  }
+                  const titleId = card.querySelector('.footer-title .lang-id');
+                  const titleEn = card.querySelector('.footer-title .lang-en');
+                  if (titleId && dbData.judul) titleId.textContent = dbData.judul;
+                  if (titleEn) titleEn.textContent = dbData.english_title || dbData.judul || '';
+                  const catEl = card.querySelector('.footer-category');
+                  if (catEl && dbData.kategori) catEl.textContent = dbData.kategori;
+
+                  card.setAttribute('data-project', JSON.stringify({ ...curData, ...dbData }));
+                }
+              } catch (_) {}
+            });
+          }
+        })
+        .catch(() => {});
+    }
+
+    if ('requestIdleCallback' in window) {
+      window.requestIdleCallback(syncLiveProjects, { timeout: 3000 });
+    } else {
+      setTimeout(syncLiveProjects, 2000);
+    }
   })();
 </script>
