@@ -575,60 +575,68 @@ const featuredCerts = (() => {
 
     updateCarousel(0);
 
-    // Live D1 dynamic sync
-    fetch('/api/certificates')
-      .then(res => res.ok ? res.json() : null)
-      .then(dbCerts => {
-        if (!Array.isArray(dbCerts) || dbCerts.length === 0) return;
+    // Live D1 dynamic sync deferred after idle (0 contention with critical rendering path)
+    function syncLiveCerts() {
+      fetch('/api/certificates')
+        .then(res => res.ok ? res.json() : null)
+        .then(dbCerts => {
+          if (!Array.isArray(dbCerts) || dbCerts.length === 0) return;
 
-        const freshFeatured = dbCerts
-          .filter(c => Number(c.is_featured) === 1 || c.is_featured === true)
-          .sort((a, b) => (Number(a.sort_order) || 0) - (Number(b.sort_order) || 0));
+          const freshFeatured = dbCerts
+            .filter(c => Number(c.is_featured) === 1 || c.is_featured === true)
+            .sort((a, b) => (Number(a.sort_order) || 0) - (Number(b.sort_order) || 0));
 
-        const targetItems = freshFeatured.length > 0 ? freshFeatured : dbCerts.slice(0, 3);
+          const targetItems = freshFeatured.length > 0 ? freshFeatured : dbCerts.slice(0, 3);
 
-        const currentCardIds = cards.map(c => {
-          try {
-            return String(JSON.parse(c.getAttribute('data-cert') || '{}').id);
-          } catch (_) {
-            return '';
-          }
-        });
-        const targetIds = targetItems.map(c => String(c.id));
-
-        const isExactMatch = currentCardIds.length === targetIds.length &&
-          currentCardIds.every((id, idx) => id === targetIds[idx]);
-
-        if (!isExactMatch) {
-          rehydrateCerts(targetItems);
-        } else {
-          const certMap = new Map(targetItems.map(c => [String(c.id), c]));
-          cards.forEach(card => {
+          const currentCardIds = cards.map(c => {
             try {
-              const curData = JSON.parse(card.getAttribute('data-cert') || '{}');
-              const dbData = certMap.get(String(curData.id));
-              if (dbData) {
-                const freshImg = dbData.url_gambar_depan || dbData.link_gambar;
-                const curImg = curData.url_gambar_depan || curData.link_gambar;
-                if (freshImg && freshImg !== curImg) {
-                  const img = card.querySelector('img');
-                  if (img) img.src = freshImg;
-                }
-                const titleId = card.querySelector('.footer-title .lang-id');
-                const titleEn = card.querySelector('.footer-title .lang-en');
-                if (titleId && dbData.nama_sertifikat) titleId.textContent = dbData.nama_sertifikat;
-                if (titleEn) titleEn.textContent = dbData.english_title || dbData.nama_sertifikat || '';
-                const issuerEl = card.querySelector('.footer-issuer');
-                if (issuerEl && dbData.penerbit) issuerEl.textContent = dbData.penerbit;
-                const yearEl = card.querySelector('.footer-year');
-                if (yearEl && dbData.tahun) yearEl.textContent = dbData.tahun;
-
-                card.setAttribute('data-cert', JSON.stringify({ ...curData, ...dbData }));
-              }
-            } catch (_) {}
+              return String(JSON.parse(c.getAttribute('data-cert') || '{}').id);
+            } catch (_) {
+              return '';
+            }
           });
-        }
-      })
-      .catch(() => {});
+          const targetIds = targetItems.map(c => String(c.id));
+
+          const isExactMatch = currentCardIds.length === targetIds.length &&
+            currentCardIds.every((id, idx) => id === targetIds[idx]);
+
+          if (!isExactMatch) {
+            rehydrateCerts(targetItems);
+          } else {
+            const certMap = new Map(targetItems.map(c => [String(c.id), c]));
+            cards.forEach(card => {
+              try {
+                const curData = JSON.parse(card.getAttribute('data-cert') || '{}');
+                const dbData = certMap.get(String(curData.id));
+                if (dbData) {
+                  const freshImg = dbData.url_gambar_depan || dbData.link_gambar;
+                  const curImg = curData.url_gambar_depan || curData.link_gambar;
+                  if (freshImg && freshImg !== curImg) {
+                    const img = card.querySelector('img');
+                    if (img) img.src = freshImg;
+                  }
+                  const titleId = card.querySelector('.footer-title .lang-id');
+                  const titleEn = card.querySelector('.footer-title .lang-en');
+                  if (titleId && dbData.nama_sertifikat) titleId.textContent = dbData.nama_sertifikat;
+                  if (titleEn) titleEn.textContent = dbData.english_title || dbData.nama_sertifikat || '';
+                  const issuerEl = card.querySelector('.footer-issuer');
+                  if (issuerEl && dbData.penerbit) issuerEl.textContent = dbData.penerbit;
+                  const yearEl = card.querySelector('.footer-year');
+                  if (yearEl && dbData.tahun) yearEl.textContent = dbData.tahun;
+
+                  card.setAttribute('data-cert', JSON.stringify({ ...curData, ...dbData }));
+                }
+              } catch (_) {}
+            });
+          }
+        })
+        .catch(() => {});
+    }
+
+    if ('requestIdleCallback' in window) {
+      window.requestIdleCallback(syncLiveCerts, { timeout: 3000 });
+    } else {
+      setTimeout(syncLiveCerts, 2000);
+    }
   })();
 </script>
